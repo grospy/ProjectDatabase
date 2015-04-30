@@ -1,13 +1,3 @@
-
-<!DOCTYPE html>
-  <html>
-  <head>
-  	<title>
-  		Log In
-  	</title>
-  	<link rel="stylesheet" type="text/css" href="style.css">
-  </head>
-  <body>
   <?php
   include "top.php";
   ?>
