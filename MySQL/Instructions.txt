@@ -1,0 +1,7 @@
+1 - Open MySQL command line
+2 - run command "create database inholland;"
+3 - run command "use inholland"
+
+Two ways to do step 4
+4a - type "source " then drag and drop the file UserName.sql into the command line and press enter
+4b - open UserName.sql and copy all the contents then in the MySQL command line right-click and choose paste
