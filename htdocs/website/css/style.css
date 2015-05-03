@@ -58,3 +58,7 @@ img	{
     width: 60px;
     padding: 8px;
 }
+
+#error {
+    color: #aa0000;
+}
