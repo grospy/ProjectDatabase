@@ -1,27 +1,80 @@
-<?PHP
+<?php
 $errorMessage = "";
 $num_rows = 0;
+$uname = "";
+if (isset($_POST['submit'])) {
+    $uname = $_POST["username"];
+}
+include_once "include/top.php";
+?>
+    <div class="login-area">
+        <form method="POST" name="login">
+            <span id="login-title">Admin Login</span>
+            <p>Username: <INPUT TYPE='TEXT' Name='username' placeholder="Enter username" value='<?php echo "$uname"; ?>'
+                                maxlength="16"></p>
+
+            <p>Password: <INPUT TYPE='password' Name='password' placeholder="Enter password" maxlength="16"></p>
+
+            <p><INPUT class="btn" TYPE="submit" Name="submit" VALUE="Login"></p>
+        </form>
+        <span id="error">
+            <?php
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $ch = 0;
+                if (!empty($_POST["username"])) {
+                    $ch++;
+                }
+                if (!empty($_POST["password"])) {
+                    $ch++;
+                    $ch++;
+                }
+                switch ($ch) {
+                    case 0:
+                        $errorMessage = "Please enter username and password.";
+                        break;
+                    case 1:
+                        $errorMessage = "Please enter your password.";
+                        break;
+                    case 2:
+                        $errorMessage = "Please enter your username";
+                        break;
+                    case 3:
+                        login($errorMessage);
+                        break;
+                }
+            }
+            print $errorMessage;
+            ?>
+        </span>
+
+        <p id="br-link"><a href="index.php">student</a></p>
+    </div>
+<?php
+include_once "include/bot.php";
+
+
+//==================================================================
+
 function quote_smart($value, $handle)
 {
     if (get_magic_quotes_gpc()) {
         $value = stripslashes($value);
     }
+
     if (!is_numeric($value)) {
         $value = "'" . mysql_real_escape_string($value, $handle) . "'";
     }
     return $value;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+function login(&$error)
+{
+    include_once "include/database.php";
     $uname = $_POST['username'];
     $pword = $_POST['password'];
 
     $uname = htmlspecialchars($uname);
     $pword = htmlspecialchars($pword);
-    $user_name = "root";
-    $pass_word = "admin";
-    $database = "login";
-    $server = "127.0.0.1";
 
     $db_handle = mysql_connect($server, $user_name, $pass_word);
     $db_found = mysql_select_db($database, $db_handle);
@@ -30,51 +83,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $uname = quote_smart($uname, $db_handle);
         $pword = quote_smart($pword, $db_handle);
 
-        $SQL = "SELECT * FROM login WHERE L1 = $uname AND L2 = md5($pword)";
+        $SQL = "SELECT * FROM employee WHERE username = $uname AND password = md5($pword)";
         $result = mysql_query($SQL);
         $num_rows = mysql_num_rows($result);
+
+
 
         if ($result) {
             if ($num_rows > 0) {
                 session_start();
-                $_SESSION['login'] = "1";
-                $_SESSION['name'] = $_POST["username"];
-                header("Location: index.php");
+                $_SESSION['login'] = "2";
+                header("Location: index2.php");
             } else {
-                $errorMessage = "Error logging on";
+                $error = "Invalid username or password.";
             }
         } else {
-            $errorMessage = "Error logging on";
+            $error = "Query error.";
         }
-
         mysql_close($db_handle);
-
     } else {
-        $errorMessage = "Error logging on";
+        $error = "Error connectiong to database.";
     }
 
 }
-include_once "include/top.php";
-?>
-
-    <div class="login-area">
-        <form method="POST" name="login">
-            <p>Username: <INPUT TYPE='TEXT' Name='username' <?php if (isset($_POST['Submit'])) {
-                    echo 'value="' . $_POST['username'] . '"';
-                } ?> maxlength="16"></p>
-
-            <p>Password: <INPUT TYPE='password' Name='password' maxlength="16"></p>
-
-            <p><INPUT class="btn" TYPE="Submit" Name="Submit" VALUE="Login"></p>
-        </form>
-    <span id="error">
-        <?php
-        print $errorMessage;
-        ?>
-    </span>
-
-        <p id="admin"><a href="admin.php">admin</a></p>
-    </div>
-
-<?php
-include_once "include/bot.php";

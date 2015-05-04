@@ -9,6 +9,8 @@ include_once "include/top.php";
 ?>
     <div class="login-area">
         <form method="POST" name="login">
+            <span id="login-title">Student Login</span>
+
             <p>Username: <INPUT TYPE='TEXT' Name='username' placeholder="Enter username" value='<?php echo "$uname"; ?>'
                                 maxlength="16"></p>
 
@@ -46,7 +48,7 @@ include_once "include/top.php";
             ?>
         </span>
 
-        <p id="admin"><a href="admin.php">admin</a></p>
+        <p id="br-link"><a href="admin.php">admin</a></p>
     </div>
 <?php
 include_once "include/bot.php";
@@ -68,16 +70,12 @@ function quote_smart($value, $handle)
 
 function login(&$error)
 {
+    include_once "include/database.php";
     $uname = $_POST['username'];
     $pword = $_POST['password'];
 
     $uname = htmlspecialchars($uname);
     $pword = htmlspecialchars($pword);
-
-    $user_name = "root";
-    $pass_word = "admin";
-    $database = "inholland";
-    $server = "127.0.0.1";
 
     $db_handle = mysql_connect($server, $user_name, $pass_word);
     $db_found = mysql_select_db($database, $db_handle);
@@ -89,7 +87,6 @@ function login(&$error)
         $SQL = "SELECT * FROM student WHERE student_number = $uname AND password = md5($pword)";
         $result = mysql_query($SQL);
         $num_rows = mysql_num_rows($result);
-
 
 
         if ($result) {

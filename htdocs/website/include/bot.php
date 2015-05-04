@@ -1,5 +1,5 @@
 	<div class="footer">
-        FOOTER
+        louis &copy;
 	</div>
 </body>
 </html>
