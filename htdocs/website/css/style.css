@@ -2,7 +2,7 @@
 body	{
     background-color:#F0F0F0
 }
-.register-form	{
+.login-area	{
     border-radius:.5em;
     box-shadow: 0 0 15px #222222;
     background-color:#777777;
@@ -43,8 +43,8 @@ img	{
 
 
 
-.register-form form input{padding: 5px;}
-.register-form .btn{
+.login-area form input{padding: 5px;}
+.login-area .btn{
     background: #484647;
     padding: 7px;
     border-radius: 5px;
@@ -53,7 +53,7 @@ img	{
     display: inline-block;
     color: #FFF;}
 
-.register-form .register{
+.login-area .btn{
     border: 0;
     width: 60px;
     padding: 8px;
@@ -61,4 +61,10 @@ img	{
 
 #error {
     color: #aa0000;
+}
+#admin{
+    text-align: right;
+    margin: 0;
+    padding-bottom: 0;
+    padding-right: 15px;
 }
