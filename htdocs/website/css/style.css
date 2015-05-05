@@ -1,8 +1,8 @@
 
 body	{
-    background-color:#F0F0F0
+    background-color: #d1d1d1
 }
-.register-form	{
+.login-area	{
     border-radius:.5em;
     box-shadow: 0 0 15px #222222;
     background-color:#777777;
@@ -11,26 +11,28 @@ body	{
     max-width:20em;
     min-width:5em;
     padding-bottom:1em;
+    padding-top: 5px;
     margin: 0 auto;
     text-align: center;
-    color: #fff;
+    color: #000000;
     -webkit-border-radius:10px;
     -moz-border-radius:10px;
 }
-.head	{
+/*.head	{
     text-align:center;
     padding-top:1em;
     padding-bottom:1em;
     border-bottom:1px solid black;
     width:100%;
-}
+}*/
 .footer	{
     text-align: center;
     padding-top:.5em;
+    font-size: .7em;
 }
-.head:after	{
+/*.head:after	{
     content:"";
-}
+}*/
 h1	{
     font-family:Lucida Console;
 }
@@ -43,17 +45,17 @@ img	{
 
 
 
-.register-form form input{padding: 5px;}
-.register-form .btn{
+.login-area form input{padding: 5px;}
+.login-area .btn{
     background: #484647;
     padding: 7px;
     border-radius: 5px;
     text-decoration: none;
     width: 50px;
     display: inline-block;
-    color: #FFF;}
+    color: #000000;}
 
-.register-form .register{
+.login-area .btn{
     border: 0;
     width: 60px;
     padding: 8px;
@@ -61,4 +63,14 @@ img	{
 
 #error {
     color: #aa0000;
+}
+#br-link{
+    text-align: right;
+    margin: 0;
+    padding-bottom: 0;
+    padding-right: 15px;
+}
+#login-title{
+    font-size: 1.5em;
+    color: black;
 }
