@@ -1,14 +1,17 @@
 <?PHP
 session_start();
-if ($_SESSION['login'] != "2") {
-	header ("Location: admin.php");
+if ($_SESSION['login'] != md5("2")) {
+    header("Location: login.php");
 }
 include_once "include/top.php";
 ?>
+<section class="container">
+    <div id="content">
+        <h1>Welcome, admin</h1>
 
-<div id="content">
-</div>
-<P>
-<A HREF = logout.php>Log out</A>
-
-<?php include_once "include/bot.php";?>
+        <p>
+            <a href="logout.php">Log out</a>
+        </p>
+    </div>
+</section>
+<?php include_once "include/bot.php"; ?>

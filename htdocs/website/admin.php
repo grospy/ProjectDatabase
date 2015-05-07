@@ -1,23 +1,23 @@
 <?php
+require_once "include/top.php";
+ob_start();
 $errorMessage = "";
 $num_rows = 0;
-$uname = "";
+$username = "";
 if (isset($_POST['submit'])) {
-    $uname = $_POST["username"];
+    $username = $_POST["username"];
+    $username = htmlspecialchars($username);
 }
-include_once "include/top.php";
 ?>
-    <div class="login-area">
-        <form method="POST" name="login">
-            <span id="login-title">Admin Login</span>
-            <p>Username: <INPUT TYPE='TEXT' Name='username' placeholder="Enter username" value='<?php echo "$uname"; ?>'
-                                maxlength="16"></p>
-
-            <p>Password: <INPUT TYPE='password' Name='password' placeholder="Enter password" maxlength="16"></p>
-
-            <p><INPUT class="btn" TYPE="submit" Name="submit" VALUE="Login"></p>
-        </form>
-        <span id="error">
+    <section class="container">
+        <div class="login">
+            <h1>Admin Login</h1>
+            <form method="post">
+                <p><input type="text" name="username" value="" placeholder="Username"></p>
+                <p><input type="password" name="password" value='<?php echo "$username"; ?>' placeholder="Password"></p>
+                <p class="submit"><input type="submit" name="submit" value="Login"></p>
+            </form>
+        <p id="error">
             <?php
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $ch = 0;
@@ -45,54 +45,35 @@ include_once "include/top.php";
             }
             print $errorMessage;
             ?>
-        </span>
-
-        <p id="br-link"><a href="index.php">student</a></p>
-    </div>
+        </p><br />
+            <p id="br-link"><a href="index.php">student</a></p>
+        </div>
+    </section>
 <?php
-include_once "include/bot.php";
-
-
-//==================================================================
-
-function quote_smart($value, $handle)
-{
-    if (get_magic_quotes_gpc()) {
-        $value = stripslashes($value);
-    }
-
-    if (!is_numeric($value)) {
-        $value = "'" . mysql_real_escape_string($value, $handle) . "'";
-    }
-    return $value;
-}
+require_once "include/bot.php";
 
 function login(&$error)
 {
-    include_once "include/database.php";
-    $uname = $_POST['username'];
-    $pword = $_POST['password'];
+    require_once "include/database.php";
+    $password = $_POST['password'];
+    $username = $_POST['username'];
+    $username = htmlspecialchars($username);
+    $password = htmlspecialchars($password);
 
-    $uname = htmlspecialchars($uname);
-    $pword = htmlspecialchars($pword);
+    $db = new mysqli($server, $user_name, $pass_word, $database);
 
-    $db_handle = mysql_connect($server, $user_name, $pass_word);
-    $db_found = mysql_select_db($database, $db_handle);
+    if ($db) {
+        $username = quote_smart($db, $username);
+        $password = quote_smart($db, $password);
 
-    if ($db_found) {
-        $uname = quote_smart($uname, $db_handle);
-        $pword = quote_smart($pword, $db_handle);
-
-        $SQL = "SELECT * FROM employee WHERE username = $uname AND password = md5($pword)";
-        $result = mysql_query($SQL);
-        $num_rows = mysql_num_rows($result);
-
-
+        $SQL = "SELECT * FROM employee WHERE username = $username AND password = md5($password)";
+        $result = $db->query($SQL);
+        $num_rows = mysqli_num_rows($result);
 
         if ($result) {
             if ($num_rows > 0) {
                 session_start();
-                $_SESSION['login'] = "2";
+                $_SESSION['login'] = md5("2");
                 header("Location: index2.php");
             } else {
                 $error = "Invalid username or password.";
@@ -100,9 +81,21 @@ function login(&$error)
         } else {
             $error = "Query error.";
         }
-        mysql_close($db_handle);
+        mysqli_close($db);
     } else {
-        $error = "Error connectiong to database.";
+        $error = "Error connecting to database.";
     }
 
+}
+
+function quote_smart($handle, $value)
+{
+    if (get_magic_quotes_gpc()) {
+        $value = stripslashes($value);
+    }
+
+    if (!is_numeric($value)) {
+        $value = "'" . mysqli_real_escape_string($handle, $value) . "'";
+    }
+    return $value;
 }

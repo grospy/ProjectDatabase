@@ -1,5 +1,6 @@
 <?PHP
     session_start();
+
     session_destroy();
     header( "refresh:2;url=index.php" );
     include_once "include/top.php";
