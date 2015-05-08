@@ -1,5 +1,6 @@
+<?-- Been Here ?>
 	<div class="footer">
-        louis &copy;
+        Amadeus &copy;
 	</div>
 </body>
 </html>
