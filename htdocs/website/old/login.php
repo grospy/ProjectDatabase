@@ -48,7 +48,7 @@ include_once "include/top.php";
             ?>
         </span>
 
-        <p id="br-link"><a href="../admin.php">admin</a></p>
+        <p id="br-link"><a href="../login2.php">admin</a></p>
     </div>
 <?php
 include_once "include/bot.php";

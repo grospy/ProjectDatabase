@@ -12,7 +12,7 @@ $server = "127.0.0.1";
 //===============================================
 //====================WEBSITE====================
 //===============================================
-/*$user_name = "1870725_school";
-$pass_word = "Amadeus1";
-$database = "1870725_school";
-$server = "fdb3.royalwebhosting.net";*/
+/*$user_name = "b5_16152360";
+$pass_word = "amadeus1";
+$database = "b5_16152360_inholland";
+$server = "sql201.byethost5.com";*/

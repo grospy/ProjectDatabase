@@ -17,7 +17,7 @@ if (isset($_POST['submit'])) {
                 <p><input type="password" name="password" value='<?php echo "$username"; ?>' placeholder="Password"></p>
                 <p class="submit"><input type="submit" name="submit" value="Login"></p>
             </form>
-        <p id="error">
+        <p class="error">
             <?php
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $ch = 0;

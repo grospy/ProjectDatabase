@@ -8,7 +8,7 @@ include_once "include/top.php";
 <section class="container">
     <div id="content">
         <h1>Welcome, admin</h1>
-
+        <p><a href="addstudent.php">Add a student to the database</a> </p>
         <p>
             <a href="logout.php">Log out</a>
         </p>

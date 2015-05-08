@@ -3,9 +3,9 @@ ob_start();
 require_once "include/top.php";
 $errorMessage = "&nbsp;";
 $num_rows = 0;
-$email = "";
+$number = "";
 if (isset($_POST['submit'])) {
-    $email = $_POST["email"];
+    $number = $_POST["number"];
 }
 ?>
     <section class="container">
@@ -13,23 +13,18 @@ if (isset($_POST['submit'])) {
             <h1>Set New Password</h1>
 
             <form method="post">
-                <p><input type="email" name="email" value='<?php echo htmlspecialchars($email); ?>' placeholder="Email">
-                </p>
+                <p><input type="text" name="number" value='<?php echo htmlspecialchars($number); ?>'
+                          placeholder="Student Number"></p>
 
                 <p class="submit"><input type="submit" name="submit" value="Send Mail"></p>
             </form>
             <p id="error">
                 <?php
                 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    if (empty($_POST["email"])) {
-                        $errorMessage = "Enter email";
+                    if (empty($_POST["number"])) {
+                        $errorMessage = "Enter student number.";
                     } else {
-                        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            set($errorMessage);
-                        }
-                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            $errorMessage = "Invalid email.";
-                        }
+                        set($errorMessage);
                     }
                 }
                 echo $errorMessage;
@@ -37,10 +32,10 @@ if (isset($_POST['submit'])) {
             </p>
             <br/>
 
-            <p id="br-link"><a href="admin.php">admin</a></p>
+            <p id="br-link"><a href="login2.php">admin</a></p>
         </div>
         <div class="login-help">
-            <p>Know your password? <a href="index.php">Back to log in page</a>.</p>
+            <p><a href="index.php">Back to log in page</a>.</p>
         </div>
     </section>
 <?php
@@ -53,14 +48,14 @@ include_once "include/bot.php";
 function set(&$error)
 {
     include_once "include/database.php";
-    $email = $_POST['email'];
+    $number = $_POST['number'];
 
     $db = new mysqli($server, $user_name, $pass_word, $database);
 
     if ($db) {
-        $email = quote_smart($email, $db);
+        $number = quote_smart($number, $db);
 
-        $SQL = "SELECT * FROM student WHERE email = $email";
+        $SQL = "SELECT * FROM student WHERE student_number = $number";
         $result = $db->query($SQL);
         $num_rows = mysqli_num_rows($result);
 
@@ -72,22 +67,23 @@ function set(&$error)
                 $data = $result->fetch_array();
                 $password = $data['password'];
 
-                if ($password != null) {
-                    $error = "You already have a password. <a href='request.php'>Forgot</a>?";
-                } else {
-                    $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-                    $code = "";
-                    $alphaLength = strlen($alphabet) - 1;
-                    for ($i = 0; $i < 8; $i++) {
-                        $n = substr($alphabet, rand(0, $alphaLength), 1);
-                        $code .= $n;
-                    }
-                    sendmail($email, $code);
-                    //header("Location: register.php");
+                $alphabet = "ABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+                $code = "";
+                $alphaLength = strlen($alphabet) - 1;
+                for ($i = 0; $i < 8; $i++) {
+                    $n = substr($alphabet, rand(0, $alphaLength), 1);
+                    $code .= $n;
                 }
-                //mysql_query("UPDATE student SET sent = $sent WHERE email = $email");
+                $db->query("UPDATE student SET set_code = '$code' WHERE student_number = $number");
+                $db->query("UPDATE student SET password = '$password' WHERE student_number = $number");
+                sendmail($code);
+                session_start();
+                $_SESSION['number'] = $number;
+                $_SESSION['login'] = md5("3");
+                header("Location: setpassword.php");
+
             } else {
-                $error = "Email not found.";
+                $error = "Student number not found.";
             }
         } else {
             $error = "Query error.";
@@ -99,7 +95,7 @@ function set(&$error)
 
 }
 
-function sendmail($email,$code)
+function sendmail($code)
 {
     include 'PHPMailer/class.phpmailer.php';
     include("PHPMailer/class.smtp.php");
@@ -115,12 +111,12 @@ function sendmail($email,$code)
     $mail->Password = "Amadeus1";
     $mail->SetFrom("registeramadeus@gmail.com");
     $mail->Subject = "Registration code";
-    $mail->Body = "Use this code to finish registration: $code.";
-    $mail->AddAddress($email);
+    $mail->Body = "Use this code to finish registration: $code";
+    $mail->AddAddress($_POST["number"] . "@student.inholland.nl");
     if (!$mail->Send()) {
-        echo "Mailer Error: " . $mail->ErrorInfo;
+        return "Mailer Error: " . $mail->ErrorInfo;
     } else {
-        echo "Message has been sent";
+        return "sent";
     }
 }
 

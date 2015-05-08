@@ -36,10 +36,10 @@ include_once "include/top.php";
             </p>
             <br/>
 
-            <p id="br-link"><a href="admin.php">admin</a></p>
+            <p id="br-link"><a href="login2.php">admin</a></p>
         </div>
         <div class="login-help">
-            <p>Know your password? <a href="index.html">Back to log in page</a>.</p>
+            <p>Know your password? <a href="index.php">Back to log in page</a>.</p>
         </div>
     </section>
 <?php
