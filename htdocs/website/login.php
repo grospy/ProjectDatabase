@@ -5,7 +5,7 @@ require_once "include/top.php";
 $errorMessage = "";
 $num_rows = 0;
 $number = "";
-$reg = "no";
+$reg = "n";
 if (isset($_SESSION['reg'])) {
     if ($_SESSION['reg'] == md5("y")) {
         $reg = $_SESSION['reg'];
@@ -20,7 +20,7 @@ session_destroy();
 ?>
     <section class="container">
         <div class="login">
-            <h1>IBIS Students enrollment</h1>
+            <h1>IBIS Students Enrollment</h1>
 
             <form method="post">
                 <?php if ($reg == md5("y")) {
@@ -98,6 +98,7 @@ function login(&$error)
                 session_start();
                 $_SESSION['login'] = md5("1");
                 $_SESSION['name'] = $name;
+                $_SESSION['number'] = $number;
                 header("Location: index.php");
             } else {
                 $error = "Invalid student number or password.";

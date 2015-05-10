@@ -1,4 +1,4 @@
-<?-- Been Here ?>
+<!--Been Here-->
 	<div class="footer">
         Amadeus &copy;
 	</div>

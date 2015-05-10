@@ -5,17 +5,6 @@ if ($_SESSION['login'] != md5("1")) {
 }
 include_once "include/top.php";
 ?>
-<!--<section class="container">
-    <div id="content">
-        <h1>Welcome, <?php /*echo $_SESSION["name"] */ ?></h1>
-
-        <p>
-            <a href="logout.php">Log out</a>
-        </p>
-    </div>
-</section>
-
--->
 
 <div class="dash">
     <p>Welcome, <?php echo htmlspecialchars($_SESSION['name'].".") ?></p>
@@ -24,16 +13,15 @@ include_once "include/top.php";
     <p><a href="logout.php">Log out</a></p>
 
 </div>
-<section class="container">
+<section class="container2">
     <div class="tabs">
 
         <div class="tab">
             <input class="tab-radio" type="radio" id="tab-1" name="tab-group-1" checked>
             <label class="tab-label" for="tab-1">Grades</label>
-
             <div class="tab-panel">
                 <div class="tab-content">
-                    //CONTENT
+                    <?php include 'include/student/grades.php';?>
                 </div>
             </div>
         </div>

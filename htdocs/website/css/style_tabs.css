@@ -74,7 +74,7 @@
 /*
 
 =======================================
-INTERNET EXPLORER 8 and below
+INTERNET EXPLORER 8 and below 
 =======================================
 
 */
@@ -140,6 +140,14 @@ UNIMPORTANT STYLES BEGIN HERE
 =======================================
 
 */
+html {
+    color: #DDD;
+    padding: 1em;
+}
+
+a:link,a:visited,a:hover,a:focus,a:active {
+    color: #58C;
+}
 
 label {
     cursor: pointer;

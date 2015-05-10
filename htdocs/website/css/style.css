@@ -123,7 +123,10 @@ body {
 .container {
     margin: 80px auto;
     width: 640px;
-}
+}.container2 {
+     margin: 80px auto;
+     width: 80%;
+ }
 
 .login {
     position: relative;
@@ -379,15 +382,378 @@ time, mark, audio, video {
 
 
 
+/*=========================================================*/
+/*===================Scrolling Table=======================*/
+/*=========================================================*/
+html {
+    /*width: 100%;*/ /*required if using % width*/
+    /*height: 100%;*/ /*required if using % height*/
+}
+body {
+    /*width: 100%;*/ /*required if using % width*/
+    /*height: 100%;*/ /*required if using % height*/
+    /*margin: 0;*/ /*required if using % width or height*/
+    /*padding: 0 20px 0 20px;*/ /*purely aesthetic, not required*/
+    /*box-sizing: border-box;*/ /*required if using above declaration*/
+    text-align: center; /*delete if using % width, or you don't want table centered*/
+}
+.scrollingtable {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    width: auto; /*set table width here if using fixed value*/
+    /*min-width: 100%;*/ /*set table width here if using %*/
+    height: 188px; /*set table height here; can be fixed value or %*/
+    /*min-height: 104px;*/ /*if using % height, make this at least large enough to fit scrollbar arrows + captions + thead*/
+    font-family: Verdana, Tahoma, sans-serif;
+    font-size: 15px;
+    line-height: 20px;
+    padding-top: 20px; /*this determines top caption height*/
+    padding-bottom: 20px; /*this determines bottom caption height*/
+    text-align: left;
+}
+.scrollingtable * {box-sizing: border-box;}
+.scrollingtable > div {
+    position: relative;
+    border-top: 1px solid black; /*top table border*/
+    height: 100%;
+    padding-top: 20px; /*this determines column header height*/
+    z-index: 2;
+}
+.scrollingtable > div:before {
+    top: 0;
+    background: cornflowerblue; /*column header background color*/
+}
+.scrollingtable > div:before,
+.scrollingtable > div > div:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 50%;
+    left: 0;
+}
+.scrollingtable > div > div {
+    /*min-height: 43px;*/ /*if using % height, make this at least large enough to fit scrollbar arrows*/
+    max-height: 100%;
+    overflow: scroll; /*set to auto if using fixed or % width; else scroll*/
+    overflow-x: hidden;
+    border: 1px solid black; /*border around table body*/
+}
+.scrollingtable > div > div:after {background: white;} /*match page background color*/
+.scrollingtable > div > div > table {
+    width: 100%;
+    border-spacing: 0;
+    margin-top: -20px; /*inverse of column header height*/
+    /*margin-right: 17px;*/ /*uncomment if using % width*/
+}
+.scrollingtable > div > div > table > caption {
+    position: absolute;
+    top: -20px; /*inverse of caption height*/
+    margin-top: -1px; /*inverse of border-width*/
+    width: 100%;
+    font-weight: bold;
+    text-align: center;
+}
+.scrollingtable > div > div > table > * > tr > * {padding: 0;}
+.scrollingtable > div > div > table > thead {
+    vertical-align: bottom;
+    white-space: nowrap;
+    text-align: center;
+}
+.scrollingtable > div > div > table > thead > tr > * > div {
+    display: inline-block;
+    padding: 0 6px 0 6px; /*header cell padding*/
+}
+.scrollingtable > div > div > table > thead > tr > :first-child:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px; /*match column header height*/
+    border-left: 1px solid black; /*leftmost header border*/
+}
+.scrollingtable > div > div > table > thead > tr > * > div[label]:before,
+.scrollingtable > div > div > table > thead > tr > * > div > div:first-child,
+.scrollingtable > div > div > table > thead > tr > * + :before {
+    position: absolute;
+    top: 0;
+    white-space: pre-wrap;
+    color: white; /*header row font color*/
+}
+.scrollingtable > div > div > table > thead > tr > * > div[label]:before,
+.scrollingtable > div > div > table > thead > tr > * > div[label]:after {content: attr(label);}
+.scrollingtable > div > div > table > thead > tr > * + :before {
+    content: "";
+    display: block;
+    min-height: 20px; /*match column header height*/
+    padding-top: 1px;
+    border-left: 1px solid black; /*borders between header cells*/
+}
+.scrollingtable .scrollbarhead {float: right;}
+.scrollingtable .scrollbarhead:before {
+    position: absolute;
+    width: 100px;
+    top: -1px; /*inverse border-width*/
+    background: white; /*match page background color*/
+}
+.scrollingtable > div > div > table > tbody > tr:after {
+    content: "";
+    display: table-cell;
+    position: relative;
+    padding: 0;
+    border-top: 1px solid black;
+    top: -1px; /*inverse of border width*/
+}
+.scrollingtable > div > div > table > tbody {vertical-align: top;}
+.scrollingtable > div > div > table > tbody > tr {background: white;}
+.scrollingtable > div > div > table > tbody > tr > * {
+    border-bottom: 1px solid black;
+    padding: 0 6px 0 6px;
+    height: 20px; /*match column header height*/
+}
+.scrollingtable > div > div > table > tbody:last-of-type > tr:last-child > * {border-bottom: none;}
+.scrollingtable > div > div > table > tbody > tr:nth-child(even) {background: gainsboro;} /*alternate row color*/
+.scrollingtable > div > div > table > tbody > tr > * + * {border-left: 1px solid black;} /*borders between body cells*/
+.tabs {
+    font-size: 0;
+    margin: 25px 0;
+}
+
+.tabs:after {
+    clear: both;
+    content: '';
+    display: table;
+}
+
+.tabs .tab {
+    display: inline;
+}
+
+.tabs .tab-label {
+    background: #eee;
+    border: 1px solid #ccc;
+    display: inline-block;
+    font-size: 16px;
+    font-size: 1rem;
+    left: 1px;
+    margin-left: -1px;
+    padding: 10px;
+    position: relative;
+    vertical-align: bottom;
+}
+
+.tabs .tab > [type="radio"] {
+    clip: rect(0 0 0 0);
+    height: 1px;
+    opacity: 0;
+    position: fixed;
+    width: 1px;
+    z-index: -1;
+}
+
+.tabs .tab-panel {
+    display: inline;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    height: 0;
+    width: 0;
+}
+
+.tabs .tab-content {
+    z-index:-10;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: white;
+    display: block;
+    padding: 0 20px;
+    border: 1px solid #ccc;
+    float: left;
+    font-size: 16px;
+    font-size: 1rem;
+    margin-top: -1px;
+    width: 100%;
+}
+
+.tabs .tab [type="radio"]:checked + .tab-label {
+    background: white;
+    border-bottom-width: 0;
+    padding-bottom: 11px;
+    z-index: 1;
+}
+
+.tabs .tab [type="radio"]:checked ~ .tab-panel {
+    display: inline;
+}
+
+
+/*
+
+=======================================
+INTERNET EXPLORER 8 and below
+=======================================
+
+*/
+@media \0screen\,screen\9 {
+    /* IE7 and IE6 */
+    .tabs {
+        zoom: 1;
+    }
+
+    /* IE8 and below */
+    .tabs .tab .tab-radio {
+        filter: Alpha(opacity=0);
+        position: absolute;
+        z-index: -1;
+    }
+
+    /* IE7 and IE6 */
+    .tabs .tab .tab-panel, {
+        display: none;
+        height: auto;
+        overflow: visible;
+        position: static;
+        width: auto;
+    }
+
+    /* IE7 and IE6 */
+    .tabs .tab-content, {
+        float: none;
+        padding-bottom: 1px;
+        padding-top: 1px;
+        width: auto;
+    }
+
+    /* IE8 and below */
+    .tabs .checked label {
+        background: white;
+        border-bottom-width: 0;
+        padding-bottom: 11px;
+        z-index: 1;
+    }
+
+    /* IE8 */
+    .tabs .checked .tab-panel {
+        display: inline;
+    }
+    /* IE7 and IE6 */
+    .tabs .checked .tab-panel, {
+        display: inline;
+        float: left;
+        width: 100%;
+    }
+}
 
 
 
 
 
 
+/*
 
+=======================================
+UNIMPORTANT STYLES BEGIN HERE
+=======================================
 
+*/
 
+label {
+    cursor: pointer;
+}
 
+.tabs {
+    color: #222;
+}
 
+.tabs a:link,.tabs a:visited,.tabs a:hover,.tabs a:focus,.tabs a:active {
+    color: #36A;
+}
 
+body > h3 {
+    font-variant: small-caps;
+    letter-spacing: .0625em;
+}
+
+p {
+    line-height: 1.5;
+    max-width: 50em;
+}
+
+code,pre {
+    font-family: 'Lucida Console', monospace;
+}
+
+pre {
+    background: #191919;
+    color: #8DA;
+    overflow-x: auto;
+    padding: 1em;
+}
+
+p > code {
+    background: #DED;
+    margin: -2px;
+    padding: 2px;
+}
+
+.for {
+    display: inline-block;
+    position: relative;
+}
+
+.for:after {
+    background: #DDD;
+    bottom: 150%;
+    color: #222;
+    font-family: sans-serif;
+    font-size: 12px;
+    opacity: 0;
+    padding: .5em;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    -webkit-transition: opacity .2s ease-in-out;
+    transition: opacity .2s ease-in-out;
+    white-space: nowrap;
+}
+
+.for:hover:after {
+    opacity: 1;
+}
+
+.for.default-tab {
+    color: #8AD;
+}
+
+.for.ie8-and-below {
+    color: #DA8;
+}
+
+.for.default-tab:after {
+    content: 'For default tab';
+}
+
+.for.ie8-and-below:after {
+    content: 'For IE8 and below';
+}
+
+/* and just for fun... */
+@media only screen and (max-width: 50em) {
+    .tabs .tab > label {
+        background: #BBB;
+        border-color: #999;
+
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 100%;
+    }
+    .tabs .tab > [type="radio"]:checked + label {
+        background: #222;
+        border-color: #444;
+        color: #DDD;
+    }
+}
