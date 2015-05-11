@@ -20,56 +20,57 @@ session_destroy();
 ?>
 
 
-    <section class="container">
-        <div class="login">
-            <h1>IBIS Students Enrollment</h1>
 
-            <form method="post">
-                <?php if ($reg == md5("y")) {
-                    echo '<p class="error">Password is set. You can login now.</p>';
-                } ?>
-                <p><input type="text" name="number" value='<?php echo "$number"; ?>' placeholder="Student Number"></p>
 
-                <p><input type="password" name="password" value="" placeholder="Password"></p>
+    <div class="login">
 
-                <p class="submit"><input type="submit" name="submit" value="Login"></p>
-            </form>
-            <p class="error">
-                <?php
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    $ch = 0;
-                    if (!empty($_POST["number"])) {
-                        $ch++;
-                    }
-                    if (!empty($_POST["password"])) {
-                        $ch++;
-                        $ch++;
-                    }
-                    switch ($ch) {
-                        case 0:
-                            $errorMessage = "Please enter student number and password.";
-                            break;
-                        case 1:
-                            $errorMessage = "Please enter your password.";
-                            break;
-                        case 2:
-                            $errorMessage = "Please enter your student number";
-                            break;
-                        case 3:
-                            login($errorMessage);
-                            break;
-                    }
+        <h3 style="color:black;">IBIS Students Enrollment</h3>
+        <form method="post">
+            <?php if ($reg == md5("y")) {
+                echo '<p class="error">Password is set. You can login now.</p>';
+            } ?>
+            <p><input type="text" name="number" value='<?php echo "$number"; ?>' placeholder="Student Number"></p>
+
+            <p><input type="password" name="password" value="" placeholder="Password"></p>
+
+            <p class="submit"><input type="submit" name="submit" value="Login"></p>
+        </form>
+        <p class="error">
+            <?php
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $ch = 0;
+                if (!empty($_POST["number"])) {
+                    $ch++;
                 }
-                echo $errorMessage;
-                ?>
-            </p><br/>
+                if (!empty($_POST["password"])) {
+                    $ch++;
+                    $ch++;
+                }
+                switch ($ch) {
+                    case 0:
+                        $errorMessage = "Please enter student number and password.";
+                        break;
+                    case 1:
+                        $errorMessage = "Please enter your password.";
+                        break;
+                    case 2:
+                        $errorMessage = "Please enter your student number";
+                        break;
+                    case 3:
+                        login($errorMessage);
+                        break;
+                }
+            }
+            echo $errorMessage;
+            ?>
+        </p><br/>
 
-            <p id="br-link"><a href="login_admin.php">admin</a></p>
-        </div>
-        <div class="login-help">
-            <p>Set/change password <a href="getcode.php">here</a>.</p>
-        </div>
-    </section>
+        <p id="switch"><a href="login_admin.php">admin</a></p>
+    </div>
+    <div>
+        <p  class="help">Set/change password <a href="getcode.php">here</a>.</p>
+    </div>
+
 
 
 <?php
