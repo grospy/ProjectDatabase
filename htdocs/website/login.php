@@ -1,7 +1,6 @@
 <?php
 ob_start();
 session_start();
-require_once "include/top.php";
 $errorMessage = "";
 $num_rows = 0;
 $number = "";
@@ -16,8 +15,11 @@ if (isset($_POST['submit'])) {
     $number = $_POST["number"];
     $number = htmlspecialchars($number);
 }
+require("include/top.php");
 session_destroy();
 ?>
+
+
     <section class="container">
         <div class="login">
             <h1>IBIS Students Enrollment</h1>
@@ -62,32 +64,32 @@ session_destroy();
                 ?>
             </p><br/>
 
-            <p id="br-link"><a href="login2.php">admin</a></p>
+            <p id="br-link"><a href="login_admin.php">admin</a></p>
         </div>
         <div class="login-help">
             <p>Set/change password <a href="getcode.php">here</a>.</p>
         </div>
     </section>
 
+
 <?php
-include_once "include/bot.php";
+require("include/bot.php");
 
 function login(&$error)
 {
-    require_once "include/database.php";
     $password = $_POST['password'];
     $number = $_POST['number'];
     $number = htmlspecialchars($number);
     $password = htmlspecialchars($password);
 
-    $db = new mysqli($server, $user_name, $pass_word, $database);
+    require("include/database.php");
 
-    if ($db) {
-        $number = quote_smart($db, $number);
-        $password = quote_smart($db, $password);
+    if ($connection) {
+        $number = quote_smart($connection, $number);
+        $password = quote_smart($connection, $password);
 
         $SQL = "SELECT * FROM student WHERE student_number = $number AND password = md5($password)";
-        $result = $db->query($SQL);
+        $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
 
         if ($result) {
@@ -106,7 +108,7 @@ function login(&$error)
         } else {
             $error = "Query error.";
         }
-        mysqli_close($db);
+        mysqli_close($connection);
     } else {
         $error = "Error connecting to database.";
     }

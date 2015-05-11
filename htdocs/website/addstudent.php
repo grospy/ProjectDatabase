@@ -133,7 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 }
 
-include_once "top.php";
+
+require('include/top.php');
+
 ?>
 
 
@@ -150,5 +152,6 @@ Password: <INPUT TYPE = 'TEXT' Name ='password'  value="<?PHP print $pword;?>" m
 <P>
 
 <?PHP print $errorMessage;
-include_once "bot.php";
+require('include/bot.php');
+
 ?>

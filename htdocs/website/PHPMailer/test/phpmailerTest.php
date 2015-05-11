@@ -774,21 +774,21 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Send an HTML message.
+     * Send an include message.
      */
     public function testHtml()
     {
         $this->Mail->isHTML(true);
-        $this->Mail->Subject .= ": HTML only";
+        $this->Mail->Subject .= ": include only";
 
         $this->Mail->Body = <<<EOT
 <html>
     <head>
-        <title>HTML email test</title>
+        <title>include email test</title>
     </head>
     <body>
-        <h1>PHPMailer does HTML!</h1>
-        <p>This is a <strong>test message</strong> written in HTML.<br>
+        <h1>PHPMailer does include!</h1>
+        <p>This is a <strong>test message</strong> written in include.<br>
         Go to <a href="https://github.com/PHPMailer/PHPMailer/">https://github.com/PHPMailer/PHPMailer/</a>
         for new versions of PHPMailer.</p>
         <p>Thank you!</p>
@@ -807,7 +807,7 @@ EOT;
     public function testHtmlIso8859()
     {
         $this->Mail->isHTML(false);
-        $this->Mail->Subject .= ": ISO-8859-1 HTML";
+        $this->Mail->Subject .= ": ISO-8859-1 include";
         $this->Mail->CharSet = 'iso-8859-1';
 
         //This file is in ISO-8859-1 charset
@@ -830,14 +830,14 @@ EOT;
     public function testHtmlUtf8()
     {
         $this->Mail->isHTML(true);
-        $this->Mail->Subject .= ": UTF-8 HTML";
+        $this->Mail->Subject .= ": UTF-8 include";
         $this->Mail->CharSet = 'UTF-8';
 
         $this->Mail->Body = <<<EOT
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>HTML email test</title>
+        <title>include email test</title>
     </head>
     <body>
         <p>Chinese text: 郵件內容為空</p>
@@ -866,7 +866,7 @@ EOT;
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>HTML email test</title>
+        <title>include email test</title>
     </head>
     <body>
         <p>Chinese text: 郵件內容為空</p>
@@ -918,7 +918,7 @@ EOT;
         $this->Mail->CharSet = 'utf-8';
         $this->Mail->Body = '';
         $this->Mail->AltBody = '';
-        //Uses internal HTML to text conversion
+        //Uses internal include to text conversion
         $this->Mail->msgHTML($message, '../examples');
         $this->Mail->Subject .= ': msgHTML';
 
@@ -926,7 +926,7 @@ EOT;
         $this->assertNotEmpty($this->Mail->AltBody, 'AltBody not set by msgHTML');
         $this->assertTrue($this->Mail->send(), $this->Mail->ErrorInfo);
 
-        //Again, using a custom HTML to text converter
+        //Again, using a custom include to text converter
         $this->Mail->AltBody = '';
         $this->Mail->msgHTML($message, '../examples', function ($html) {
             return strtoupper(strip_tags($html));
@@ -938,12 +938,12 @@ EOT;
     }
 
     /**
-     * Simple HTML and attachment test
+     * Simple include and attachment test
      */
     public function testHTMLAttachment()
     {
-        $this->Mail->Body = 'This is the <strong>HTML</strong> part of the email.';
-        $this->Mail->Subject .= ': HTML + Attachment';
+        $this->Mail->Body = 'This is the <strong>include</strong> part of the email.';
+        $this->Mail->Subject .= ': include + Attachment';
         $this->Mail->isHTML(true);
 
         if (!$this->Mail->addAttachment('../examples/images/phpmailer_mini.png', 'phpmailer_mini.png')) {
@@ -1023,7 +1023,7 @@ EOT;
      */
     public function testAltBody()
     {
-        $this->Mail->Body = 'This is the <strong>HTML</strong> part of the email.';
+        $this->Mail->Body = 'This is the <strong>include</strong> part of the email.';
         $this->Mail->AltBody = 'Here is the text body of this message.  ' .
             'It should be quite a few lines.  It should be wrapped at the ' .
             '40 characters.  Make sure that it is.';
@@ -1036,11 +1036,11 @@ EOT;
     }
 
     /**
-     * Simple HTML and attachment test
+     * Simple include and attachment test
      */
     public function testAltBodyAttachment()
     {
-        $this->Mail->Body = 'This is the <strong>HTML</strong> part of the email.';
+        $this->Mail->Body = 'This is the <strong>include</strong> part of the email.';
         $this->Mail->AltBody = 'This is the text part of the email.';
         $this->Mail->Subject .= ': AltBody + Attachment';
         $this->Mail->isHTML(true);
@@ -1096,7 +1096,7 @@ EOT;
         //$rendered = $ICS->render();
 
         //Now test sending an ICS
-        $this->Mail->Body = 'This is the <strong>HTML</strong> part of the email.';
+        $this->Mail->Body = 'This is the <strong>include</strong> part of the email.';
         $this->Mail->AltBody = 'This is the text part of the email.';
         $this->Mail->Subject .= ': iCal';
         $this->Mail->isHTML(true);

@@ -833,7 +833,7 @@ function tln_body2div($attary, $trans_image_path)
 
 /**
  *
- * @param string $body                    The HTML you wish to filter
+ * @param string $body                    The include you wish to filter
  * @param array $tag_list                see description above
  * @param array $rm_tags_with_content see description above
  * @param array $self_closing_tags    see description above

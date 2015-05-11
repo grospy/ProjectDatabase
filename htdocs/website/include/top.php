@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!--Been Here-->
 	<title>
         Amadeus
 	</title>
-    <link rel="stylesheet" type="text/css" href="./css/style_tabs.css">
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
-    <!--[if lt IE 9]><script>window.ltIE9=true</script><![endif]-->
+    <link href="css+js/table.css" rel="stylesheet" type="text/css">
+    <link href="css+js/login.scss" rel="stylesheet" type="text/css">
+    <link href="css+js/tabs.css" rel="stylesheet" type="text/css">
+    <link href="css+js/style.css" rel="stylesheet" type="text/css">
+    <script src="css+js/ie9.js"></script>
 </head>
 <body>

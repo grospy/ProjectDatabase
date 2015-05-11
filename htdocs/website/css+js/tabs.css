@@ -1,6 +1,7 @@
 .tabs {
     font-size: 0;
     margin: 25px 0;
+    min-height: 500px;
 }
 
 .tabs:after {
@@ -50,13 +51,14 @@
     box-sizing: border-box;
     display: block;
     background: white;
-    padding: 0 20px;
+    padding: 20px 20px;
     border: 1px solid #ccc;
     float: left;
     font-size: 16px;
     font-size: 1rem;
     margin-top: -1px;
     width: 100%;
+    min-height: 50%;
 }
 
 .tabs .tab [type="radio"]:checked + .tab-label {
@@ -74,7 +76,7 @@
 /*
 
 =======================================
-INTERNET EXPLORER 8 and below 
+INTERNET EXPLORER 8 and below
 =======================================
 
 */
@@ -141,6 +143,7 @@ UNIMPORTANT STYLES BEGIN HERE
 
 */
 html {
+    background: #333;
     color: #DDD;
     padding: 1em;
 }

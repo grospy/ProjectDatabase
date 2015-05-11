@@ -1,3 +1,6 @@
+/**
+ * Created by Louis on 5/11/2015.
+ */
 // in HTML <head>:
 // <!--[if lt IE 9]><script>window.ltIE9=true</script><![endif]-->
 if(window.ltIE9) {

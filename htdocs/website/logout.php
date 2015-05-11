@@ -2,7 +2,8 @@
 session_start();
 session_destroy();
 header("refresh:1;url=index.php");
-include_once "include/top.php";
+require('include/top.php');
+
 ?>
     <section class="container">
         <div id="content">
@@ -13,4 +14,5 @@ include_once "include/top.php";
         </div>
     </section>
 <?php
-include_once "include/top.php";
+require('include/bot.php');
+

@@ -101,17 +101,17 @@ class PHPMailer
     public $Subject = '';
 
     /**
-     * An HTML or plain text message body.
-     * If HTML then call isHTML(true).
+     * An include or plain text message body.
+     * If include then call isHTML(true).
      * @type string
      */
     public $Body = '';
 
     /**
      * The plain-text message body.
-     * This body can be read by mail clients that do not have HTML email
+     * This body can be read by mail clients that do not have include email
      * capability such as mutt & Eudora.
-     * Clients that can read HTML will view the normal Body.
+     * Clients that can read include will view the normal Body.
      * @type string
      */
     public $AltBody = '';
@@ -656,7 +656,7 @@ class PHPMailer
                 error_log($str);
                 break;
             case 'html':
-                //Cleans up output a bit for a better looking, HTML-safe output
+                //Cleans up output a bit for a better looking, include-safe output
                 echo htmlentities(
                     preg_replace('/[\r\n]+/', '', $str),
                     ENT_QUOTES,
@@ -677,8 +677,8 @@ class PHPMailer
     }
 
     /**
-     * Sets message type to HTML or plain.
-     * @param boolean $isHtml True for HTML mode.
+     * Sets message type to include or plain.
+     * @param boolean $isHtml True for include mode.
      * @return void
      */
     public function isHTML($isHtml = true)
@@ -1650,7 +1650,7 @@ class PHPMailer
     /**
      * Apply word wrapping to the message body.
      * Wraps the message body to the number of chars set in the WordWrap property.
-     * You should only do this to plain-text bodies as wrapping HTML tags may break them.
+     * You should only do this to plain-text bodies as wrapping include tags may break them.
      * This is called automatically by createBody(), so you don't need to call it yourself.
      * @access public
      * @return void
@@ -2633,11 +2633,11 @@ class PHPMailer
      * This can include images, sounds, and just about any other document type.
      * These differ from 'regular' attachments in that they are intended to be
      * displayed inline with the message, not just attached for download.
-     * This is used in HTML messages that embed the images
-     * the HTML refers to using the $cid value.
+     * This is used in include messages that embed the images
+     * the include refers to using the $cid value.
      * @param string $path Path to the attachment.
      * @param string $cid Content ID of the attachment; Use this to reference
-     *        the content when using an embedded image in HTML.
+     *        the content when using an embedded image in include.
      * @param string $name Overrides the attachment name.
      * @param string $encoding File encoding (see $Encoding).
      * @param string $type File MIME type.
@@ -2682,7 +2682,7 @@ class PHPMailer
      * JPEG images use 'image/jpeg', GIF uses 'image/gif', PNG uses 'image/png'.
      * @param string $string The attachment binary data.
      * @param string $cid Content ID of the attachment; Use this to reference
-     *        the content when using an embedded image in HTML.
+     *        the content when using an embedded image in include.
      * @param string $name
      * @param string $encoding File encoding (see $Encoding).
      * @param string $type MIME type.
@@ -2969,14 +2969,14 @@ class PHPMailer
     }
 
     /**
-     * Create a message from an HTML string.
+     * Create a message from an include string.
      * Automatically makes modifications for inline images and backgrounds
-     * and creates a plain-text version by converting the HTML.
+     * and creates a plain-text version by converting the include.
      * Overwrites any existing values in $this->Body and $this->AltBody
      * @access public
-     * @param string $message HTML message string
+     * @param string $message include message string
      * @param string $basedir baseline directory for path
-     * @param boolean|callable $advanced Whether to use the internal HTML to text converter
+     * @param boolean|callable $advanced Whether to use the internal include to text converter
      *    or your own custom converter @see html2text()
      * @return string $message
      */
@@ -3037,14 +3037,14 @@ class PHPMailer
         $this->Body = $this->normalizeBreaks($message);
         $this->AltBody = $this->normalizeBreaks($this->html2text($message, $advanced));
         if (empty($this->AltBody)) {
-            $this->AltBody = 'To view this email message, open it in a program that understands HTML!' .
+            $this->AltBody = 'To view this email message, open it in a program that understands include!' .
                 self::CRLF . self::CRLF;
         }
         return $this->Body;
     }
 
     /**
-     * Convert an HTML string into plain text.
+     * Convert an include string into plain text.
      * This is used by msgHTML().
      * Note - older versions of this function used a bundled advanced converter
      * which was been removed for license reasons in #232
@@ -3058,7 +3058,7 @@ class PHPMailer
      *     return $converter->get_text();
      * });
      * </code>
-     * @param string $html The HTML text to convert
+     * @param string $html The include text to convert
      * @param boolean|callable $advanced Any boolean value to use the internal converter,
      *   or provide your own callable for custom conversion.
      * @return string
@@ -3152,7 +3152,7 @@ class PHPMailer
             'tiff'  => 'image/tiff',
             'tif'   => 'image/tiff',
             'eml'   => 'message/rfc822',
-            'css'   => 'text/css',
+            'css+js'   => 'text/css+js',
             'html'  => 'text/html',
             'htm'   => 'text/html',
             'shtml' => 'text/html',

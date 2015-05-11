@@ -3,7 +3,7 @@ session_start();
 if ($_SESSION['login'] != md5("2")) {
     header("Location: login.php");
 }
-include_once "include/top.php";
+require('include/top.php');
 ?>
 <section class="container">
     <div id="content">
@@ -14,4 +14,5 @@ include_once "include/top.php";
         </p>
     </div>
 </section>
-<?php include_once "include/bot.php"; ?>
+<?php
+require('include/bot.php');

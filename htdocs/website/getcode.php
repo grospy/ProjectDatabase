@@ -1,6 +1,7 @@
 <?php
 ob_start();
-require_once "include/top.php";
+require('include/top.php');
+
 $errorMessage = "&nbsp;";
 $num_rows = 0;
 $number = "";
@@ -32,14 +33,15 @@ if (isset($_POST['submit'])) {
             </p>
             <br/>
 
-            <p id="br-link"><a href="login2.php">admin</a></p>
+            <p id="br-link"><a href="login_admin.php">admin</a></p>
         </div>
         <div class="login-help">
             <p><a href="index.php">Back to log in page</a>.</p>
         </div>
     </section>
 <?php
-include_once "include/bot.php";
+require('include/bot.php');
+
 
 
 //==================================================================
