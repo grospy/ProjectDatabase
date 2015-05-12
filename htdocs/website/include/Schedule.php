@@ -17,7 +17,7 @@
         <!--------------------------------------------------------------------->
 
         <?php
-        require("./include/database.php");
+        require("database.php");
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
 

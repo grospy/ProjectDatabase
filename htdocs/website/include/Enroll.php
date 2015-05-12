@@ -1,32 +1,33 @@
-<div class="CSSTableGenerator" >
-    <table >
+<div class="CSSTableGenerator">
+    <table>
         <tr>
             <td>
-                Course ID
-            </td>
-            <td >
-                Year
+                Course
             </td>
             <td>
-                Term
+                Date
             </td>
             <td>
-                Grade
+                Capacity
+            </td>
+            <td>
+                Study Load
+            </td>
+            <td>
+                Enroll
             </td>
         </tr>
         <!--------------------------------------------------------------------->
 
-
-
         <?php
-        require("./include/database.php");
+        require("database.php");
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
 
         if ($connection) {
             $number = quote_smart($number, $connection);
 
-            $SQL = "SELECT * FROM grade WHERE student_number =  $number";
+            $SQL = "SELECT * FROM course";
 
             $result = $connection->query($SQL);
             $num_rows = mysqli_num_rows($result);
@@ -35,11 +36,13 @@
                     for ($x = 0; $x < $num_rows; $x++) {
                         $result->data_seek($x);
                         $data = $result->fetch_array();
+                        //=============================
+                        $name = $data['name'];
+                        $capacity = $data['capacity'];
+                        $studyload = $data['studyload'];
                         $courseID = $data['courseID'];
-                        $year = $data['year'];
-                        $term = $data['term'];
-                        $grade = $data['grade'];
-                        echo "<tr><td>$courseID</td><td>$year</td><td>$term</td><td>$grade</td></tr>";
+                        //=============================
+                        echo "<tr><td>$name</td><td><a href='dates.php?courseid=" . urlencode($courseID) . "'><button>Show dates</button></a></td><td>$capacity</td><td>$studyload</td><td><button>Enroll</button></td></tr>";
                     }
                 }
             } else {
@@ -50,77 +53,7 @@
         ?>
 
 
-
     </table>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="scrollingtable">
-    <div>
-        <div>
-            <table>
-                <thead>
-                <tr>
-                    <td>
-                        <div label="Course ID"/>
-                    </td>
-                    <td>
-                        <div label="Year"/>
-                    </td>
-                    <td>
-                        <div label="Term"/>
-                    </td>
-                    <td>
-                        <div label="Grade"/>
-                    </th>
-                    <td class="scrollbarhead"/>
-                    <!--ALWAYS ADD THIS EXTRA CELL AT END OF HEADER ROW-->
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<!--[if lte IE 9]>
-<style>.scrollingtable > div > div > table {
-    margin-right: 17px;
-}</style><![endif]-->
-
-
-<!--more versatile way of doing column label; requires 2 identical copies of label-->
-<!--<th>
-  <div><div>Column 4</div><div>Column 4</div></div>
-</th>-->
-
 <?php
-function quote_smart($value, $handle)
-{
-    if (get_magic_quotes_gpc()) {
-        $value = stripslashes($value);
-    }
-
-    if (!is_numeric($value)) {
-        $value = "'" . mysqli_real_escape_string($handle, $value) . "'";
-    }
-    return $value;
-}
 ?>
