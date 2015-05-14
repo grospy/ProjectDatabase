@@ -81,6 +81,36 @@ CREATE TABLE IF NOT EXISTS `Registration` (
    `EndTime`   varchar(10)
    )
    
-  
-  
+-- Students & course
+
+CREATE TABLE IF NOT EXISTS `students&course` (
+   `student_nr` int(10),
+   `course_ID`  int(14),
+   )
+   
+--  Course
+
+CREATE TABLE IF NOT EXISTS `Course` (
+   `name` varchar(10),
+   PRIMARY KEY(`course_ID`)
+   )
+   
+-- Lesson
+
+CREATE TABLE IF NOT EXISTS `Lesson` (
+   `capacity` int(10),
+   FOREIGN KEY(`course_ID`),
+   PRIMARY KEY(`date`),
+   
+   PRIMARY KEY(`location`),
+   PRIMARY KEY(`start_time`)
+   )
+
+
+--Location
+
+CREATE TABLE IF NOT EXISTS `Location` (
+    `room_capacity` int(10),
+	PRIMARY KEY(`room_number`)
+	)
   
