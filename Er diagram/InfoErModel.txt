@@ -1,0 +1,20 @@
+Er diagram : doesnt have any important info , so we dont need it
+
+ 1 ,Er diagram  version1 : Er model for employee only. Employee entity is didiveded into twoo internal Employee and external Employee.
+
+2,Er diagram version 2: a person tables is created as mister haralld recommanded. and the sudent table and Employee table are created with thier relation ship to employee
+
+3, Er diagram version 3: All the tables are connected in Er model , tables are : person, student, employee , internal and external employees.
+
+4 , Er diagram version 4: Additional table is created for the ternary relation ship between student , grade and registration,
+
+4b, Er diagram version 5: final er model.
+
+
+5 Er diagram version 6: gerneral representation of thge model
+
+6,Er diagram version 7:( logical model) identifable and nonidentifable relationships are 
+
+7, Er diagram version 8: table division is added the to the relation
+
+8, Er diagram version 9: phone number is deleted as attribute of an employee. coz sandra doesnt need it
