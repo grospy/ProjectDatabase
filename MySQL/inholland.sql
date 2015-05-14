@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `student_number` int(6) NOT NULL,
   `first_name` varchar(35) NOT NULL,
   `password` varchar(32) NOT NULL,
+  `phone_nr` int(9) NOT NULL,
   PRIMARY KEY (`student_number`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -59,38 +60,27 @@ CREATE TABLE IF NOT EXISTS `student` (
 
 INSERT INTO `student` (`student_number`, `first_name`, `password`) VALUES
 (480402, 'Louis', '5e92b6d9772966b339aef40faf6b640b'
- 523001, 'Shamil', '5e92b6d9772966b339aef40faf6b640c');
+ 523001, 'Shamil','5e92b6d9772966b339aef40faf6b640c');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
--- Table structure for table instructor
+-- grade
+CREATE TABLE IF NOT EXISTS `grade` (
+  `Year` int(6),
+  `Semester` varchar(6),
+  `Grade`   int(3),
+  PRIMARY KEY(`course_ID`)
+  ) 
+  
+-- Registration
 
-
-
-CREATE TABLE instructor
-	(ID			varchar(5), 
-	 name			varchar(20) not null, 
-	 dept_name		varchar(20), 
-	 salary			numeric(8,2) check (salary > 29000),
-	 PRIMARY KEY (ID),
-	 foreign key (dept_name) references department
- (dept_name)		on delete set null
-	);
-
--- Table structure for table course
-
-create table course
-	(course_id		varchar(8), 
-	 title			varchar(50), 
-	 dept_name		varchar(20),
-	 credits		numeric(2,0) check (credits > 0),
-	 PRIMARY KEY (course_id),
-	 foreign key (dept_name) references department
- (dept_name)		on delete set null
-	);
-
-
-
-
+CREATE TABLE IF NOT EXISTS `Registration` (
+   `Starttime` varchar(10),
+   `EndTime`   varchar(10)
+   )
+   
+  
+  
+  
