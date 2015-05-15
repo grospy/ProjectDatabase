@@ -33,6 +33,23 @@ CREATE TABLE IF NOT EXISTS `employee` (
   PRIMARY KEY (`employee_number`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- Employee modified
+
+CREATE TABLE IF NOT EXISTS `Employee` (
+    `first_name` varchar(15),
+	`last_name`  varchar(20),
+	`email`      varchar(15),
+	`phone_nr`   int(20),
+	`emp_nr`     int(20),
+	PRIMARY KEY(`emp_id`),
+	FOREIGN KEY(`emp_type`)
+	)
+	
+CREATE TABLE IF NOT EXISTS `type` (
+    `internal`   varchar(20),
+	`external`   varchar(15)
+	)
+
 --
 -- Dumping data for table `employee`
 --
@@ -113,4 +130,5 @@ CREATE TABLE IF NOT EXISTS `Location` (
     `room_capacity` int(10),
 	PRIMARY KEY(`room_number`)
 	)
+  
   
