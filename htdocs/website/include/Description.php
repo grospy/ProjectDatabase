@@ -1,3 +1,4 @@
+
 <div class="CSSTableGenerator" >
     <table >
         <tr>
@@ -51,5 +52,6 @@
 
     </table>
 </div>
+
 <?php
 ?>

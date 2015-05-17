@@ -1,4 +1,4 @@
 <!--Been Here-->
-<div id="footer">Amadeus &copy;</div>
+<div class="footer">Amadeus &copy;</div>
 </body>
 </html>

@@ -21,10 +21,12 @@ session_destroy();
 
 
 
-
+<div class="loginbox">
     <div class="login">
-
-        <h3 style="color:black;">IBIS Students Enrollment</h3>
+		<img src="image/Inholland_logo.png" id="logologin"></img>
+		<hr/>
+        <h3>IBIS Students Enrollment</h3>
+		<hr/>
         <form method="post">
             <?php if ($reg == md5("y")) {
                 echo '<p class="error">Password is set. You can login now.</p>';
@@ -70,7 +72,7 @@ session_destroy();
     <div>
         <p  class="help">Set/change password <a href="getcode.php">here</a>.</p>
     </div>
-
+</div>
 
 
 <?php

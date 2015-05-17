@@ -1,0 +1,106 @@
+body{
+max-width: 1000px;
+
+height : 100%;
+overflow-y : scroll;
+font-family:Arial,sans-serif;
+font-size:9pt;
+}
+
+#logotop {
+	float: left;
+	height: 60px;
+	z-index: +1;	
+}
+
+#webtitle{
+	font-family:"Myriad Pro";
+	font-weight:bold;
+	font-size:13pt;
+	color:#336699 ;
+	line-height:150%;
+	float: left;
+}
+#logout {
+	font-size:9pt;
+	float: right;
+	text-align: right;
+}
+
+#welcome {
+	font-size:11pt;
+	float: right;
+	display: block;
+	margin-right : 50px ;
+	
+	text-align: right;
+}
+
+.dash {
+	min-width : 800px;
+    width:100%;
+    position:fixed;
+    top:0px;
+	left:0px;
+	background-color: #F1F5F6; 
+	background-size: 100% 100%;
+	border-bottom: 3px solid #336699 ;
+	padding: 10px;
+	z-index: +1;
+}
+
+
+.footer {
+	min-width : 800px;
+	width:100%;
+	background-color:rgb(221,225,226); 
+	position:fixed;
+	bottom:0em;
+	right:0em;
+	padding: 3px 6px; 
+	text-align: right;
+}
+
+.overlap {
+width: 50%;
+height:100px;
+margin:auto;
+text-align: left;
+color: rgb(150,150,150);
+overflow-y:auto;
+padding:10px;
+}
+#overlap_message {
+color: rgb(90,90,90);
+text-align: center;
+}
+
+.enroll, .schedule, .back, .withdraw{
+    -moz-box-shadow:inset 0px 1px 0px 0px #91b8b3;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #91b8b3;
+    box-shadow:inset 0px 1px 0px 0px #91b8b3;
+    background-color:#768d87;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    border:1px solid #566963;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:13px;
+    font-weight:bold;
+    padding:4px 8px;
+    text-decoration:none;
+}
+.enroll:hover, .schedule:hover, .back:hover, .withdraw:hover{
+    background-color:rgb(75,75,75);
+}
+.enroll:active, .schedule:active,.back:active, .withdraw:hover {
+    position:relative;
+    top:1px;
+}
+
+html{
+    background: #ffffff;
+}

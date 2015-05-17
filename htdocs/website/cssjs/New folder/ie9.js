@@ -18,4 +18,3 @@ if(window.ltIE9) {
         });
     })(window.jQuery);
 }
-
