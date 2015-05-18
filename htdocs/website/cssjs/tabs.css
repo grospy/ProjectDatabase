@@ -1,11 +1,12 @@
 .tabs {
 	min-width : 800px;
 	min-height: 500px;
-	display:block;
+	display:inline;
 	margin-top:120px;  
 	font-size: 0;
 	height: auto !important;
 	overflow:hidden;
+	float:left;
 }
 
 .tabs:after {
@@ -16,8 +17,13 @@
 
 .tabs .tab {
     display: inline;
+	color:#003366;
 }
-
+.creditmsg{
+display: block;
+float :right;
+font-size: 10px;
+}
 .tabs .tab-label {
     background: #eee;
     border: 1px solid #ccc;
@@ -27,7 +33,7 @@
     left: 1px;
     margin-left: -1px;
     padding: 10px;
-    position: relative;
+   
     vertical-align: bottom;
 }
 
@@ -41,7 +47,6 @@
 }
 
 .tabs .tab-panel {
-    display: inline;
     display: inline-block;
     overflow: hidden;
     position: relative;
@@ -66,7 +71,9 @@
 }
 
 .tabs .tab [type="radio"]:checked + .tab-label {
-    background: white;
+    background-color:rgb(191,195,196);
+   color:#003366;
+	font-weight: bold;
     border-bottom-width: 0;
     padding-bottom: 11px;
     z-index: 1;

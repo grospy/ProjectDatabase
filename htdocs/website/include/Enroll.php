@@ -27,9 +27,14 @@
 
         if ($connection) {
             $number = quote_smart($number, $connection);
-            $availableEnrollSQL = "SELECT * FROM course where courseID not in (select c.courseID from course c inner join enrolled_students en on c.courseID=en.courseID where en.studentID=$number)";
+            $availableEnrollSQL = "select * from course where courseID not in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolled_students where studentID='$number')));";
             $resultAvailable = $connection->query($availableEnrollSQL);
             $num_rowsAvailable = mysqli_num_rows($resultAvailable);
+			
+			$unavailableEnrollSQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolled_students where studentID='$number'))) and courseID not in (select courseID from enrolled_students where studentID='$number');" ;
+			$resultUnavailable = $connection->query($unavailableEnrollSQL);
+            $num_rowsUnavailable = mysqli_num_rows($resultUnavailable);
+			
 			
 			$enrolledSQL = "SELECT * FROM course c inner join enrolled_students en on c.courseID=en.courseID where studentID=$number";
 			$resultEnrolledSQL = $connection->query($enrolledSQL); 
@@ -47,7 +52,7 @@
                         $courseID = $data['courseID'];
                         //=============================
                         echo 
-						"<tr>
+						"<tr class='availableRow'>
 						<td>$name</td>
 						<td>
 							<a href='dates.php?courseid=" . urlencode($courseID) . "' >
@@ -57,7 +62,8 @@
 						<td>$capacity</td>
 						<td>$studyload</td>
 						<td>
-							<button class='enroll'>Enroll</button>
+							<a href='enroll_confirmation.php?courseid=" . urlencode($courseID) . "' >
+							<button class='enroll'>Enroll</button></a>
 						</td>
 						</tr>";
                     }
@@ -73,7 +79,7 @@
                         $courseID = $data['courseID'];
                         //=============================
                         echo 
-						"<tr id='unavailableCourse'>
+						"<tr class='enrolledRow'>
 							<td>$name</td>
 							<td>
 								<a href='dates.php?courseid=" . urlencode($courseID) . "' >
@@ -83,37 +89,40 @@
 							<td>$capacity</td>
 							<td>$studyload</td>
 							<td>
-								<button class='withdraw'>Withdraw</button>
+								<a href='withdraw_confirmation.php?courseid=" . urlencode($courseID) . "' ><button class='withdraw'>Withdraw</button></a>
 							</td>
 						</tr>";
                     }
                 }
-				/* if ($connection) {
-            $SQLcheckoverlap = "select * from course where courseID in (select le.courseID from lesson le where le.date in (select date from lesson where courseID='$courseID') and le.courseID in (le.courseID='$courseID'));";
-			
-select courseID from course where courseID in(SELECT c.courseID FROM course c inner join enrolled_students en on c.courseID=en.courseID where studentID=552301)"			
-			
-			
-			
-            $result = $connection->query($SQLcheckoverlap);
-            $num_rows = mysqli_num_rows($result);
-            if ($result) {
 				
-                if ($num_rows > 0) {
-                    
-					for ($x = 0; $x < $num_rows; $x++) {
-                        $result->data_seek($x);
-                        $data = $result->fetch_array();
+				if ($num_rowsUnavailable > 0) {
+                    for ($x = 0; $x < $num_rowsUnavailable; $x++) {
+                        $resultUnavailable->data_seek($x);
+                        $data = $resultUnavailable->fetch_array();
                         //=============================
-                        $overlap = $data['overlap'];
+                        $name = $data['name'];
+                        $capacity = $data['capacity'];
+                        $studyload = $data['studyload'];
+                        $courseID = $data['courseID'];
                         //=============================
-                        echo "$overlap <br/>";
+                        echo 
+						"
+						<tr class='unavailableRow'>
+						<td>$name</td>
+						<td>
+							<a href='dates.php?courseid=" . urlencode($courseID) . "' >
+								<button class='schedule'>Schedule</button>
+							</a>
+						</td>
+						<td>$capacity</td>
+						<td>$studyload</td>
+						<td>
+							<button class='unavailable'>Unavailable</button>
+						</td>
+						</tr>";
                     }
                 }
-            } else {
-                echo "Database error";
-            }
-        } */
+				
             }else {
                 echo "Database error";
             } 
