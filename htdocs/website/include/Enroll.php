@@ -44,9 +44,9 @@
                         $studyload = $data['studyload'];
                         $courseID = $data['courseID'];
                         //=============================
-                        $pre = "<a href='javascript:void(0)' onclick = 'function1(" . '"';
+                        $pre = "<button class = 'enroll' href='javascript:void(0)' onclick = 'function1(" . '"';
                         $pre .= $courseID . '"';
-                        $pre .= ")'>Enroll</a>" . "<div id='light" . $courseID . "' class='white_content'>" . enroll($number, $courseID, $connection) . "<a href = 'javascript:void(0)' onclick = 'function2('" . $courseID . "')'>Close</a></div>";
+                        $pre .= ")'>Enroll</button>" . "<div id='light" . $courseID . "' class='white_content'>" . enroll($number, $courseID, $connection) . "<a href = 'javascript:void(0)' onclick = 'function2('" . $courseID . "')'>Close</a></div>";
                         $pre .= "<div id='fade' class='black_overlay'></div>";
 
                         //=============================
