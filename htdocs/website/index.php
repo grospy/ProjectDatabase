@@ -74,10 +74,13 @@ require("include/database.php");
 		<label class="tab-label" for="tab-3">Schedule</label>
 
 		<div class="tab-panel">
+			
 			<div class="tab-content">
-				<h3>Schedule</h3>
+			<button class="printSchedule" onClick="window.print()">Print schedule</button>
+				<h3 id="scheduleH">Schedule</h3>
 				<?php require('include/Schedule.php'); ?>
 			</div>
+			
 		</div>
 	</div>
 

@@ -1,4 +1,9 @@
+Search by course name : 
+Search by teacher :
+Search by 
 
+
+<!--
 <div class="CSSTableGenerator" >
     <table >
         <tr>
@@ -15,10 +20,10 @@
                 Grade
             </td>
         </tr>
-        <!--------------------------------------------------------------------->
+        
 
         <?php
-        require("./include/database.php");
+       /* require("./include/database.php");
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
 
@@ -45,13 +50,13 @@
                 echo "Database error";
             }
         }
-
+*/
         ?>
 
 
 
     </table>
-</div>
+</div>-->
 
 <?php
 ?>

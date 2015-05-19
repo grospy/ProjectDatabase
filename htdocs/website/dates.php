@@ -15,7 +15,19 @@ require('include/top.php');
         $courseID = $_GET['courseid'];
         require("include/database.php");
         if ($connection) {
-            $SQL = "SELECT * FROM lesson WHERE courseid = '$courseID'";
+            $courseNameSQL = "SELECT name FROM course WHERE courseid = '$courseID'";
+			$resultCourseName = $connection->query($courseNameSQL);
+			$resultCourseName->data_seek(0);
+			$data = $resultCourseName->fetch_array();
+			$courseName = $data['name'];
+			echo "
+				<div class='schedule_header'>
+					<h1> $courseID - $courseName </h1>
+				</div>
+				
+				";
+				
+			$SQL = "SELECT * FROM lesson WHERE courseid = '$courseID'";
             $result = $connection->query($SQL);
             $num_rows = mysqli_num_rows($result);
             if ($result) {
