@@ -1,4 +1,5 @@
 <?PHP
+ob_start();
 session_start();
 if ($_SESSION['login'] != md5("1")) {
     header("Location: login.php");
@@ -11,40 +12,21 @@ require("include/database.php");
     <img src="image/Inholland_logo.png" id="logotop">
     <div id="webtitle">
         International Business Innovation Studies
-        </br>Elective Courses Enrolment 
+        <br/>Elective Courses Enrolment
     </div>
-     
+
     <div id="welcome">
         Welcome, <?php echo htmlspecialchars($_SESSION['name'] . ".") ?>
         <br/>Registration deadline: 
 		<br/><span id="logout"><a href="logout.php">Log out</a></span>
-    </div>    
+    </div>
+    <?php if(isset($_SESSION["message"])){echo $_SESSION["message"]; $_SESSION["message"] = "";} ?>
 </div>
 
 
 
 <div class="tabs">
-	<div class="creditmsg">
-	<?php
-		$number = $_SESSION['number'];
-        $number = htmlspecialchars($number);
-
-        if ($connection) {
-            $number = quote_smart($number, $connection);
-            $SQL = "select sum(c.studyload) as total from course c inner join enrolled_students en on c.courseID=en.courseID where en.studentID=$number";
-
-			$result = $connection->query($SQL);
-            $num_rows = mysqli_num_rows($result);
-            if ($result) {
-                if ($num_rows > 0) {
-						$data = $result->fetch_array();
-						$total = $data['total'];
-						echo "You have enrolled ".$total." out of 60 credits";
-					}
-			}
-		}
-	?>
-	</div>
+	
 	<div class="tab">
 		<input class="tab-radio" type="radio" id="tab-1" name="tab-group-1">
 		<label class="tab-label" for="tab-1">Grades</label>
@@ -74,13 +56,10 @@ require("include/database.php");
 		<label class="tab-label" for="tab-3">Schedule</label>
 
 		<div class="tab-panel">
-			
 			<div class="tab-content">
-			<button class="printSchedule" onClick="window.print()">Print schedule</button>
-				<h3 id="scheduleH">Schedule</h3>
+				<h3>Schedule</h3>
 				<?php require('include/Schedule.php'); ?>
 			</div>
-			
 		</div>
 	</div>
 
@@ -96,7 +75,28 @@ require("include/database.php");
 		</div>
 	</div>
 	
-	
+	<div class="creditmsg">
+	<?php
+		$number = $_SESSION['number'];
+        $number = htmlspecialchars($number);
+
+        if ($connection) {
+            $number = quote_smart($number, $connection);
+            $SQL = "select sum(c.studyload) as total from course c inner join enrolled_students en on c.courseID=en.courseID where en.studentID=$number";
+
+			$result = $connection->query($SQL);
+            $num_rows = mysqli_num_rows($result);
+            if ($result) {
+                if ($num_rows > 0) {
+                        $result->data_seek($x);
+                        $data = $result->fetch_array();
+						$total = $data['total'];
+						echo "You have enrolled ".$total." out of 60 credits";
+					}
+			}
+		}
+	?>
+	</div>
 	
 </div>
 	
