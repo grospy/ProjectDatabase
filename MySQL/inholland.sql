@@ -183,41 +183,42 @@ CREATE TABLE IF NOT EXISTS `students&course` (
 --Creating table lesson`
 ---- Lesson
 
-CREATE TABLE IF NOT EXISTS `Lesson` (
-   `capacity` int(10),
-   `courseID` int(15),
-   `date`     varchar(20),
-   `time_start` varchar(20),
-   `room_number` varchar(20),
+
    
-   FOREIGN KEY(`course_ID`),
-   PRIMARY KEY(`date`),
-   
-   PRIMARY KEY(`location`),
-   PRIMARY KEY(`start_time`)
-   )
+   CREATE TABLE IF NOT EXISTS `lesson` (
+  `capacity` varchar(6) NOT NULL,
+  `course_ID` varchar(20) NOT NULL,
+  `date` varchar(20) NOT NULL,
+  `start_time` varchar(25) NOT NULL,
+  `room_number` varchar(20) NOT NULL,
+  `location` varchar(32) NOT NULL,
+   PRIMARY KEY (`date`)
+)
 --
 -- Dumping data for table `lesson`
 --
 
 INSERT INTO `lesson` VALUES 
-('IBIS001', '2015-05-04', '09:00:00', ''),
-('IBIS001', '2015-05-22', '12:00:00', ''),
-('IBIS001', '2015-05-29', '12:00:00', ''),
-('IBIS001', '2015-06-04', '09:00:00', ''),
-('IBIS001', '2015-06-04', '12:00:00', ''),
-('IBIS001', '2015-06-04', '15:00:00', ''),
-('IBIS001', '2015-06-05', '09:00:00', ''),
-('IBIS001', '2015-06-05', '12:00:00', ''),
-('IBIS001', '2015-06-05', '15:00:00', ''),
-('IBIS001', '2015-06-08', '09:00:00', ''),
-('IBIS001', '2015-06-19', '09:00:00', ''),
-('IBIS002', '2015-04-29', '09:00:00', ''),
-('IBIS002', '2015-05-01', '12:00:00', ''),
-('IBIS002', '2015-05-22', '12:00:00', ''),
-('IBIS002', '2015-05-29', '12:00:00', ''),
-('IBIS002', '2015-06-01', '09:00:00', ''),
-('IBIS002', '2015-06-04', '12:00:00', ''),
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-05-04', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-05-22', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-05-29', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-04', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-04', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-04', '15:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-05', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-05', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-05', '15:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-08', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-19', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-04-29', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-05-01', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-05-22', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-05-29', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-06-01', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-06-04', '12:00:00', 'B2-14','Diemen');
+
+-- 
+/* To be modified
 ('IBIS002', '2015-06-19', '12:00:00', ''),
 ('IBIS003', '2015-05-13', '09:00:00', ''),
 ('IBIS003', '2015-06-04', '09:00:00', ''),
@@ -345,7 +346,7 @@ INSERT INTO `lesson` VALUES
 ('IBIS032', '2015-06-05', '12:00:00', ''),
 ('IBIS032', '2015-06-12', '12:00:00', ''),
 ('IBIS032', '2015-06-19', '12:00:00', '');
-
+*/
 -- --------------------------------------------------------
 
 --
