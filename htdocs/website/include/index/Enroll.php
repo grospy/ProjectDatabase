@@ -42,33 +42,36 @@ if (isset($_SESSION["message"])) {
             $result3 = $connection->query($SQL3);
 
             $rows = mysqli_num_rows($result);
-            $rows1 = mysqli_num_rows($result);
-            $rows2 = mysqli_num_rows($result);
-            $rows3 = mysqli_num_rows($result);
 
             $results = array();
             while ($row = mysqli_fetch_array($result)) {
                 $results[] = $row['courseID'];
             }
             $results1 = array();
-            while ($row = mysqli_fetch_array($result1)) {
-                $results1[] = $row['courseID'];
+            while ($row1 = mysqli_fetch_array($result1)) {
+                $results1[] = $row1['courseID'];
             }
             $results2 = array();
-            while ($row = mysqli_fetch_array($result2)) {
-                $results2[] = $row['courseID'];
+            while ($row2 = mysqli_fetch_array($result2)) {
+                $results2[] = $row2['courseID'];
             }
             $results3 = array();
-            while ($row = mysqli_fetch_array($result3)) {
-                $results3[] = $row['courseID'];
+            while ($row3 = mysqli_fetch_array($result3)) {
+                $results3[] = $row3['courseID'];
             }
+            $x1 = $x2 = $x3 = 0;
             for ($x = 0; $x < $rows; $x++) {
                 if (in_array($results[$x], $results1)) {
-                    renamethisfunction(0, $result1, $x, $number, $connection);
-                } else if (in_array($results[$x], $results2)) {
-                    renamethisfunction(1, $result2, $x, $number, $connection);
-                } else if (in_array($results[$x], $results3)) {
-                    renamethisfunction(2, $result3, $x, $number, $connection);
+                    renamethisfunction(0, $result1, $x1, $number, $connection);
+                    $x1++;
+                }
+                if (in_array($results[$x], $results2)) {
+                    renamethisfunction(1, $result2, $x2, $number, $connection);
+                    $x2++;
+                }
+                if (in_array($results[$x], $results3)) {
+                    renamethisfunction(2, $result3, $x3, $number, $connection);
+                    $x3++;
                 }
             }
         } else {

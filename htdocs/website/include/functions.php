@@ -166,13 +166,14 @@ function withdraw($number, $courseID, $connection)
 
 function renamethisfunction($case, $result, $x, $number, $connection)
 {
-    $result->data_seek($x);
-    $data = $result->fetch_array();
+    $safety = $result;
+    $safety->data_seek($x);
+    $data = $safety->fetch_array();
+
     $name = $data['name'];
     $capacity = $data['capacity'];
     $studyload = $data['studyload'];
     $courseID = $data['courseID'];
-
 
     $text = "<button class='";
     switch ($case) {
