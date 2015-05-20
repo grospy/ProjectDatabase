@@ -17,7 +17,8 @@ require("include/database.php");
 
     <div id="welcome">
         Welcome, <?php echo htmlspecialchars($_SESSION['name'] . ".") ?>
-        <br/>Registration deadline:
+<<<<<<< HEAD
+        <br/>Registration deadline: 
 		<?php
 		if ($connection) {
             if (true) { //if the student is still in the registration period	
@@ -39,7 +40,11 @@ require("include/database.php");
 		
 		
 		
+		<br/><span id="logout"><a href="logout.php">Log out</a></span>
+=======
+        <br/>Registration deadline:
         <br/><span id="logout"><a href="logout.php">Log out</a></span>
+>>>>>>> 1ddf46720cf3804ac1a8104a9e9a8412e0b3aca4
     </div>
 </div>
 
