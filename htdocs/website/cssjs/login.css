@@ -2,17 +2,26 @@
 .error{
     color: darkred;
 }
+
+#logologin {
+float:top;
+width:100%;
+}
+
+.login hr {
+	width:90%;
+	border-color: rgb(231,235,236);
+}
 .login {
     width: 200px ;
-    margin-left: auto ;
-    margin-right: auto ;
+	height: auto;
+    margin:auto;
     padding: 1em;
     text-align: center;
+	color: rgb(141,145,146);
     border: solid #a3a3a3 1px;
     background: white;
-    box-shadow: 5px 5px 5px grey;
-    margin-top: 10%;
-    margin-bottom: 1em;
+    box-shadow: 2px 2px 5px grey;
 }
 #number,#password{
     font-size: 1em;
@@ -20,4 +29,11 @@
 .help{
     width: 100%;
     text-align: center;
+}
+.loginbox{
+ position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }

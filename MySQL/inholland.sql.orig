@@ -125,36 +125,48 @@ INSERT INTO `employee` (`employee_number`, `first_name`, `last_name`, `email`, `
 -- Table structure for table `enrolled_students`
 --
 
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS `enrolled_students` (
   `courseID` varchar(7) NOT NULL,
   `studentID` varchar(6) NOT NULL
+=======
+CREATE TABLE IF NOT EXISTS `student` (
+  `student_number` int(6) NOT NULL,
+  `first_name` varchar(35) NOT NULL,
+  `password` varchar(32) NOT NULL,
   `phone_nr` int(9) NOT NULL,
+  PRIMARY KEY (`student_number`)
+>>>>>>> origin/databaseDesign
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `enrolled_students`
 --
 
+<<<<<<< HEAD
 INSERT INTO `enrolled_students` (`courseID`, `studentID`) VALUES
 ('IBIS001', '559942'),
- 523001, 'Shamil','5e92b6d9772966b339aef40faf6b640c');
+('IBIS002', '559942'),
 ('IBIS003', '559942'),
 ('IBIS004', '559942'),
 ('IBIS005', '552301'),
 ('IBIS006', '552301'),
 ('IBIS007', '552301'),
 ('IBIS008', '552301');
+=======
+INSERT INTO `student` (`student_number`, `first_name`, `password`) VALUES
+(480402, 'Louis', '5e92b6d9772966b339aef40faf6b640b'
+ 523001, 'Shamil','5e92b6d9772966b339aef40faf6b640c');
+>>>>>>> origin/databaseDesign
 
 -- --------------------------------------------------------
 
--- grade
+<<<<<<< HEAD
+--
+-- Table structure for table `grade`
+--
+
 CREATE TABLE IF NOT EXISTS `grade` (
-  `Year` int(6),
-  `Semester` varchar(6),
-  `Grade`   int(3),
-  PRIMARY KEY(`course_ID`)
-  ) 
-  
   `student_number` varchar(6) NOT NULL,
   `courseID` char(7) NOT NULL,
   `year` year(4) NOT NULL,
@@ -163,19 +175,25 @@ CREATE TABLE IF NOT EXISTS `grade` (
   PRIMARY KEY (`student_number`,`courseID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-CREATE TABLE IF NOT EXISTS `Registration` (
-   `Starttime` varchar(10),
-   `EndTime`   varchar(10)
-   )
-   
--- Students & course
+--
+-- Dumping data for table `grade`
+--
 
-CREATE TABLE IF NOT EXISTS `students&course` (
-   `student_nr` int(10),
-   `course_ID`  int(14),
-   )
-   
---  Course
+INSERT INTO `grade` (`student_number`, `courseID`, `year`, `term`, `grade`) VALUES
+('559942', '3D Art', 2001, '1', 10),
+('559942', '2D Art', 2001, '2', 8);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lesson`
+--
+
+CREATE TABLE IF NOT EXISTS `lesson` (
+  `courseID` varchar(7) NOT NULL,
+  `date` date NOT NULL DEFAULT '0000-00-00',
+  `time_start` time NOT NULL,
+  `room_number` varchar(5) NOT NULL,
   PRIMARY KEY (`courseID`,`date`,`time_start`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -362,6 +380,54 @@ INSERT INTO `student` (`student_number`, `first_name`, `last_name`, `email`, `se
 -- Table structure for table `teacher`
 --
 
+CREATE TABLE IF NOT EXISTS `teacher` (
+  `employee_number` varchar(6) NOT NULL,
+  `courseID` varchar(7) NOT NULL,
+  PRIMARY KEY (`employee_number`,`courseID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `teacher`
+--
+
+INSERT INTO `teacher` (`employee_number`, `courseID`) VALUES
+('11111', 'IBIS001'),
+('11111', 'IBIS006'),
+('22222', 'IBIS002'),
+('22222', 'IBIS007'),
+('33333', 'IBIS003'),
+('33333', 'IBIS004'),
+('33333', 'IBIS008'),
+('44444', 'IBIS005');
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+=======
+-- grade
+CREATE TABLE IF NOT EXISTS `grade` (
+  `Year` int(6),
+  `Semester` varchar(6),
+  `Grade`   int(3),
+  PRIMARY KEY(`course_ID`)
+  ) 
+  
+-- Registration
+
+CREATE TABLE IF NOT EXISTS `Registration` (
+   `Starttime` varchar(10),
+   `EndTime`   varchar(10)
+   )
+   
+-- Students & course
+
+CREATE TABLE IF NOT EXISTS `students&course` (
+   `student_nr` int(10),
+   `course_ID`  int(14),
+   )
+   
+--  Course
+
 CREATE TABLE IF NOT EXISTS `Course` (
    `name` varchar(10),
    PRIMARY KEY(`course_ID`)
@@ -386,16 +452,5 @@ CREATE TABLE IF NOT EXISTS `Location` (
 	PRIMARY KEY(`room_number`)
 	)
   
-INSERT INTO `teacher` (`employee_number`, `courseID`) VALUES
-('11111', 'IBIS001'),
-('11111', 'IBIS006'),
-('22222', 'IBIS002'),
-('22222', 'IBIS007'),
-('33333', 'IBIS003'),
-('33333', 'IBIS004'),
-('33333', 'IBIS008'),
-('44444', 'IBIS005');
   
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+>>>>>>> origin/databaseDesign

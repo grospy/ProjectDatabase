@@ -1,3 +1,4 @@
+
 <div class="CSSTableGenerator" >
     <table >
         <tr>
@@ -17,7 +18,6 @@
         <!--------------------------------------------------------------------->
 
         <?php
-        require("./include/database.php");
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
 
@@ -51,5 +51,6 @@
 
     </table>
 </div>
+
 <?php
 ?>
