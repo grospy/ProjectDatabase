@@ -112,12 +112,13 @@ CREATE TABLE IF NOT EXISTS `type` (
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`employee_number`, `first_name`, `last_name`, `email`, `username`, `password`) VALUES
-('1', '', '', '', 'administrator', '200ceb26807d6bf99fd6f4f0d1ca54d4'),
-('11111', 'Drillenburg', 'Harald', 'Harald.Drillenburg@INHOLL', 'Harald.Drillenburg@I', 'harald'),
-('22222', 'Belinda', 'Kroes', 'Belinda.Kroes@INHOLLAND.n', 'Belinda.Kroes@INHOLL', 'belinda'),
-('33333', 'Margje', 'Penning', 'margje.penning@inholland.', 'margje.penning@inhol', 'margje'),
-('44444', 'Sandra', 'Reeb-Gruber', 'Sandra.ReebGruber@INHOLLA', 'Sandra.ReebGruber@IN', 'sandra');
+
+INSERT INTO `employee`  VALUES ('1', '', '', '', 'administrator', '200ceb26807d6bf99fd6f4f0d1ca54d4');
+INSERT INTO `employee`  VALUES ('11111', 'Drillenburg', 'Harald', 'Harald.Drillenburg@INHOLL', 'Harald.Drillenburg@I', 'harald');
+INSERT INTO `employee`  VALUES ('22222', 'Belinda', 'Kroes', 'Belinda.Kroes@INHOLLAND.n', 'Belinda.Kroes@INHOLL', 'belinda');
+INSERT INTO `employee`  VALUES ('33333', 'Margje', 'Penning', 'margje.penning@inholland.', 'margje.penning@inhol', 'margje');
+INSERT INTO `employee`  VALUES ('44444', 'Sandra', 'Reeb-Gruber', 'Sandra.ReebGruber@INHOLLA', 'Sandra.ReebGruber@IN', 'sandra');
+
 
 -- --------------------------------------------------------
 
