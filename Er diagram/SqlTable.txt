@@ -1,0 +1,26 @@
+CREATE TABLE Person (
+
+                      Person_id CHAR(6) NOT NULL,
+                      firstName VARCHAR(50) NOT NULL,
+                      lastName  VARCHAR(100) NOT NULL,
+                      E-MAIL    VARCHAR(200) NOT NULL,
+                      Password  VARCHAR(50) NOT NULL,
+                      CONSTRAIN pk_Person PERIMARY KEY (Person_id)
+);
+
+CREATE TABLE Student (
+                       Student_id CHAR(6) NOT NULL,
+                       Person_id  CHAR(6) NOT NULL,
+                       constrain PK_Student PRIMARY KEY (Student_id)
+);
+
+CREATE TABLE Employee (
+               
+                        Employee_id CHAR(6) NOT NULL,
+                        Type CHAR(1) NOT NULL,
+                        course_id VARCHAR(25) NOT NULL,
+                        Person_id CHAR(6) NOT NULL,
+                        CONSTRAIN pk_Employee PRIMARY KEY (Employee_id)
+             
+
+                 
