@@ -9,9 +9,13 @@ if (isset($_POST['submit'])) {
     $username = htmlspecialchars($username);
 }
 ?>
-    <section class="container">
+    <section class="loginbox">
         <div class="login">
-            <h1>Admin Login</h1>
+		<img src="image/Inholland_logo.png" id="logologin"></img>
+			<hr/>
+       <h1>Admin Login</h1>
+			<hr/>
+            
 
             <form method="post">
                 <p><input type="text" name="username" value="" placeholder="Username"></p>

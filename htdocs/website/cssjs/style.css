@@ -26,7 +26,10 @@ font-size:9pt;
 	float: right;
 	text-align: right;
 }
-
+.container {
+margin-top:120px;
+display : block;
+}
 #welcome {
 	font-size:11pt;
 	float: right;
@@ -47,6 +50,7 @@ font-size:9pt;
 	border-bottom: 3px solid #336699 ;
 	padding: 10px;
 	z-index: +1;
+	
 }
 
 
