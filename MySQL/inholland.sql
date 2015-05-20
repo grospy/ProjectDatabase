@@ -155,7 +155,8 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `Grade`   int(3),
   PRIMARY KEY(`course_ID`)
   ) 
-  
+  -- student_grade
+  CREATE TABLE IF NOT EXISTS `student_grade` (
   `student_number` varchar(6) NOT NULL,
   `courseID` char(7) NOT NULL,
   `year` year(4) NOT NULL,
