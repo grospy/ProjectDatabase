@@ -136,15 +136,15 @@ CREATE TABLE IF NOT EXISTS `enrolled_students` (
 -- Dumping data for table `enrolled_students`
 --
 
-INSERT INTO `enrolled_students` (`courseID`, `studentID`) VALUES
-('IBIS001', '559942'),
- 523001, 'Shamil','5e92b6d9772966b339aef40faf6b640c');
-('IBIS003', '559942'),
-('IBIS004', '559942'),
-('IBIS005', '552301'),
-('IBIS006', '552301'),
-('IBIS007', '552301'),
-('IBIS008', '552301');
+
+INSERT INTO `enrolled_students` VALUES ('IBIS001', '559942','0627349328749');
+INSERT INTO `enrolled_students` VALUES ('IBIS002', '556789','0627349328758');
+INSERT INTO `enrolled_students` VALUES ('IBIS003', '559942','0627349328747');
+INSERT INTO `enrolled_students` VALUES ('IBIS004', '559942','0627349328745');
+INSERT INTO `enrolled_students` VALUES ('IBIS005', '552301','0627349328742');
+INSERT INTO `enrolled_students` VALUES ('IBIS006', '552301','0627349328741');
+INSERT INTO `enrolled_students` VALUES ('IBIS007', '552301','0627349328743');
+INSERT INTO `enrolled_students` VALUES ('IBIS008', '552301','0627349328767');
 
 -- --------------------------------------------------------
 
