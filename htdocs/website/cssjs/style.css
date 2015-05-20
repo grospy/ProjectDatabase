@@ -49,7 +49,7 @@ display : block;
 	background-size: 100% 100%;
 	border-bottom: 3px solid #336699 ;
 	padding: 10px;
-	z-index: +1;
+	z-index: 2;
 	
 }
 
