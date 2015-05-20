@@ -68,10 +68,9 @@
                         $studyload = $data['studyload'];
                         $courseID = $data['courseID'];
                         //=============================
-                        $pre = "<button class='withdraw'>Withdraw</button>";
-                        $pre = "<a href='javascript:void(0)' onclick = 'function1(" . '"';
+                        $pre = "<button class='withdraw' href='javascript:void(0)' onclick = 'function1(" . '"';
                         $pre .= $courseID . '"';
-                        $pre .= ")'>Withdraw</a>" . "<div id='light" . $courseID . "' class='white_content'>" . withdraw($number, $courseID, $connection) . "<a href = 'javascript:void(0)' onclick = 'function2('" . $courseID . "')'>Close</a></div>";
+                        $pre .= ")'>Withdraw</button>" . "<div id='light" . $courseID . "' class='white_content'>" . withdraw($number, $courseID, $connection) . "<a href = 'javascript:void(0)' onclick = 'function2('" . $courseID . "')'>Close</a></div>";
                         $pre .= "<div id='fade' class='black_overlay'></div>";
                         //=============================
                         echo
