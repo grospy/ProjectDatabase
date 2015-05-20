@@ -63,7 +63,6 @@ require("include/database.php");
                     $total = $data['total'];
                     if($total > 0){echo "You have enrolled ".$total." out of 60 credits.<br/>";}
                     else {echo "You are not enrolled in any classes.<br/>";}
-                    if(isset($_SESSION["message"])){echo $_SESSION["message"]; $_SESSION["message"] = "";}
                 }
             }
         }

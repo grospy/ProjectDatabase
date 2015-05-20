@@ -1,3 +1,6 @@
+<?php
+if(isset($_SESSION["message"])){echo $_SESSION["message"]; $_SESSION["message"] = "";}
+?>
 <div class="CSSTableGenerator">
     <table>
         <tr>
@@ -44,9 +47,12 @@
                         $studyload = $data['studyload'];
                         $courseID = $data['courseID'];
                         //=============================
-                        $pre = "<button class = 'enroll' href='javascript:void(0)' onclick = 'function1(" . '"';
+                        $pre  = "<button class = 'enroll' onclick = 'function1(" . '"';
                         $pre .= $courseID . '"';
-                        $pre .= ")'>Enroll</button>" . "<div id='light" . $courseID . "' class='white_content'>" . enroll($number, $courseID, $connection) . "<a href = 'javascript:void(0)' onclick = 'function2('" . $courseID . "')'>Close</a></div>";
+                        $pre .= ")'>Enroll</button>" . "<div id='light" . $courseID . "' class='white_content'>" . enroll($number, $courseID, $connection);
+                        $pre .= "<button class = 'back' onclick = 'function2(" . '"';
+                        $pre .= $courseID . '"';
+                        $pre .= ")'>Cancel</button></div>";
                         $pre .= "<div id='fade' class='black_overlay'></div>";
 
                         //=============================
@@ -70,7 +76,10 @@
                         //=============================
                         $pre = "<button class='withdraw' href='javascript:void(0)' onclick = 'function1(" . '"';
                         $pre .= $courseID . '"';
-                        $pre .= ")'>Withdraw</button>" . "<div id='light" . $courseID . "' class='white_content'>" . withdraw($number, $courseID, $connection) . "<a href = 'javascript:void(0)' onclick = 'function2('" . $courseID . "')'>Close</a></div>";
+                        $pre .= ")'>Withdraw</button>" . "<div id='light" . $courseID . "' class='white_content'>" . withdraw($number, $courseID, $connection);
+                        $pre .= "<button class = 'back' onclick = 'function2(" . '"';
+                        $pre .= $courseID . '"';
+                        $pre .= ")'>Cancel</button></div>";
                         $pre .= "<div id='fade' class='black_overlay'></div>";
                         //=============================
                         echo
@@ -145,6 +154,7 @@ function enroll($number, $courseID, $connection)
         $num_rows = mysqli_num_rows($result);
         if ($result) {
             if ($num_rows > 0) {
+                $text .= "<ul>";
                 for ($x = 0; $x < $num_rows; $x++) {
                     $result->data_seek($x);
                     $data = $result->fetch_array();
@@ -153,24 +163,25 @@ function enroll($number, $courseID, $connection)
                     //=============================
                     $text .= "$overlap <br/>";
                 }
+                $text .= "</ul>";
             }
         } else {
             return "Database error";
         }
     }
-    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><p><input type='submit' name='enroll" . $courseID . "' class='back' value='";
+    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><input type='submit' name='enroll" . $courseID . "' class='back' value='";
 
     if (isset($_POST["enroll$courseID"])) {
         $withdrawSQL = "insert into enrolled_students (courseID,studentID) values ('$courseID','$number');";
-        if ($connection->query($withdrawSQL) === TRUE) {
-            $_SESSION["message"] = "Successfully enrolled.";
+        if ($connection->query($withdrawSQL) === TRUE){
+            $_SESSION["message"] = "<p class='error'>Successfully enrolled.</p>";
             header("Location: index.php");
         }
     } else {
         $text .= "Enroll";
     }
 
-    $text .= "'></p></form><p><a href='index.php'><button class='back'>Cancel</button></a></p></div>";
+    $text .= "'></form></div>";
     return $text;
 }function withdraw($number, $courseID, $connection)
 {
@@ -209,18 +220,18 @@ function enroll($number, $courseID, $connection)
             return "Database error";
         }
     }
-    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><p><input type='submit' name='delete" . $courseID . "' class='back' value='";
+    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><input type='submit' name='delete" . $courseID . "' class='back' value='";
 
     if (isset($_POST["delete$courseID"])) {
         $withdrawSQL = "delete from enrolled_students where courseID='$courseID' and studentID= '$number';";
         if ($connection->query($withdrawSQL) === TRUE) {
-            $_SESSION["message"] = "Successfully withdrew.";
+            $_SESSION["message"] = "<p class='error'>Successfully withdrawn.</p>";
             header("Location: index.php");
         }
     } else {
         $text .= "Withdraw";
     }
 
-    $text .= "'></p></form><p><a href='index.php'><button class='back'>Cancel</button></a></p></div>";
+    $text .= "'></form></div>";
     return $text;
 }
