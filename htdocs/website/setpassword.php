@@ -128,7 +128,7 @@ function set(&$error)
                     header("Location: index.php");
                 }
             } else {
-                $error = "Student number not found.";
+                $error = "index number not found.";
             }
         } else {
             $error = "Query error.";

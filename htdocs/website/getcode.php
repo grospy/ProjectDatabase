@@ -85,7 +85,7 @@ function set(&$error)
                 header("Location: setpassword.php");
 
             } else {
-                $error = "Student number not found.";
+                $error = "index number not found.";
             }
         } else {
             $error = "Query error.";

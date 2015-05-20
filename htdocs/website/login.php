@@ -16,6 +16,7 @@ if (isset($_POST['submit'])) {
     $number = htmlspecialchars($number);
 }
 require("include/top.php");
+require("include/functions.php");
 session_destroy();
 ?>
 
@@ -77,55 +78,3 @@ session_destroy();
 
 <?php
 require("include/bot.php");
-
-function login(&$error)
-{
-    $password = $_POST['password'];
-    $number = $_POST['number'];
-    $number = htmlspecialchars($number);
-    $password = htmlspecialchars($password);
-
-    require("include/database.php");
-
-    if ($connection) {
-        $number = quote_smart($connection, $number);
-        $password = quote_smart($connection, $password);
-
-        $SQL = "SELECT * FROM student WHERE student_number = $number AND password = md5($password)";
-        $result = $connection->query($SQL);
-        $num_rows = mysqli_num_rows($result);
-
-        if ($result) {
-            if ($num_rows > 0) {
-                $result->data_seek(0);
-                $data = $result->fetch_array();
-                $name = $data['first_name'];
-                session_start();
-                $_SESSION['login'] = md5("1");
-                $_SESSION['name'] = $name;
-                $_SESSION['number'] = $number;
-                header("Location: index.php");
-            } else {
-                $error = "Invalid student number or password.";
-            }
-        } else {
-            $error = "Query error.";
-        }
-        mysqli_close($connection);
-    } else {
-        $error = "Error connecting to database.";
-    }
-
-}
-
-function quote_smart($handle, $value)
-{
-    if (get_magic_quotes_gpc()) {
-        $value = stripslashes($value);
-    }
-
-    if (!is_numeric($value)) {
-        $value = "'" . mysqli_real_escape_string($handle, $value) . "'";
-    }
-    return $value;
-}
