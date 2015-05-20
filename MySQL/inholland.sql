@@ -180,12 +180,27 @@ CREATE TABLE IF NOT EXISTS `students&course` (
 --  Course
   PRIMARY KEY (`courseID`,`date`,`time_start`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+--Creating table lesson`
+---- Lesson
 
+CREATE TABLE IF NOT EXISTS `Lesson` (
+   `capacity` int(10),
+   `courseID` int(15),
+   `date`     varchar(20),
+   `time_start` varchar(20),
+   `room_number` varchar(20),
+   
+   FOREIGN KEY(`course_ID`),
+   PRIMARY KEY(`date`),
+   
+   PRIMARY KEY(`location`),
+   PRIMARY KEY(`start_time`)
+   )
 --
 -- Dumping data for table `lesson`
 --
 
-INSERT INTO `lesson` (`courseID`, `date`, `time_start`, `room_number`) VALUES
+INSERT INTO `lesson` VALUES 
 ('IBIS001', '2015-05-04', '09:00:00', ''),
 ('IBIS001', '2015-05-22', '12:00:00', ''),
 ('IBIS001', '2015-05-29', '12:00:00', ''),
@@ -369,16 +384,7 @@ CREATE TABLE IF NOT EXISTS `Course` (
    PRIMARY KEY(`course_ID`)
    )
    
--- Lesson
 
-CREATE TABLE IF NOT EXISTS `Lesson` (
-   `capacity` int(10),
-   FOREIGN KEY(`course_ID`),
-   PRIMARY KEY(`date`),
-   
-   PRIMARY KEY(`location`),
-   PRIMARY KEY(`start_time`)
-   )
 
 
 --Location
