@@ -108,6 +108,15 @@ CREATE TABLE IF NOT EXISTS `type` (
 	`external`   varchar(15)
 	)
 
+	INSERT INTO `teacher` (`employee_number`, `courseID`) VALUES
+('11111', 'IBIS001'),
+('11111', 'IBIS006'),
+('22222', 'IBIS002'),
+('22222', 'IBIS007'),
+('33333', 'IBIS003'),
+('33333', 'IBIS004'),
+('33333', 'IBIS008'),
+('44444', 'IBIS005');
 --
 -- Dumping data for table `employee`
 --
@@ -371,7 +380,6 @@ CREATE TABLE IF NOT EXISTS `student` (
 INSERT INTO `student` (`student_number`, `first_name`, `last_name`, `email`, `sent`, `password`, `set_code`) VALUES
 ('559942', 'Louis', NULL, '', 2, 'cfcd208495d565ef66e7dff9f98764da', 'ZCQ2QLFS'),
 ('552301', 'Sasmita', NULL, '', 1, '3ccbda445fcce40d8aa046f393f256e0', 'SR8QYX9S'),
-('560755', 'Niki', NULL, '', 0, '', ''),
 ('523001', 'Shamil', NULL, '', 0, '', '');
 
 -- --------------------------------------------------------
@@ -395,15 +403,7 @@ CREATE TABLE IF NOT EXISTS `Location` (
 	PRIMARY KEY(`room_number`)
 	)
   
-INSERT INTO `teacher` (`employee_number`, `courseID`) VALUES
-('11111', 'IBIS001'),
-('11111', 'IBIS006'),
-('22222', 'IBIS002'),
-('22222', 'IBIS007'),
-('33333', 'IBIS003'),
-('33333', 'IBIS004'),
-('33333', 'IBIS008'),
-('44444', 'IBIS005');
+
   
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
