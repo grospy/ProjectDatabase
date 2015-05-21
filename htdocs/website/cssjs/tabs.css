@@ -1,12 +1,14 @@
+/*Tabs*/
+
 .tabs {
-	min-width : 800px;
-	min-height: 500px;
-	display:block;
-	margin-top:0px;
-    margin-bottom:30px;
-	font-size: 0;
-	height: auto !important;
-	overflow:hidden;
+    min-width: 800px;
+    min-height: 500px;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 30px;
+    font-size: 0;
+    height: auto !important;
+    overflow: hidden;
 }
 
 .tabs:after {
@@ -18,6 +20,7 @@
 .tabs .tab {
     display: inline;
 }
+
 .tabs .tab-label {
     background: #eee;
     border: 1px solid #ccc;
@@ -79,7 +82,6 @@
     display: inline;
 }
 
-
 /*
 
 =======================================
@@ -129,6 +131,7 @@ INTERNET EXPLORER 8 and below
     .tabs .checked .tab-panel {
         display: inline;
     }
+
     /* IE7 and IE6 */
     .tabs .checked .tab-panel, {
         display: inline;
@@ -136,11 +139,6 @@ INTERNET EXPLORER 8 and below
         width: 100%;
     }
 }
-
-
-
-
-
 
 /*
 
@@ -150,8 +148,7 @@ UNIMPORTANT STYLES BEGIN HERE
 
 */
 
-
-a:link,a:visited,a:hover,a:focus,a:active {
+a:link, a:visited, a:hover, a:focus, a:active {
     color: #58C;
 }
 
@@ -163,7 +160,7 @@ label {
     color: #222;
 }
 
-.tabs a:link,.tabs a:visited,.tabs a:hover,.tabs a:focus,.tabs a:active {
+.tabs a:link, .tabs a:visited, .tabs a:hover, .tabs a:focus, .tabs a:active {
     color: #36A;
 }
 
@@ -172,9 +169,7 @@ body > h3 {
     letter-spacing: .0625em;
 }
 
-
-
-code,pre {
+code, pre {
     font-family: 'Lucida Console', monospace;
 }
 
@@ -243,6 +238,7 @@ p > code {
         box-sizing: border-box;
         width: 100%;
     }
+
     .tabs .tab > [type="radio"]:checked + label {
         background: #222;
         border-color: #444;

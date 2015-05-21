@@ -1,3 +1,5 @@
+/*Other*/
+
 body {
     max-width: 1000px;
     height: 100%;
@@ -11,7 +13,7 @@ body {
     margin-top: 90px;
     font-size: 1.1em;
     font-weight: bold;
-	display:block;
+    display: block;
 }
 
 .message {
@@ -56,7 +58,7 @@ body {
 }
 
 .dash {
-    min-width: 1150px;
+    min-width: 900px;
     width: 100%;
     position: fixed;
     top: 0px;
@@ -66,7 +68,7 @@ body {
     border-bottom: 3px solid #336699;
     padding: 10px;
     z-index: 2;
-	display:block;
+    display: block;
 }
 
 .footer {
@@ -82,7 +84,7 @@ body {
 
 .overlap {
     width: 90%;
-    height: 100px;
+    height: 300px;
     margin: auto;
     text-align: left;
     background-color: rgb(255, 255, 255);
@@ -97,8 +99,8 @@ body {
     text-align: center;
 }
 
-.enroll, .unavailable, .withdraw, .back{
-    width: 85px;
+.enroll, .unavailable, .withdraw, .back {
+    width: 90px;
 }
 
 .enroll, .schedule, .back, .withdraw, .unavailable {
@@ -119,6 +121,7 @@ body {
     padding: 4px 8px;
     text-decoration: none;
 }
+
 .back {
     margin-top: 5px;
 }
@@ -134,7 +137,7 @@ body {
     background-color: rgb(211, 111, 106);
 }
 
-.withdraw:hover,.back:hover {
+.withdraw:hover, .back:hover {
     background-color: rgb(128, 26, 21);
 }
 
@@ -185,4 +188,5 @@ html {
     background-color: #ececec;
     z-index: 4;
     overflow: auto;
+    text-align: center;
 }

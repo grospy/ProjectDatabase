@@ -8,12 +8,14 @@ require("include/top.php");
 require("include/database.php");
 require("include/functions.php");
 ?>
-<!--------------------------------------------------------------- -->
 <div class="dash">
     <?php require("include/index/dash.php"); ?>
+
 </div>
+
 <div class="creditmsg">
     <?php require("include/index/credit.php"); ?>
+
 </div>
 
 <div class="tabs">

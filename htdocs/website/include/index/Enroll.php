@@ -1,25 +1,25 @@
 <?php
 if (isset($_SESSION["message"])) {
-    echo "<p class = 'message'>".$_SESSION["message"]."</p>";
+    echo "<p class = 'message'>" . $_SESSION["message"] . "</p>";
     $_SESSION["message"] = "";
 }
 ?>
 <div class="CSSTableGenerator">
-    <table>
-        <tr>
-            <td>
-                Course
-            </td>
-            <td>
-                Capacity
-            </td>
-            <td>
-                Study Load
-            </td>
-            <td>
-                Enroll
-            </td>
-        </tr>
+                <table>
+                    <tr>
+                        <td>
+                            Course
+                        </td>
+                        <td>
+                            Capacity
+                        </td>
+                        <td>
+                            Study Load
+                        </td>
+                        <td>
+                            Enroll
+                        </td>
+                    </tr>
         <?php
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
@@ -62,11 +62,13 @@ if (isset($_SESSION["message"])) {
             for ($x = 0; $x < $rows; $x++) {
                 if (in_array($results[$x], $results3)) {
                     renamethisfunction(2, $result, $x, $number, $connection);
-                }else if (in_array($results[$x], $results2)) {
+                } else if (in_array($results[$x], $results2)) {
                     renamethisfunction(1, $result, $x, $number, $connection);
-                }else if (in_array($results[$x], $results1)) {
+                } else if (in_array($results[$x], $results1)) {
                     renamethisfunction(0, $result, $x, $number, $connection);
-                }else{echo "ERRORNOMATCHREFRESH";}
+                } else {
+                    echo "ERRORNOMATCHREFRESH";
+                }
             }
         } else {
             echo "Database error";
