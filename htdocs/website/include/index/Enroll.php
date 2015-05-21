@@ -28,7 +28,7 @@ if (isset($_SESSION["message"])) {
             $number = quote_smart($connection, $number);
 
             //ALL
-            $SQL = "SELECT * FROM course";
+            $SQL = "SELECT * FROM course ORDER by courseID;";
             //AVAILABLE
             $SQL1 = "select * from course where courseID not in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolled_students where studentID='$number')));";
             //OVERLAP
@@ -59,20 +59,14 @@ if (isset($_SESSION["message"])) {
             while ($row3 = mysqli_fetch_array($result3)) {
                 $results3[] = $row3['courseID'];
             }
-            $x1 = $x2 = $x3 = 0;
             for ($x = 0; $x < $rows; $x++) {
-                if (in_array($results[$x], $results1)) {
-                    renamethisfunction(0, $result1, $x1, $number, $connection);
-                    $x1++;
-                }
-                if (in_array($results[$x], $results2)) {
-                    renamethisfunction(1, $result2, $x2, $number, $connection);
-                    $x2++;
-                }
                 if (in_array($results[$x], $results3)) {
-                    renamethisfunction(2, $result3, $x3, $number, $connection);
-                    $x3++;
-                }
+                    renamethisfunction(2, $result, $x, $number, $connection);
+                }else if (in_array($results[$x], $results2)) {
+                    renamethisfunction(1, $result, $x, $number, $connection);
+                }else if (in_array($results[$x], $results1)) {
+                    renamethisfunction(0, $result, $x, $number, $connection);
+                }else{echo "ERRORNOMATCHREFRESH";}
             }
         } else {
             echo "Database error";

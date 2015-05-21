@@ -54,15 +54,17 @@ function login(&$error)
 
 function enroll($number, $courseID, $connection)
 {
-    $text = "<div class='confirmation_message'>";
-    $text .= "<h3 align='center'>Are you sure to enroll to : </h3>";
+    $text = "\n\t\t<div class='confirmation_message'>
+";
+    $text .= "\n\t\t\t<h3 align='center'>Are you sure to enroll to : </h3>
+";
     if ($connection) {
         $courseNameSQL = "SELECT name FROM course WHERE courseid = '$courseID'";
         $resultCourseName = $connection->query($courseNameSQL);
         $resultCourseName->data_seek(0);
         $data = $resultCourseName->fetch_array();
         $courseName = $data['name'];
-        $text .= "<div class='schedule_header'><h1> $courseID - $courseName </h1></div>";
+        $text .= "<div class='schedule_header'>\n\t<h1> $courseID - $courseName </h1>\n</div>";
     } else {
         return "Database error";
     }
@@ -110,21 +112,19 @@ function enroll($number, $courseID, $connection)
 
 function withdraw($number, $courseID, $connection)
 {
-    $text = "<div class='confirmation_message'>";
-    $text .= "<h3 align='center'>Are you sure to withdraw from : </h3>";
+    $text = "\n\t\t\t<div class='confirmation_message'>";
+    $text .= "\n\t\t\t\t<h3 align='center'>Are you sure to withdraw from : </h3>";
     if ($connection) {
         $courseNameSQL = "SELECT name FROM course WHERE courseid = '$courseID'";
         $resultCourseName = $connection->query($courseNameSQL);
         $resultCourseName->data_seek(0);
         $data = $resultCourseName->fetch_array();
         $courseName = $data['name'];
-        $text .= "<div class='schedule_header'><h1> $courseID - $courseName </h1></div>";
+        $text .= "\n\t\t\t\t<div class='schedule_header'>\n\t\t\t\t\t<h1> $courseID - $courseName </h1>\n\t\t\t\t</div>";
     } else {
         return "Database error";
     }
-    $text .= "<p id='overlap_message'>The course(s) below will be AVAILABLE if you withdraw from this course :</p>
-
-    <div class='overlap'>";
+    $text .= "\n\t\t\t\t<p id='overlap_message'>The course(s) below will be AVAILABLE if you withdraw from this course :</p>\n\t\t\t\t<div class='overlap'>";
 
     if ($connection) {
         $SQLcheckoverlap = "select concat(courseID,' - ',name) as overlap from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID='$courseID') and le.courseID in (le.courseID='$courseID'));";
@@ -137,7 +137,7 @@ function withdraw($number, $courseID, $connection)
                      $x++) {
                     $result->data_seek($x);
                     $data = $result->fetch_array();
-                    $text .= "<li>";
+                    $text .= "\n\t\t\t\t\t<li>";
                     $text .= $data["overlap"];
                     $text .= "</li><br/>";
                 }
@@ -146,7 +146,7 @@ function withdraw($number, $courseID, $connection)
             return "Database error";
         }
     }
-    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><input type='submit' name='delete" . $courseID . "' class='withdraw' value='";
+    $text .= "\n\t\t\t\t</div>\n\t\t\t\t<form action='" . $_SERVER['PHP_SELF'] . "' method='post'>\n\t\t\t\t\t<input type='submit' name='delete" . $courseID . "' class='withdraw' value='";
 
     if (isset($_POST["delete$courseID"])) {
         $withdrawSQL = "delete from enrolled_students where courseID='$courseID' and studentID= '$number';";
@@ -158,20 +158,20 @@ function withdraw($number, $courseID, $connection)
         $text .= "Withdraw";
     }
 
-    $text .= "'></form></div>";
+    $text .= "'>\n\t\t\t\t</form>\n\t\t\t</div>";
     return $text;
 }
 
 function renamethisfunction($case, $result, $x, $number, $connection)
 {
-    $safety = $result;
-    $safety->data_seek($x);
-    $data = $safety->fetch_array();
+    $result->data_seek($x);
+    $data = $result->fetch_array();
 
     $name = $data['name'];
     $capacity = $data['capacity'];
     $studyload = $data['studyload'];
     $courseID = $data['courseID'];
+
 
     $text = "<button class='";
     switch ($case) {
@@ -203,8 +203,9 @@ function renamethisfunction($case, $result, $x, $number, $connection)
             break;
     }
     $text .= "</button>";
+
     if ($case != 1) {
-        $text .= "<div id='light" . $courseID . "' class='white_content'>";
+        $text .= "\n\t\t<div id='light" . $courseID . "' class='white_content'>";
         switch ($case) {
             case 0:
                 $text .= enroll($number, $courseID, $connection);
@@ -213,15 +214,14 @@ function renamethisfunction($case, $result, $x, $number, $connection)
                 $text .= withdraw($number, $courseID, $connection);
                 break;
         }
-        $text .= "<button class = 'back' onclick = 'function2(" . '"';
+        $text .= "\n\t\t\t<button class = 'back' onclick = 'function2(" . '"';
         $text .= $courseID . '"';
-        $text .= ")'>Cancel</button></div>";
-        $text .= "<div id='fade' class='black_overlay'></div>";
-
+        $text .= ")'>Cancel</button>\n\t\t</div>";
+        /*$text .= "<div id='fade' class='black_overlay'></div>";*/
     }
 
 
-    echo "<tr class='";
+    echo "\n<tr class='";
     switch ($case) {
         case 0:
             echo "available";
@@ -233,5 +233,5 @@ function renamethisfunction($case, $result, $x, $number, $connection)
             echo "enrolled";
             break;
     }
-    echo "Row'><td>$name</td> <td>$capacity</td> <td>$studyload</td> <td>$text</td></tr>";
+    echo "Row'>\n\t<td>$name</td>\n\t<td>$capacity</td>\n\t<td>$studyload</td>\n\t<td> $text\n\t</td>\n</tr>";
 }
