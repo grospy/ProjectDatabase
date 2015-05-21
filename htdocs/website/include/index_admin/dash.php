@@ -4,7 +4,7 @@
         <br/>Elective Courses Enrolment
     </div>
     <div id="welcome">
-        Welcome Admin,
+        Welcome Admin.
         <br/><span id="logout"><a href="logout.php">Log out</a></span>
     </div>
     <?php if (isset($_SESSION["message"])) {

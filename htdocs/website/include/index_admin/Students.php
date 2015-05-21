@@ -10,7 +10,10 @@ if (isset($_SESSION["message"])) {
         <input type="file" name="file"/><br/>
         <input type="submit" name="submit" value="Submit"/>
     </form>
-
+    <?php
+    addStudents();
+    ?>
+    <br/><br/>
     <button onclick='function1("Students")'>Show students</button>
     <div id='lightStudents' class='white_content'>
         <div class="CSSTableGenerator">
@@ -58,36 +61,6 @@ if (isset($_SESSION["message"])) {
 
 
 
-    <?php
-    if (isset($_POST["submit"])) {
-        $filecheck = basename($_FILES['file']['name']);
-        $ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
-        if (!($ext == "csv")) {
-            echo "file must be csv type";
-        } else {
-            $file = $_FILES['file']['tmp_name'];
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
-            $handle = fopen($file, "r");
-            if ($handle !== FALSE) {
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    $num = count($data);
-                    $student_number = $data[0];
-                    $first_name = $data[1];
-                    $last_name = $data[2];
-                    $email = $student_number . "@student.inholland.nl";
-                    $sql = "INSERT INTO student (student_number, first_name, last_name, email) VALUES ('$student_number','$first_name','$last_name','$email')";
-                    if ($connection->query($sql)) {
-                        echo "Succeed adding $student_number, $first_name, $last_name! <br/>";
-                    } else {
-                        echo $connection->error;
-                    }
-                }
-                fclose($handle);
-            }
-        }
-    }
 
-
-    ?>
 
 </div>

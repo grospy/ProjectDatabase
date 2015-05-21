@@ -59,7 +59,7 @@ require("include/database.php");
 
 	<div class="tab">
 		<input class="tab-radio" type="radio" id="tab-4" name="tab-group-1" value="4" <?php if (isset($_POST['submit'])) echo "Checked"?>>
-		<label class="tab-label" for="tab-4">Student</label>
+		<label class="tab-label" for="tab-4">Students</label>
 
 		<div class="tab-panel">
 			<div class="tab-content">

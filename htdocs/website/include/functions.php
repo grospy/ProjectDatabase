@@ -18,7 +18,7 @@ function login(&$error)
 {
     require("database.php");
     $password = htmlspecialchars($_POST['password']);
-    $number= htmlspecialchars($_POST['number']);
+    $number = htmlspecialchars($_POST['number']);
     if ($connection) {
         $number = quote_smart($connection, $number);
         $password = quote_smart($connection, $password);
@@ -64,7 +64,7 @@ function popup($number, $courseID, $connection, $case)
     } else {
         return "Database error";
     }
-    $text .= "\n\t\t\t\t<p id='overlap_message'>The course(s) below will be ".($case == 0 ? 'AVAILABLE' : 'UNAVAILABLE')." if you withdraw from this course :</p>\n\t\t\t\t<div class='overlap'>";
+    $text .= "\n\t\t\t\t<p id='overlap_message'>The course(s) below will be " . ($case == 0 ? 'AVAILABLE' : 'UNAVAILABLE') . " if you withdraw from this course :</p>\n\t\t\t\t<div class='overlap'>";
 
     if ($connection) {
         $SQLcheckoverlap = "select concat(courseID,' - ',name) as overlap from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID='$courseID') and le.courseID in (le.courseID='$courseID'));";
@@ -88,7 +88,7 @@ function popup($number, $courseID, $connection, $case)
             return "Database error";
         }
     }
-    $text .= "\n\t\t\t\t</div>\n\t\t\t\t<form action='" . $_SERVER['PHP_SELF'] . "' method='post'>\n\t\t\t\t\t<input type='submit' name='". ($case==0 ? 'delete':'enroll') . $courseID . "' class=".($case==0 ? 'withdraw':'enroll')." value='";
+    $text .= "\n\t\t\t\t</div>\n\t\t\t\t<form action='" . $_SERVER['PHP_SELF'] . "' method='post'>\n\t\t\t\t\t<input type='submit' name='" . ($case == 0 ? 'delete' : 'enroll') . $courseID . "' class=" . ($case == 0 ? 'withdraw' : 'enroll') . " value='";
 
     if (isset($_POST["delete$courseID"])) {
         $withdrawSQL = "delete from enrolled_students where courseID='$courseID' and studentID= '$number';";
@@ -96,16 +96,15 @@ function popup($number, $courseID, $connection, $case)
             $_SESSION["message"] = "Successfully withdrawn.";
             header("Location: index.php");
         }
-    } else if ($case == 0){
+    } else if ($case == 0) {
         $text .= "Withdraw";
-    }
-    else if (isset($_POST["enroll$courseID"])) {
+    } else if (isset($_POST["enroll$courseID"])) {
         $withdrawSQL = "insert into enrolled_students (courseID,studentID) values ('$courseID','$number');";
         if ($connection->query($withdrawSQL) === TRUE) {
             $_SESSION["message"] = "Successfully enrolled.";
             header("Location: index.php");
         }
-    } else if ($case == 1){
+    } else if ($case == 1) {
         $text .= "Enroll";
     }
 
@@ -159,10 +158,10 @@ function renamethisfunction($case, $result, $x, $number, $connection)
         $text .= "\n\t\t\t\t<div id='light" . $courseID . "' class='white_content'>";
         switch ($case) {
             case 0:
-                $text .= popup($number, $courseID, $connection,1);
+                $text .= popup($number, $courseID, $connection, 1);
                 break;
             case 2:
-                $text .= popup($number, $courseID, $connection,0);
+                $text .= popup($number, $courseID, $connection, 0);
                 break;
         }
         $text .= "\n\t\t\t\t\t<button class = 'back' onclick = 'function2(" . '"';
@@ -185,6 +184,7 @@ function renamethisfunction($case, $result, $x, $number, $connection)
     }
     echo "Row'>\n\t\t\t<td>$name</td>\n\t\t\t<td>$capacity</td>\n\t\t\t<td>$studyload</td>\n\t\t\t<td> $text\n\t\t\t</td>\n\t\t    </tr>";
 }
+
 //Sets password
 function set(&$error)
 {
@@ -281,6 +281,7 @@ function send(&$error)
     }
 
 }
+
 //make code to send
 function getcode(&$error)
 {
@@ -321,7 +322,7 @@ function getcode(&$error)
         } else {
             if ($limit >= 5) {
                 $error = "Email limit (5) reached. Contact a administrator.";
-            }else{
+            } else {
                 $error = "Query error.";
             }
         }
@@ -331,6 +332,7 @@ function getcode(&$error)
     }
 
 }
+
 //sends email
 function sendmail($code)
 {
@@ -354,5 +356,37 @@ function sendmail($code)
         return "Mailer Error: " . $mail->ErrorInfo;
     } else {
         return "sent";
+    }
+}
+
+function addStudents()
+{
+    require('database.php');
+    if (isset($_POST["submit"])) {
+        $filecheck = basename($_FILES['file']['name']);
+        $ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
+        if (!($ext == "csv")) {
+            echo "file must be csv type";
+        } else {
+            $file = $_FILES['file']['tmp_name'];
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $handle = fopen($file, "r");
+            if ($handle !== FALSE) {
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $num = count($data);
+                    $student_number = $data[0];
+                    $first_name = $data[1];
+                    $last_name = $data[2];
+                    $email = $student_number . "@student.inholland.nl";
+                    $sql = "INSERT INTO student (student_number, first_name, last_name, email) VALUES ('$student_number','$first_name','$last_name','$email')";
+                    if ($connection->query($sql)) {
+                        echo "Succeed adding $student_number, $first_name, $last_name! <br/>";
+                    } else {
+                        echo "<br />".$connection->error;
+                    }
+                }
+                fclose($handle);
+            }
+        }
     }
 }
