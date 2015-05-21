@@ -4,6 +4,8 @@ if ($_SESSION['login'] != md5("2")) {
     header("Location: login.php");
 }
 require('include/top.php');
+require("include/database.php");
+
 ?>
 <div class="dash">
     <img src="image/Inholland_logo.png" id="logotop">
@@ -32,7 +34,7 @@ require('include/top.php');
 				<h3>Registration</h3>
 				<br/>Set registration date:
 				<br/>Open from ... Close at ...
-				<?php /* require('include/Grades.php'); */ ?>
+				<?php /* require('include/index_admin/Registration.php'); */ ?>
 			</div>
 		</div>
 	</div>
@@ -45,7 +47,7 @@ require('include/top.php');
 			<div class="tab-content">
 				<h3>Enrollment</h3>
 				<br/>see who enrolled for what
-				<?php  ?>
+				<?php /* require('include/index_admin/Enrollment.php'); */ ?>
 			</div>
 		</div>
 	</div>
@@ -58,7 +60,7 @@ require('include/top.php');
 			<div class="tab-content">
 				<h3>Edit Course</h3>
 				add course, delete course, edit course
-				<?php  ?>
+				<?php /* require('include/index_admin/Course.php'); */ ?>
 			</div>
 		</div>
 	</div>
@@ -70,8 +72,8 @@ require('include/top.php');
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Student</h3>
-				add student
-				<?php ?>
+				
+				<?php require('include/index_admin/Student.php');  ?>
 			</div>
 		</div>
 	</div>
