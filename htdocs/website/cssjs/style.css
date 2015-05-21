@@ -11,6 +11,7 @@ body {
     margin-top: 90px;
     font-size: 1.1em;
     font-weight: bold;
+	display:block;
 }
 
 .message {
@@ -65,7 +66,7 @@ body {
     border-bottom: 3px solid #336699;
     padding: 10px;
     z-index: 2;
-
+	display:block;
 }
 
 .footer {

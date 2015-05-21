@@ -5,11 +5,15 @@ if ($_SESSION['login'] != md5("2")) {
 }
 require('include/top.php');
 require('include/functions.php');
-require("include/admin/dash.php");
+require("include/database.php");
+
 ?>
+<div class="dash">
+    <?php require("include/admin/dash.php"); ?>
+</div>
 
-
-
+<div class="creditmsg">
+</div>
 
 <div class="tabs">
 	
