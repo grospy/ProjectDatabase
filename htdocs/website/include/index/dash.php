@@ -5,12 +5,12 @@
     </div>
     <div id="welcome">
         Welcome, <?php echo htmlspecialchars($_SESSION['name'] . ".") ?>
-        <br/>Registration deadline:
+        <br/>Registration period:</br>
     <?php
     if ($connection) {
         if (true) { //if the student is still in the registration period
             //$registrationSQL = "select DATE_FORMAT(openRegDate, '%a, %e-%b-%Y %r') as openRegDate, DATE_FORMAT(closeRegDate, '%a, %e-%b-%Y %r') as closeRegDate from registration order by closeRegDate DESC limit 1";
-            $registrationSQL = "select DATE_FORMAT(openRegDate, '%a, %e %b') as openRegDate, DATE_FORMAT(closeRegDate, '%a, %e %b') as closeRegDate from registration order by closeRegDate DESC limit 1";
+            $registrationSQL = "select DATE_FORMAT(openRegDate, '%b %e') as openRegDate, DATE_FORMAT(closeRegDate, '%b %e, %Y') as closeRegDate from registration order by closeRegDate DESC limit 1";
             $result = $connection->query($registrationSQL);
             $num_rows = mysqli_num_rows($result);
             if ($result) {
@@ -21,7 +21,7 @@
                     $closeDate = $data['closeRegDate'];
 
 
-                    echo "\t".$openDate." to ".$closeDate;
+                    echo $openDate." to ".$closeDate;
                 }
             }
         }

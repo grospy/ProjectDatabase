@@ -1,5 +1,4 @@
 <?php
-require("database.php");
 
 //Security function; puts quotes around value
 function quote_smart($handle, $value)
@@ -17,8 +16,9 @@ function quote_smart($handle, $value)
 //Checks login values to provide access to site
 function login(&$error)
 {
-    $number = htmlspecialchars($_POST['password']);
-    $password = htmlspecialchars($_POST['number']);
+    require("database.php");
+    $password = htmlspecialchars($_POST['password']);
+    $number= htmlspecialchars($_POST['number']);
     if ($connection) {
         $number = quote_smart($connection, $number);
         $password = quote_smart($connection, $password);
@@ -184,4 +184,175 @@ function renamethisfunction($case, $result, $x, $number, $connection)
             break;
     }
     echo "Row'>\n\t\t\t<td>$name</td>\n\t\t\t<td>$capacity</td>\n\t\t\t<td>$studyload</td>\n\t\t\t<td> $text\n\t\t\t</td>\n\t\t    </tr>";
+}
+//Sets password
+function set(&$error)
+{
+    require_once "include/database.php";
+    $number = $_POST["number"];
+    $code = $_POST["code"];
+    $password = $_POST["password"];
+
+    $db = new mysqli($server, $user_name, $pass_word, $database);
+
+    if ($db) {
+        $number = quote_smart($db, $number);
+        $code = quote_smart($db, $code);
+        $password = quote_smart($db, $password);
+
+
+        $SQL = "SELECT * FROM student WHERE student_number = $number";
+        $result = $db->query($SQL);
+        $num_rows = mysqli_num_rows($result);
+
+        if ($result) {
+            if ($num_rows > 0) {
+                $result->data_seek(0);
+                $data = $result->fetch_array();
+                $db_code = $data['set_code'];
+                $db_pass = $data['password'];
+                $db_sent = $data['sent'] + 1;
+                $db_code = quote_smart($db, $db_code);
+
+                if ($db_code != $code || $code == "'NOCODE'") {
+                    $error = "Invalid registration code.";
+                } else {
+                    $db->query("UPDATE student SET password = md5($password) WHERE student_number = $number");
+                    $db->query("UPDATE student SET sent = $db_sent WHERE student_number = $number");
+                    $_SESSION['reg'] = md5("y");
+                    $_SESSION['number'] = $number;
+                    header("Location: index.php");
+                }
+            } else {
+                $error = "Student number not found.";
+            }
+        } else {
+            $error = "Query error.";
+        }
+        mysqli_close($db);
+    } else {
+        $error = "Error connecting to database.";
+    }
+
+}
+
+//Sends mail
+function send(&$error)
+{
+    require('functions.php');
+    $email = $_POST['email'];
+
+    $db_handle = mysql_connect($server, $user_name, $pass_word);
+    $db_found = mysql_select_db($database, $db_handle);
+
+    if ($db_found) {
+        $email = quote_smart($db_handle, $email);
+
+        $SQL = "SELECT * FROM student WHERE email = $email";
+        $result = mysql_query($SQL);
+        $num_rows = mysql_num_rows($result);
+
+
+        if ($result) {
+            if ($num_rows > 0) {
+                $password = mysql_result($result, 0, "password");
+                $sent = mysql_result($result, 0, "sent");
+                if ($sent < 500) {
+                    $error = $password;
+                    $sent++;
+                    mysql_query("UPDATE student SET sent = $sent WHERE email =$email");
+                } else {
+                    $error = "Maximum requests exceeded(5).";
+                }
+
+
+                echo $password;
+
+
+            } else {
+                $error = "Email not found.";
+            }
+        } else {
+            $error = "Query error.";
+        }
+        mysql_close($db_handle);
+    } else {
+        $error = "Error connecting to database.";
+    }
+
+}
+//make code to send
+function getcode(&$error)
+{
+    include_once "include/database.php";
+    $number = $_POST['number'];
+
+    $db = new mysqli($server, $user_name, $pass_word, $database);
+
+    if ($db) {
+        $number = quote_smart($db, $number);
+
+        $SQL = "SELECT * FROM student WHERE student_number = $number";
+        $result = $db->query($SQL);
+        $num_rows = mysqli_num_rows($result);
+        $result->data_seek(0);
+        $data = $result->fetch_array();
+        $limit = $data['sent'];
+
+        if ($result && $limit < 5) {
+            if ($num_rows > 0) {
+                $alphabet = "ABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+                $code = "";
+                $alphaLength = strlen($alphabet) - 1;
+                for ($i = 0; $i < 8; $i++) {
+                    $n = substr($alphabet, rand(0, $alphaLength), 1);
+                    $code .= $n;
+                }
+                $db->query("UPDATE student SET set_code = '$code' WHERE student_number = $number");
+                sendmail($code);
+                session_start();
+                $_SESSION['number'] = $number;
+                $_SESSION['login'] = md5("3");
+                header("Location: setpassword.php");
+
+            } else {
+                $error = "Student number not found.";
+            }
+        } else {
+            if ($limit >= 5) {
+                $error = "Email limit (5) reached. Contact a administrator.";
+            }else{
+                $error = "Query error.";
+            }
+        }
+        mysqli_close($db);
+    } else {
+        $error = "Error connecting to database.";
+    }
+
+}
+//sends email
+function sendmail($code)
+{
+    include 'PHPMailer/class.phpmailer.php';
+    include("PHPMailer/class.smtp.php");
+
+    $mail = new PHPMailer(); // create a new object
+    $mail->IsSMTP(); // enable SMTP
+    $mail->SMTPAuth = true; // authentication enabled
+    $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
+    $mail->Host = "smtp.gmail.com";
+    $mail->Port = 465; // or 587
+    $mail->IsHTML(true);
+    $mail->Username = "registeramadeus@gmail.com";
+    $mail->Password = "Amadeus1";
+    $mail->SetFrom("registeramadeus@gmail.com");
+    $mail->Subject = "Registration code";
+    $mail->Body = "Use this code to finish registration: $code";
+    $mail->AddAddress($_POST["number"] . "@student.inholland.nl");
+    if (!$mail->Send()) {
+        return "Mailer Error: " . $mail->ErrorInfo;
+    } else {
+        return "sent";
+    }
 }
