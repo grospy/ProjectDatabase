@@ -12,10 +12,11 @@ require("include/functions.php");
 <div class="dash">
     <?php require("include/index/dash.php"); ?>
 </div>
+<div class="creditmsg">
+    <?php require("include/index/credit.php"); ?>
+</div>
+
 <div class="tabs">
-    <div class="creditmsg">
-        <?php require("include/index/credit.php"); ?>
-    </div>
     <div class="tab">
         <input class="tab-radio" type="radio" id="tab-1" name="tab-group-1">
         <label class="tab-label" for="tab-1">Grades</label>

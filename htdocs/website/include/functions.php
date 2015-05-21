@@ -82,10 +82,9 @@ function enroll($number, $courseID, $connection)
                      $x++) {
                     $result->data_seek($x);
                     $data = $result->fetch_array();
-//=============================
-                    $overlap = $data['overlap'];
-//=============================
-                    $text .= "$overlap <br/>";
+                    $text .= "<li>";
+                    $text .= $data["overlap"];
+                    $text .= "</li><br/>";
                 }
                 $text .= "</ul>";
             }
@@ -93,12 +92,12 @@ function enroll($number, $courseID, $connection)
             return "Database error";
         }
     }
-    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><input type='submit' name='enroll" . $courseID . "' class='back' value='";
+    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><input type='submit' name='enroll" . $courseID . "' class='enroll' value='";
 
     if (isset($_POST["enroll$courseID"])) {
         $withdrawSQL = "insert into enrolled_students (courseID,studentID) values ('$courseID','$number');";
         if ($connection->query($withdrawSQL) === TRUE) {
-            $_SESSION["message"] = "<p class='error'>Successfully enrolled.</p>";
+            $_SESSION["message"] = "Successfully enrolled.";
             header("Location: index.php");
         }
     } else {
@@ -138,22 +137,21 @@ function withdraw($number, $courseID, $connection)
                      $x++) {
                     $result->data_seek($x);
                     $data = $result->fetch_array();
-//=============================
-                    $overlap = $data['overlap'];
-//=============================
-                    $text .= "$overlap <br/>";
+                    $text .= "<li>";
+                    $text .= $data["overlap"];
+                    $text .= "</li><br/>";
                 }
             }
         } else {
             return "Database error";
         }
     }
-    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><input type='submit' name='delete" . $courseID . "' class='back' value='";
+    $text .= "</div><form action='" . $_SERVER['PHP_SELF'] . "' method='post'><input type='submit' name='delete" . $courseID . "' class='withdraw' value='";
 
     if (isset($_POST["delete$courseID"])) {
         $withdrawSQL = "delete from enrolled_students where courseID='$courseID' and studentID= '$number';";
         if ($connection->query($withdrawSQL) === TRUE) {
-            $_SESSION["message"] = "<p class='error'>Successfully withdrawn.</p>";
+            $_SESSION["message"] = "Successfully withdrawn.";
             header("Location: index.php");
         }
     } else {

@@ -1,9 +1,9 @@
 .tabs {
-	padding-top: 10px;
 	min-width : 800px;
 	min-height: 500px;
 	display:block;
-	margin-top:120px;  
+	margin-top:0px;
+    margin-bottom:30px;
 	font-size: 0;
 	height: auto !important;
 	overflow:hidden;

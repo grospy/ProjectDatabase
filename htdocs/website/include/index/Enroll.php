@@ -1,6 +1,6 @@
 <?php
 if (isset($_SESSION["message"])) {
-    echo $_SESSION["message"];
+    echo "<p class = 'message'>".$_SESSION["message"]."</p>";
     $_SESSION["message"] = "";
 }
 ?>

@@ -4,8 +4,13 @@ if ($_SESSION['login'] != md5("2")) {
     header("Location: login.php");
 }
 require('include/top.php');
+<<<<<<< HEAD
+require("include/database.php");
+
+=======
 require('include/functions.php');
 require("include/admin/dash.php");
+>>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
 ?>
 
 
@@ -20,9 +25,13 @@ require("include/admin/dash.php");
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Registration</h3>
-				<?php require('include/admin/Registration.php');  ?>
+<<<<<<< HEAD
 				<br/>Set registration date:
 				<br/>Open from ... Close at ...
+				<?php /* require('include/index_admin/Registration.php'); */ ?>
+=======
+				<?php require('include/admin/Registration.php');  ?>
+>>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
 			</div>
 		</div>
 	</div>
@@ -34,8 +43,12 @@ require("include/admin/dash.php");
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Enrollment</h3>
+<<<<<<< HEAD
 				<br/>see who enrolled for what
 				<?php /* require('include/index_admin/Enrollment.php'); */ ?>
+=======
+                <?php require('include/admin/Enrollment.php');  ?>
+>>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
 			</div>
 		</div>
 	</div>
@@ -47,8 +60,12 @@ require("include/admin/dash.php");
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Edit Course</h3>
+<<<<<<< HEAD
 				add course, delete course, edit course
 				<?php /* require('include/index_admin/Course.php'); */ ?>
+=======
+                <?php require('include/admin/Courses.php');  ?>
+>>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
 			</div>
 		</div>
 	</div>
@@ -60,8 +77,12 @@ require("include/admin/dash.php");
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Student</h3>
+<<<<<<< HEAD
 				
 				<?php require('include/index_admin/Student.php');  ?>
+=======
+                <?php require('include/admin/Students.php');  ?>
+>>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
 			</div>
 		</div>
 	</div>
