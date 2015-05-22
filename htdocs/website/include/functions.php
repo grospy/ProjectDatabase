@@ -390,3 +390,45 @@ function addStudents()
         }
     }
 }
+
+function addRegistrationDate()
+{
+    require('database.php');
+   if (isset($_POST["submitRegDate"])) {
+	$studyYear = $_POST["studyYear"];
+	$term = $_POST["term"];
+	
+	$today = date("Y-m-d");
+	
+	$openDay = $_POST["openDay"];
+	$openMonth = $_POST["openMonth"];
+	$openYear =  $_POST["openYear"];
+	$openDate = "$openYear-$openMonth-$openDay";
+	
+	$closeDay = $_POST["closeDay"];
+	$closeMonth = $_POST["closeMonth"];
+	$closeYear =  $_POST["closeYear"];
+	$closeDate = "$closeYear-$closeMonth-$closeDay";
+	
+	if (!($openDay=="Day" || $openMonth=="Month" || $openYear=="Year"|| $closeDay=="Day" || $closeMonth=="Month" || $closeYear=="Year")) {
+		if (($openDate>$today) && (($closeDate>$today) && ($closeDate>$openDate)) ){
+			require('include/database.php');
+			$openDateSQL = "insert into registration (year, term, openRegDate, closeRegDate) values ($studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay')";
+				if($connection->query($openDateSQL)===TRUE) {
+					echo "<br/>Succeed adding registration date for study year $studyYear term $term 
+							<br/>open date : $openYear-$openMonth-$openDay
+							<br/>close date : $closeYear-$closeMonth-$closeDay";
+				} 
+				else {
+					echo "<br />".$connection->error;
+				}
+		}
+		else {
+			 echo "date error. select open date after today. select close date after open date.";
+		}
+	}
+	else {
+			 echo "all day, month and year field must be filled.";
+		}
+ }		
+}

@@ -25,8 +25,6 @@ require("include/database.php");
 			<div class="tab-content">
 				<h3>Registration</h3>
 				<?php require('include/index_admin/Registration.php');  ?>
-				<br/>Set registration date:
-				<br/>Open from ... Close at ...
 			</div>
 		</div>
 	</div>
