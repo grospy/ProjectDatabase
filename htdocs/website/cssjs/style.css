@@ -1,130 +1,164 @@
-body{
-max-width: 1000px;
+/*Other*/
 
-height : 100%;
-overflow-y : scroll;
-font-family:Arial,sans-serif;
-font-size:9pt;
+body {
+    max-width: 1000px;
+    height: 100%;
+    overflow-y: scroll;
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+}
+
+.creditmsg {
+    text-align: right;
+    margin-top: 90px;
+    font-size: 1.1em;
+    font-weight: bold;
+    display: block;
+}
+
+.message {
+    color: darkred;
+    font-weight: bold;
+    text-align: center;
 }
 
 #logotop {
-	float: left;
-	height: 60px;
-	z-index: +1;	
+    float: left;
+    height: 60px;
+    z-index: 1;
 }
 
-#webtitle{
-	font-family:"Myriad Pro";
-	font-weight:bold;
-	font-size:13pt;
-	color:#336699 ;
-	line-height:150%;
-	float: left;
+#webtitle {
+    font-family: "Myriad Pro";
+    font-weight: bold;
+    font-size: 13pt;
+    color: #336699;
+    line-height: 150%;
+    float: left;
 }
+
 #logout {
-	font-size:9pt;
-	float: right;
-	text-align: right;
+    font-size: 9pt;
+    float: right;
+    text-align: right;
 }
+
 .container {
-margin-top:120px;
-display : block;
+    margin-top: 120px;
+    display: block;
 }
+
 #welcome {
-	font-size:11pt;
-	float: right;
-	display: block;
-	margin-right : 50px ;
-	
-	text-align: right;
+    font-size: 11pt;
+    float: right;
+    display: block;
+    margin-right: 50px;
+
+    text-align: right;
 }
 
 .dash {
-	min-width : 800px;
-    width:100%;
-    position:fixed;
-    top:0px;
-	left:0px;
-	background-color: #F1F5F6; 
-	background-size: 100% 100%;
-	border-bottom: 3px solid #336699 ;
-	padding: 10px;
-	z-index: +1;
-	
+    min-width: 750px;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #F1F5F6;
+    background-size: 100% 100%;
+    border-bottom: 3px solid #336699;
+    padding: 10px;
+    z-index: 2;
+    display: block;
 }
 
-
 .footer {
-	min-width : 800px;
-	width:100%;
-	background-color:rgb(221,225,226); 
-	position:fixed;
-	bottom:0em;
-	right:0em;
-	padding: 3px 6px; 
-	text-align: right;
+    min-width: 800px;
+    width: 100%;
+    background-color: rgb(221, 225, 226);
+    position: fixed;
+    bottom: 0em;
+    right: 0em;
+    padding: 3px 6px;
+    text-align: right;
 }
 
 .overlap {
-width: 50%;
-height:100px;
-margin:auto;
-text-align: left;
-color: rgb(150,150,150);
-overflow-y:auto;
-padding:10px;
+    width: 90%;
+    max-height: 300px;
+    margin: auto;
+    text-align: left;
+    background-color: rgb(255, 255, 255);
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
 }
+
 #overlap_message {
-color: rgb(90,90,90);
-text-align: center;
+    color: rgb(90, 90, 90);
+    text-align: center;
 }
 
-.enroll, .schedule, .back, .withdraw, .unavailable{
-    -moz-box-shadow:inset 0px 1px 0px 0px #91b8b3;
-    -webkit-box-shadow:inset 0px 1px 0px 0px #91b8b3;
-    box-shadow:inset 0px 1px 0px 0px #91b8b3;
-    background-color:#768d87;
-    -moz-border-radius:4px;
-    -webkit-border-radius:4px;
-    border-radius:4px;
-    border:1px solid #566963;
-    display:inline-block;
-    cursor:pointer;
-    color:#ffffff;
-    font-family:Arial;
-    font-size:13px;
-    font-weight:bold;
-    padding:4px 8px;
-    text-decoration:none;
-}
-.enroll:hover, .schedule:hover, .back:hover, .withdraw:hover{
-    background-color:rgb(75,75,75);
-}
-.withdraw{
-    -moz-box-shadow:inset 0px 1px 0px 0px rgb(151,61,56);
-    -webkit-box-shadow:inset 0px 1px 0px 0px rgb(151,61,56);
-    box-shadow:inset 0px 1px 0px 0px rgb(151,61,56);
-	background-color: rgb(211,111,106);
-}
-.withdraw:hover{
-    background-color:rgb(128,26,21);
-}
-.unavailable{
-    -moz-box-shadow:inset 0px 1px 0px 0px rgb(150,150,150);
-    -webkit-box-shadow:inset 0px 1px 0px 0px rgb(150,150,150);
-    box-shadow:inset 0px 1px 0px 0px rgb(150,150,150);
-	background-color: rgb(180,180,180);
+.enroll, .unavailable, .withdraw, .back {
+    width: 90px;
 }
 
-.enroll:active, .schedule:active,.back:active, .withdraw:active, .unavailable:active {
-    position:relative;
-    top:1px;
+.enroll, .schedule, .back, .withdraw, .unavailable {
+    -moz-box-shadow: inset 0px 1px 0px 0px #91b8b3;
+    -webkit-box-shadow: inset 0px 1px 0px 0px #91b8b3;
+    box-shadow: inset 0px 1px 0px 0px #91b8b3;
+    background-color: #768d87;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid #566963;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 8px;
+    text-decoration: none;
 }
+
+.back {
+    margin-top: 5px;
+}
+
+.enroll:hover, .schedule:hover, .back:hover, .withdraw:hover {
+    background-color: rgb(75, 75, 75);
+}
+
+.withdraw {
+    -moz-box-shadow: inset 0px 1px 0px 0px rgb(151, 61, 56);
+    -webkit-box-shadow: inset 0px 1px 0px 0px rgb(151, 61, 56);
+    box-shadow: inset 0px 1px 0px 0px rgb(151, 61, 56);
+    background-color: rgb(211, 111, 106);
+}
+
+.withdraw:hover, .back:hover {
+    background-color: rgb(128, 26, 21);
+}
+
+.unavailable, .back {
+    -moz-box-shadow: inset 0px 1px 0px 0px rgb(150, 150, 150);
+    -webkit-box-shadow: inset 0px 1px 0px 0px rgb(150, 150, 150);
+    box-shadow: inset 0px 1px 0px 0px rgb(150, 150, 150);
+    background-color: rgb(180, 180, 180);
+}
+
+.enroll:active, .schedule:active, .back:active, .withdraw:active, .unavailable:active {
+    position: relative;
+    top: 1px;
+}
+
 .schedule_header {
-	text-align: center;
-	color: rgb(80,80,80);
+    text-align: center;
+    color: rgb(80, 80, 80);
 }
-html{
+
+html {
     background: #ffffff;
 }
 
@@ -136,7 +170,7 @@ html{
     width: 100%;
     height: 100%;
     background-color: black;
-    z-index: 1001;
+    z-index: 3;
     -moz-opacity: 0.8;
     opacity: .80;
     filter: alpha(opacity=80);
@@ -148,10 +182,11 @@ html{
     top: 10%;
     left: 20%;
     width: 60%;
-    height: 70%;
+    max-height: 70%;
     padding: 16px;
     border: 3px solid #2e2e2e;
     background-color: #ececec;
-    z-index: 1002;
+    z-index: 4;
     overflow: auto;
+    text-align: center;
 }

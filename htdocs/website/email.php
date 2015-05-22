@@ -6,6 +6,7 @@ if (isset($_POST['submit'])) {
     $email = $_POST["email"];
 }
 require('include/top.php');
+require('include/functions.php');
 
 ?>
     <section class="container">
@@ -45,64 +46,3 @@ require('include/top.php');
     </section>
 <?php
 require('include/bot.php');
-
-
-
-//==================================================================
-
-function quote_smart($value, $handle)
-{
-    if (get_magic_quotes_gpc()) {
-        $value = stripslashes($value);
-    }
-
-    if (!is_numeric($value)) {
-        $value = "'" . mysql_real_escape_string($value, $handle) . "'";
-    }
-    return $value;
-}
-
-function send(&$error)
-{
-    include_once "include/database.php";
-    $email = $_POST['email'];
-
-    $db_handle = mysql_connect($server, $user_name, $pass_word);
-    $db_found = mysql_select_db($database, $db_handle);
-
-    if ($db_found) {
-        $email = quote_smart($email, $db_handle);
-
-        $SQL = "SELECT * FROM student WHERE email = $email";
-        $result = mysql_query($SQL);
-        $num_rows = mysql_num_rows($result);
-
-
-        if ($result) {
-            if ($num_rows > 0) {
-                $password = mysql_result($result, 0, "password");
-                $sent = mysql_result($result, 0, "sent");
-                if ($sent < 500) {
-                    $error = $password;
-                    $sent++;
-                    mysql_query("UPDATE student SET sent = $sent WHERE email =$email");
-                } else {
-                    $error = "Maximum requests exceeded(5).";
-                }
-
-
-                echo $password;
-
-
-            } else {
-                $error = "Email not found.";
-            }
-        } else {
-            $error = "Query error.";
-        }
-        mysql_close($db_handle);
-    } else {
-        $error = "Error connecting to database.";
-    }
-
-}

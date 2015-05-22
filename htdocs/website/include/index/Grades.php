@@ -1,28 +1,25 @@
-
 <div class="CSSTableGenerator" >
-    <table >
-        <tr>
-            <td>
-                Course ID
-            </td>
-            <td >
-                Year
-            </td>
-            <td>
-                Term
-            </td>
-            <td>
-                Grade
-            </td>
-        </tr>
-        <!--------------------------------------------------------------------->
-
+                    <table>
+                        <tr>
+                            <td>
+                                Course ID
+                            </td>
+                            <td>
+                                Year
+                            </td>
+                            <td>
+                                Term
+                            </td>
+                            <td>
+                                Grade
+                            </td>
+                        </tr>
         <?php
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
 
         if ($connection) {
-            $number = quote_smart($number, $connection);
+            $number = quote_smart($connection, $number);
 
             $SQL = "SELECT * FROM grade WHERE student_number =  $number";
 
@@ -37,7 +34,7 @@
                         $year = $data['year'];
                         $term = $data['term'];
                         $grade = $data['grade'];
-                        echo "<tr><td>$courseID</td><td>$year</td><td>$term</td><td>$grade</td></tr>";
+                        echo "\t\t\t<tr>\n\t\t\t\t<td>$courseID</td>\n\t\t\t\t<td>$year</td>\n\t\t\t\t<td>$term</td>\n\t\t\t\t<td>$grade</td>\n\t\t\t</tr>\n";
                     }
                 }
             } else {
@@ -46,11 +43,7 @@
         }
 
         ?>
-
-
-
-    </table>
-</div>
-
+                    </table>
+                </div>
 <?php
 ?>
