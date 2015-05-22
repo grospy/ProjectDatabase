@@ -50,6 +50,7 @@ function login(&$error)
 
 }
 
+//Withdraw/Enroll confirmation
 function popup($number, $courseID, $connection, $case)
 {
     $text = "\n\t\t\t<div class='confirmation_message'>";
@@ -112,7 +113,8 @@ function popup($number, $courseID, $connection, $case)
     return $text;
 }
 
-function renamethisfunction($case, $result, $x, $number, $connection)
+//Returns courses in a table
+function courseRow($case, $result, $x, $number, $connection)
 {
     $result->data_seek($x);
     $data = $result->fetch_array();
@@ -359,6 +361,7 @@ function sendmail($code)
     }
 }
 
+//Add students with cvs file
 function addStudents()
 {
     require('database.php');
@@ -382,7 +385,7 @@ function addStudents()
                     if ($connection->query($sql)) {
                         echo "Succeed adding $student_number, $first_name, $last_name! <br/>";
                     } else {
-                        echo "<br />".$connection->error;
+                        echo "<br />" . $connection->error;
                     }
                 }
                 fclose($handle);
@@ -391,44 +394,84 @@ function addStudents()
     }
 }
 
+//Set registration date
 function addRegistrationDate()
 {
     require('database.php');
-   if (isset($_POST["submitRegDate"])) {
-	$studyYear = $_POST["studyYear"];
-	$term = $_POST["term"];
-	
-	$today = date("Y-m-d");
-	
-	$openDay = $_POST["openDay"];
-	$openMonth = $_POST["openMonth"];
-	$openYear =  $_POST["openYear"];
-	$openDate = "$openYear-$openMonth-$openDay";
-	
-	$closeDay = $_POST["closeDay"];
-	$closeMonth = $_POST["closeMonth"];
-	$closeYear =  $_POST["closeYear"];
-	$closeDate = "$closeYear-$closeMonth-$closeDay";
-	
-	if (!($openDay=="Day" || $openMonth=="Month" || $openYear=="Year"|| $closeDay=="Day" || $closeMonth=="Month" || $closeYear=="Year")) {
-		if (($openDate>$today) && (($closeDate>$today) && ($closeDate>$openDate)) ){
-			require('include/database.php');
-			$openDateSQL = "insert into registration (year, term, openRegDate, closeRegDate) values ($studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay')";
-				if($connection->query($openDateSQL)===TRUE) {
-					echo "<br/>Succeed adding registration date for study year $studyYear term $term 
+    if (isset($_POST["submitRegDate"])) {
+        $studyYear = $_POST["studyYear"];
+        $term = $_POST["term"];
+
+        $today = date("Y-m-d");
+
+        $openDay = $_POST["openDay"];
+        $openMonth = $_POST["openMonth"];
+        $openYear = $_POST["openYear"];
+        $openDate = "$openYear-$openMonth-$openDay";
+
+        $closeDay = $_POST["closeDay"];
+        $closeMonth = $_POST["closeMonth"];
+        $closeYear = $_POST["closeYear"];
+        $closeDate = "$closeYear-$closeMonth-$closeDay";
+
+        if (!($openDay == "Day" || $openMonth == "Month" || $openYear == "Year" || $closeDay == "Day" || $closeMonth == "Month" || $closeYear == "Year")) {
+            if (($openDate > $today) && (($closeDate > $today) && ($closeDate > $openDate))) {
+                require('include/database.php');
+                $openDateSQL = "insert into registration (year, term, openRegDate, closeRegDate) values ($studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay')";
+                if ($connection->query($openDateSQL) === TRUE) {
+                    echo "<br/>Succeed adding registration date for study year $studyYear term $term
 							<br/>open date : $openYear-$openMonth-$openDay
 							<br/>close date : $closeYear-$closeMonth-$closeDay";
-				} 
-				else {
-					echo "<br />".$connection->error;
-				}
-		}
-		else {
-			 echo "date error. select open date after today. select close date after open date.";
-		}
-	}
-	else {
-			 echo "all day, month and year field must be filled.";
-		}
- }		
+                } else {
+                    echo "<br />" . $connection->error;
+                }
+            } else {
+                echo "date error. select open date after today. select close date after open date.";
+            }
+        } else {
+            echo "all day, month and year field must be filled.";
+        }
+    }
+}
+
+//All students into table
+function showStudents()
+{
+    require('include/database.php');
+    $return = "<div id='lightStudents' class='white_content'>
+                <div class=\"CSSTableGenerator\">
+                <table>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        ID
+                    </td>
+                </tr>";
+    if ($connection) {
+        $SQL = "SELECT * FROM student;";
+        $result = $connection->query($SQL);
+        $rows = mysqli_num_rows($result);
+        //for sorting
+        /* $results = array();
+         while ($row = mysqli_fetch_array($result)) {
+             $results[] = $row['courseID'];
+         }*/
+        for ($x = 0; $x < $rows; $x++) {
+            $result->data_seek($x);
+            $data = $result->fetch_array();
+            $name = $data['first_name'];
+            $name2 = $data['last_name'];
+            $number = $data['student_number'];
+            $return .= "<tr><td>$name" ." "."$name2</td><td>$number</td></tr>";
+        }
+    } else {
+        $return .= "Database error";
+    }
+    $return .= "</table>
+                </div>
+                <button class='back' onclick='function2(\"Students\")'>Close</button>
+                </div>";
+    return $return;
 }

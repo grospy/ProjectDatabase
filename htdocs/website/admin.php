@@ -1,7 +1,7 @@
 <?PHP
 session_start();
 if ($_SESSION['login'] != md5("2")) {
-    header("Location: login.php");
+    header("Location: login_admin.php");
 }
 require('include/top.php');
 require('include/functions.php');
@@ -62,7 +62,6 @@ require("include/database.php");
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Student</h3>
-				
 				<?php require('include/index_admin/Students.php');  ?>
 			</div>
 		</div>
@@ -71,33 +70,5 @@ require("include/database.php");
 	
 	
 </div>
-	
-<!--------------------------------------------------------------- -->
-
-
-<!--<section class="container">
-    <div id="content">
-        <h1>Welcome, admin</h1>
-        <p><a href="addstudent.php">Add a student to the database</a> </p>
-        <p>
-            <a href="logout.php">Log out</a>
-        </p>
-    </div>
-</section>	
-	<div class="dash">
-    <img src="image/Inholland_logo.png" id="logotop">
-    <div id="webtitle">
-        International Business Innovation Studies
-        <br/>Elective Courses Enrolment
-    </div>
-
-    <div id="welcome">
-        Welcome, <?php echo htmlspecialchars($_SESSION['name'] . ".") ?>
-        <br/>Registration deadline: 
-		<br/><span id="logout"><a href="logout.php">Log out</a></span>
-    </div>
-    <?php if(isset($_SESSION["message"])){echo $_SESSION["message"]; $_SESSION["message"] = "";} ?>
-</div> -->
-
 <?php
 require('include/bot.php');

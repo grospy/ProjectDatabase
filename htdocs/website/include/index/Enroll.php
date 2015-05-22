@@ -61,11 +61,11 @@ if (isset($_SESSION["message"])) {
             }
             for ($x = 0; $x < $rows; $x++) {
                 if (in_array($results[$x], $results3)) {
-                    renamethisfunction(2, $result, $x, $number, $connection);
+                    courseRow(2, $result, $x, $number, $connection);
                 } else if (in_array($results[$x], $results2)) {
-                    renamethisfunction(1, $result, $x, $number, $connection);
+                    courseRow(1, $result, $x, $number, $connection);
                 } else if (in_array($results[$x], $results1)) {
-                    renamethisfunction(0, $result, $x, $number, $connection);
+                    courseRow(0, $result, $x, $number, $connection);
                 } else {
                     echo "ERRORNOMATCHREFRESH";
                 }
