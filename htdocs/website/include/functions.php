@@ -50,265 +50,6 @@ function login(&$error)
 
 }
 
-//Withdraw/Enroll confirmation
-function popup($number, $courseID, $connection, $case)
-{
-    $text = "\n\t\t\t<div class='confirmation_message'>";
-    if ($case != 2) {
-        $text .= "\n\t\t\t\t<h3 align='center'>Are you sure you want to " . ($case == 0 ? 'withdraw from' : 'enroll to') . "</h3>";
-    } else {
-        $text .= "Sorry, this class is full.";
-    }
-    if ($connection) {
-        $courseNameSQL = "SELECT name FROM course WHERE courseid = '$courseID'";
-        $resultCourseName = $connection->query($courseNameSQL);
-        $resultCourseName->data_seek(0);
-        $data = $resultCourseName->fetch_array();
-        $courseName = $data['name'];
-        $text .= "\n\t\t\t\t<div class='schedule_header'>\n\t\t\t\t\t<h1> $courseID - $courseName </h1>\n\t\t\t\t</div>";
-    } else {
-        return "Database error";
-    }
-    $text .= "\n\t\t\t\t<p id='overlap_message'>The course(s) below will be " . ($case == 0 ? 'AVAILABLE' : 'UNAVAILABLE') . " if you " . ($case == 0 ? 'withdraw from' : 'enroll to') . " this course :</p>\n\t\t\t\t<div class='overlap'>";
-
-    if ($connection) {
-        $SQLcheckoverlap = "select concat(courseID,' - ',name) as overlap from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID='$courseID') and le.courseID in (le.courseID='$courseID'));";
-        $result = $connection->query($SQLcheckoverlap);
-        $num_rows = mysqli_num_rows($result);
-        if ($result) {
-            if ($num_rows > 0) {
-                $text .= "\t\t\t\t\t\t\t<ul>\n";
-                for ($x = 0;
-                     $x < $num_rows;
-                     $x++) {
-                    $result->data_seek($x);
-                    $data = $result->fetch_array();
-                    $text .= "\t\t\t\t\t\t\t\t<li>";
-                    $text .= $data["overlap"];
-                    $text .= "</li><br/>\n";
-                }
-                $text .= "\t\t\t\t\t\t\t</ul>\n";
-            }
-        } else {
-            return "Database error";
-        }
-    }
-    if ($case != 2) {
-        $text .= "\n\t\t\t\t</div>\n\t\t\t\t<form action='" . $_SERVER['PHP_SELF'] . "' method='post'>\n\t\t\t\t\t<input type='submit' name='" . ($case == 0 ? 'delete' : 'enroll') . $courseID . "' class=" . ($case == 0 ? 'withdraw' : 'enroll') . " value='";
-    }
-
-    if (isset($_POST["delete$courseID"])) {
-        $withdrawSQL = "delete from enrolledstudent where courseID='$courseID' and studentID= '$number';";
-        if ($connection->query($withdrawSQL) === TRUE) {
-            $_SESSION["message"] = "Successfully withdrawn.";
-            header("Location: index.php");
-        }
-    } else if ($case == 0) {
-        $text .= "Withdraw";
-    } else if (isset($_POST["enroll$courseID"])) {
-        $withdrawSQL = "insert into enrolledstudent (courseID,studentID) values ('$courseID','$number');";
-        if ($connection->query($withdrawSQL) === TRUE) {
-            $_SESSION["message"] = "Successfully enrolled.";
-            header("Location: index.php");
-        }
-    } else if ($case == 1) {
-        $text .= "Enroll";
-    }
-
-    $text .= "'" . ($case == 2 ? 'disabled' : '') . ">\n\t\t\t\t</form>\n\t\t\t</div>";
-    return $text;
-}
-
-//Get courses
-function courses()
-{
-    global $connection;
-    $number = $_SESSION['number'];
-    $number = htmlspecialchars($number);
-
-    if ($connection) {
-        $number = quote_smart($connection, $number);
-
-        //ALL
-        $SQL = "SELECT * FROM course ORDER by courseID;";
-        $resultALL = $connection->query($SQL);
-        $all = array();
-        $rows = mysqli_num_rows($resultALL);
-        while ($row = mysqli_fetch_array($resultALL)) {
-            $all[] = $row['courseID'];
-        }
-        //OFFERED
-        $SQL = "SELECT * FROM course WHERE offer = '1';";
-        $result = $connection->query($SQL);
-        $offered = array();
-        while ($row = mysqli_fetch_array($result)) {
-            $offered[] = $row['courseID'];
-        }
-        //ENROLLED
-        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number;";
-        $result = $connection->query($SQL);
-        $enrolled = array();
-        while ($row = mysqli_fetch_array($result)) {
-            $enrolled[] = $row['courseID'];
-        }
-        //OVERLAP
-        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number'))) and courseID not in (select courseID from enrolledstudent where studentID='$number');";
-        $result = $connection->query($SQL);
-        $overlap = array();
-        while ($row = mysqli_fetch_array($result)) {
-            $overlap[] = $row['courseID'];
-        }
-/*        //FULL
-        $SQL = "Select * from course where (SELECT count(*) as enrolled from course c inner join enrolledstudent en on c.courseID = en.courseID where c.courseID = '$all[$x]';) >= capacity and courseID = '$all[$x]';";
-        $result = $connection->query($SQL);
-        $full = array();
-        while ($row = mysqli_fetch_array($result)) {
-            $full[] = $row['courseID'];
-        }*/
-        /*        //OFFERED
-                $SQL = "SELECT * FROM course where offered = yes;";
-                $result = $connection->query($SQL);
-                $offered = array();
-                while ($row = mysqli_fetch_array($result)) {
-                    $offered[] = $row['courseID'];
-                }*/
-
-        /*        //REQUIREMENTS
-                $SQL = "SELECT * FROM course ORDER by courseID;";
-                $result = $connection->query($SQL);
-                $requirements = array();
-                while ($row = mysqli_fetch_array($result)) {
-                    $requirements[] = $row['courseID'];
-                }*/
-
-        for ($x = 0; $x < $rows; $x++) {
-
-
-            if (in_array($all[$x], $offered)) {
-                if (!in_array($all[$x], $enrolled)) {
-                    if (!in_array($all[$x], $overlap)) {
-                        if (!full($all[$x])) {
-                            courseRow(0, $resultALL, $x, $number, $connection);
-                        }else{
-                            courseRow(3, $resultALL, $x, $number, $connection);
-                        }
-                    } else {
-                        courseRow(1, $resultALL, $x, $number, $connection);
-                    }
-                } else {
-                    courseRow(2, $resultALL, $x, $number, $connection);
-                }
-
-
-            } else {
-                //THIS CLASS IS NOT OFFERED!
-            }
-        }
-    } else {
-        echo "Database error";
-    }
-}
-
-//Returns courses in a table
-function courseRow($case, $result, $x, $number, $connection)
-{
-    $result->data_seek($x);
-    $data = $result->fetch_array();
-
-    $name = $data['name'];
-    $capacity = $data['capacity'];
-    $studyload = $data['studyload'];
-    $courseID = $data['courseID'];
-
-
-    $text = "
-<button class='";
-    switch ($case) {
-        case 0:
-            $text .= "enroll'";
-            break;
-        case 1:
-            $text .= "unavailable'";
-            break;
-        case 2:
-            $text .= "withdraw'";
-            break;
-        case 3:
-            $text .= "full'";
-            break;
-    }
-    if ($case != 1) {
-        $text .= " onclick = 'function1(" . '"';
-        $text .= $courseID . '"';
-        $text .= ")'";
-    }
-    $text .= ">";
-    switch ($case) {
-        case 0:
-            $text .= "Enroll";
-            break;
-        case 1:
-            $text .= "Unavailable";
-            break;
-        case 2:
-            $text .= "Withdraw";
-            break;
-        case 3:
-            $text .= "Full";
-            break;
-    }
-    $text .= "</button>";
-
-    if ($case != 1) {
-        $text .= "\n\t\t\t\t
-<div id='light" . $courseID . "' class='white_content'>";
-        switch ($case) {
-            case 0:
-                $text .= popup($number, $courseID, $connection, 1);
-                break;
-            case 2:
-                $text .= popup($number, $courseID, $connection, 0);
-                break;
-            case 3:
-                $text .= popup($number, $courseID, $connection, 2);
-                break;
-        }
-        $text .= "\n\t\t\t\t\t
-    <button class='back' onclick='function2(" . '
-    "';
-        $text .= $courseID . '"';
-        $text .= ")'>Cancel</button>\n\t\t\t\t
-</div>";
-    }
-
-
-    echo "\n\t\t
-<tr class='";
-    switch ($case) {
-        case 0:
-            echo "available";
-            break;
-        case 1:
-            echo "unavailable";
-            break;
-        case 2:
-            echo "enrolled";
-            break;
-        case 3:
-            echo "full";
-            break;
-    }
-    echo "Row'>\n\t\t\t
-    <td>$name</td>
-    \n\t\t\t
-    <td>$capacity</td>
-    \n\t\t\t
-    <td>$studyload</td>
-    \n\t\t\t
-    <td> $text\n\t\t\t</td>
-    \n\t\t
-</tr>";
-}
 
 //Sets password
 function set(&$error)
@@ -675,14 +416,290 @@ function showStudents()
     return $return;
 }
 
+
+
+//Get courses
+function courses()
+{
+    global $connection;
+    $number = $_SESSION['number'];
+    $number = htmlspecialchars($number);
+
+    if ($connection) {
+        $number = quote_smart($connection, $number);
+
+        //ALL
+        $SQL = "SELECT * FROM course ORDER by courseID;";
+        $resultALL = $connection->query($SQL);
+        $all = array();
+        $rows = mysqli_num_rows($resultALL);
+        while ($row = mysqli_fetch_array($resultALL)) {
+            $all[] = $row['courseID'];
+        }
+        //OFFERED
+        $SQL = "SELECT * FROM course WHERE offer = '1';";
+        $result = $connection->query($SQL);
+        $offered = array();
+        while ($row = mysqli_fetch_array($result)) {
+            $offered[] = $row['courseID'];
+        }
+        //ENROLLED
+        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number;";
+        $result = $connection->query($SQL);
+        $enrolled = array();
+        while ($row = mysqli_fetch_array($result)) {
+            $enrolled[] = $row['courseID'];
+        }
+        //OVERLAP
+        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number'))) and courseID not in (select courseID from enrolledstudent where studentID='$number');";
+        $result = $connection->query($SQL);
+        $overlap = array();
+        while ($row = mysqli_fetch_array($result)) {
+            $overlap[] = $row['courseID'];
+        }
+        /*        //FULL
+                $SQL = "Select * from course where (SELECT count(*) as enrolled from course c inner join enrolledstudent en on c.courseID = en.courseID where c.courseID = '$all[$x]';) >= capacity and courseID = '$all[$x]';";
+                $result = $connection->query($SQL);
+                $full = array();
+                while ($row = mysqli_fetch_array($result)) {
+                    $full[] = $row['courseID'];
+                }*/
+        /*        //OFFERED
+                $SQL = "SELECT * FROM course where offered = yes;";
+                $result = $connection->query($SQL);
+                $offered = array();
+                while ($row = mysqli_fetch_array($result)) {
+                    $offered[] = $row['courseID'];
+                }*/
+
+        /*        //REQUIREMENTS
+                $SQL = "SELECT * FROM course ORDER by courseID;";
+                $result = $connection->query($SQL);
+                $requirements = array();
+                while ($row = mysqli_fetch_array($result)) {
+                    $requirements[] = $row['courseID'];
+                }*/
+
+        for ($x = 0; $x < $rows; $x++) {
+
+
+            if (in_array($all[$x], $offered)) {
+                if (!in_array($all[$x], $enrolled)) {
+                    if (!in_array($all[$x], $overlap)) {
+                        if (!full($all[$x])) {
+                            courseRow(0, $resultALL, $x, $number, $connection);
+                        }else{
+                            courseRow(3, $resultALL, $x, $number, $connection);
+                        }
+                    } else {
+                        courseRow(1, $resultALL, $x, $number, $connection);
+                    }
+                } else {
+                    courseRow(2, $resultALL, $x, $number, $connection);
+                }
+
+
+            } else {
+                //THIS CLASS IS NOT OFFERED!
+            }
+        }
+    } else {
+        echo "Database error";
+    }
+}
+
+//Returns courses in a table
+function courseRow($case, $result, $x, $number, $connection)
+{
+    $result->data_seek($x);
+    $data = $result->fetch_array();
+
+    $name = $data['name'];
+    $capacity = $data['capacity'];
+    $studyload = $data['studyload'];
+    $courseID = $data['courseID'];
+
+
+    $text = "
+<button class='";
+    switch ($case) {
+        case 0:
+            $text .= "enroll'";
+            break;
+        case 1:
+            $text .= "unavailable'";
+            break;
+        case 2:
+            $text .= "withdraw'";
+            break;
+        case 3:
+            $text .= "full'";
+            break;
+    }
+    if ($case != 1) {
+        $text .= " onclick = 'function1(" . '"';
+        $text .= $courseID . '"';
+        $text .= ")'";
+    }
+    $text .= ">";
+    switch ($case) {
+        case 0:
+            $text .= "Enroll";
+            break;
+        case 1:
+            $text .= "Unavailable";
+            break;
+        case 2:
+            $text .= "Withdraw";
+            break;
+        case 3:
+            $text .= "Full";
+            break;
+    }
+    $text .= "</button>";
+
+    if ($case != 1) {
+        $text .= "\n\t\t\t\t
+<div id='light" . $courseID . "' class='white_content'>";
+        switch ($case) {
+            case 0:
+                $text .= popup($number, $courseID, $connection, 1);
+                break;
+            case 2:
+                $text .= popup($number, $courseID, $connection, 0);
+                break;
+            case 3:
+                $text .= popup($number, $courseID, $connection, 2);
+                break;
+        }
+        $text .= "\n\t\t\t\t\t
+    <button class='back' onclick='function2(" . '
+    "';
+        $text .= $courseID . '"';
+        $text .= ")'>Cancel</button>\n\t\t\t\t
+</div>";
+    }
+
+
+    echo "\n\t\t
+<tr class='";
+    switch ($case) {
+        case 0:
+            echo "available";
+            break;
+        case 1:
+            echo "unavailable";
+            break;
+        case 2:
+            echo "enrolled";
+            break;
+        case 3:
+            echo "full";
+            break;
+    }
+    echo "Row'>\n\t\t\t
+    <td>$name</td>
+    \n\t\t\t
+    <td>$capacity</td>
+    \n\t\t\t
+    <td>$studyload</td>
+    \n\t\t\t
+    <td> $text\n\t\t\t</td>
+    \n\t\t
+</tr>";
+}
+//Withdraw/Enroll confirmation
+function popup($number, $courseID, $connection, $case)
+{
+    // 0 - withdraw
+    // 1 - enroll
+    // 2 - FULL
+    $text = "\n\t\t\t<div class='confirmation_message'>";
+    if ($case != 2) {
+        $text .= "\n\t\t\t\t<h3 align='center'>Are you sure you want to " . ($case == 0 ? 'withdraw from' : 'enroll to') . "</h3>";
+    } else {
+        $text .= "Sorry, this class is full.";
+    }
+    if ($connection) {
+        $courseNameSQL = "SELECT name FROM course WHERE courseID = '$courseID'";
+        $resultCourseName = $connection->query($courseNameSQL);
+        $resultCourseName->data_seek(0);
+        $data = $resultCourseName->fetch_array();
+        $courseName = $data['name'];
+        $text .= "\n\t\t\t\t<div class='schedule_header'>\n\t\t\t\t\t<h1> $courseID - $courseName </h1>\n\t\t\t\t</div>";
+    } else {
+        return "Database error";
+    }
+
+
+
+    $text .= "\n\t\t\t\t<p id='overlap_message'>The course(s) below will be " . ($case == 0 ? 'AVAILABLE' : 'UNAVAILABLE') . " if you " . ($case == 0 ? 'withdraw from' : 'enroll to') . " this course :</p>\n\t\t\t\t<div class='overlap'>";
+
+
+
+    if ($connection) {
+        $SQLcheckoverlap = "select concat(courseID,' - ',name) as overlap from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID='$courseID') and le.courseID in (le.courseID='$courseID'));";
+        $result = $connection->query($SQLcheckoverlap);
+        $num_rows = mysqli_num_rows($result);
+        if ($result) {
+            if ($num_rows > 0) {
+                $text .= "\t\t\t\t\t\t\t<ul>\n";
+                for ($x = 0;
+                     $x < $num_rows;
+                     $x++) {
+                    $result->data_seek($x);
+                    $data = $result->fetch_array();
+                    $text .= "\t\t\t\t\t\t\t\t<li>";
+                    $text .= $data["overlap"];
+                    $text .= "</li><br/>\n";
+                }
+                $text .= "\t\t\t\t\t\t\t</ul>\n";
+            }
+        } else {
+            return "Database error";
+        }
+    }
+    if ($case != 2) {
+        $text .= "\n\t\t\t\t</div>\n\t\t\t\t<form action='" . $_SERVER['PHP_SELF'] . "' method='post'>\n\t\t\t\t\t<input type='submit' name='" . ($case == 0 ? 'delete' : 'enroll') . $courseID . "' class='" . ($case == 0 ? 'withdraw' : 'enroll') . "' value='";
+    }else{
+        $text .= "\n\t\t\t\t</div>\n\t\t\t\t";
+    }
+
+    if (isset($_POST["delete$courseID"])) {
+        $withdrawSQL = "delete from enrolledstudent where courseID='$courseID' and studentID= '$number';";
+        if ($connection->query($withdrawSQL) === TRUE) {
+            $_SESSION["message"] = "Successfully withdrawn.";
+            header("Location: index.php");
+        }
+    } else if ($case == 0) {
+        $text .= "Withdraw";
+    } else if (isset($_POST["enroll$courseID"])) {
+        $withdrawSQL = "insert into enrolledstudent (courseID,studentID) values ('$courseID','$number');";
+        if ($connection->query($withdrawSQL) === TRUE) {
+            $_SESSION["message"] = "Successfully enrolled.";
+            header("Location: index.php");
+        }
+    } else if ($case == 1) {
+        echo "dsfsdfsd";
+        $text .= "Enroll";
+    }
+
+    $text .= "'" . ($case == 2 ? 'disabled' : '') . ">\n\t\t\t\t</form>\n\t\t\t</div>";
+    return $text;
+}
+
 function full($courseID){
     global $connection;
-    $connection->query("SELECT capacity FROM course where courseID='$courseID';");
-    $capacity = mysqli_next_result($connection);
-    $connection->query("SELECT count(*) FROM course c inner join enrolledstudent e on c.courseID=e.courseID where c.courseID = $courseID;");
-    $enrolled = mysqli_next_result($connection);
-    echo $capacity;
-    echo $enrolled;
-    echo "sdfsdf";
-    return ($enrolled < $capacity ?  true : false);
+
+    $result = $connection->query("SELECT capacity FROM course where courseID='$courseID';");
+    $result->data_seek(0);
+    $data = $result->fetch_array();
+    $capacity = $data['capacity'];
+
+    $result = $connection->query("SELECT count(*) as enrolled FROM course c inner join enrolledstudent e on c.courseID=e.courseID where c.courseID = '$courseID';");
+    $result->data_seek(0);
+    $data = $result->fetch_array();
+    $enrolled = $data['enrolled'];
+
+    return ($enrolled < $capacity ?  false:true);
 }
