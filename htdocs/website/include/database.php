@@ -3,7 +3,7 @@
 /*Been Here*/
 //===============================================
 //==================LOCAL HOST===================
- $user_name = "root";
+$user_name = "root";
 $pass_word = "admin";
 $database = "inholland";
 $server = "127.0.0.1"; 

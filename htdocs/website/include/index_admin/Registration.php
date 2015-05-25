@@ -85,9 +85,22 @@ Close at
 	?>
 </select> 
 </p>
+
+<p>
+Filter student for registration :
+
+<br/><input type='radio' name='allowedStudent' value='allStudent'>All students (for first registration)</input>
+<br/><input type='radio' name='allowedStudent' value='noStudent'>No student allowed (clear registration)</input>
+<br/><input type='radio' name='allowedStudent' value='problemStudent'>Students whose credits less than</input>
+<input type='number' name='minStudyLoad' value='60'></input>
+<br/>Manually insert studentID : <br/><textarea name="area" rows="5" cols="40">studentID, separate with comma</textarea>
+
+</p>
+
 <input type="submit" name="submitRegDate"/>
 </form>
 
 <?php
-addRegistrationDate()
+addRegistrationDate();
+allowStudent();
 ?>

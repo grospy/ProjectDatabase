@@ -190,3 +190,21 @@ html {
     overflow: auto;
     text-align: center;
 }
+.content{
+    width: 200px;
+    height: auto;
+    margin: auto;
+    padding: 1em;
+    text-align: center;
+    color: rgb(141, 145, 146);
+    border: solid #a3a3a3 1px;
+    background: white;
+    box-shadow: 2px 2px 5px grey;
+}
+.contentbox{
+     position: fixed;
+     top: 50%;
+     left: 50%;
+     -webkit-transform: translate(-50%, -50%);
+     transform: translate(-50%, -50%);
+ }

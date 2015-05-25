@@ -4,7 +4,7 @@ $number = htmlspecialchars($number);
 
 if ($connection) {
     $number = quote_smart($connection, $number);
-    $SQL = "select sum(c.studyload) as total from course c inner join enrolled_students en on c.courseID=en.courseID where en.studentID=$number";
+    $SQL = "select sum(c.studyload) as total from course c inner join enrolledstudent en on c.courseID=en.courseID where en.studentID=$number";
 
     $result = $connection->query($SQL);
     $num_rows = mysqli_num_rows($result);

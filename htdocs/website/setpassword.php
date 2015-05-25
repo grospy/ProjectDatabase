@@ -79,7 +79,7 @@ require('include/functions.php');
 
             <p id="br-link"><a href="login_admin.php">admin</a></p>
         </div>
-        <div class="login-help">
+        <div class="help">
             <p>Know your password? <a href="index.php">Back to log in page</a>.</p>
         </div>
     </section>

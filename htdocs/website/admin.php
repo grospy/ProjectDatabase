@@ -43,14 +43,13 @@ require("include/database.php");
 	</div>
 	
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" >
+		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (isset($_POST['offerCourse'])) echo "Checked"?>>
 		<label class="tab-label" for="tab-3">Edit Courses</label>
 
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Edit Course</h3>
-				add course, delete course, edit course
-				<?php /* require('include/index_admin/Courses.php'); */ ?>
+				<?php require('include/index_admin/Courses.php'); ?>
 			</div>
 		</div>
 	</div>
