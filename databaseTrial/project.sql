@@ -1,0 +1,1 @@
+SELECT * FROM student inner join grade where studentId='001'
