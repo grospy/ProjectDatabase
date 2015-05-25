@@ -241,8 +241,9 @@ function addStudents()
                     $first_name = $data[1];
                     $last_name = $data[2];
                     $email = $studentID . "@student.inholland.nl";
-                    $sql = "INSERT INTO student (studentID, first_name, last_name, email) VALUES ('$studentID','$first_name','$last_name','$email')";
-                    if ($connection->query($sql)) {
+                    $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
+					$sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
+                    if ($connection->query($sql1) && $connection->query($sql2)) {
                         echo "Succeed adding $studentID, $first_name, $last_name! <br/>";
                     } else {
                         echo "<br/>" . $connection->error;
@@ -261,7 +262,7 @@ function addRegistrationDate()
     if (isset($_POST["submitRegDate"])) {
         $studyYear = $_POST["studyYear"];
         $term = $_POST["term"];
-
+		
         $today = date("Y-m-d");
 
         $openDay = $_POST["openDay"];
@@ -273,17 +274,34 @@ function addRegistrationDate()
         $closeMonth = $_POST["closeMonth"];
         $closeYear = $_POST["closeYear"];
         $closeDate = "$closeYear-$closeMonth-$closeDay";
+		
+		switch ($_POST['allowedStudent']) {
+            case 'allStudent':
+                echo " first ";
+                $type = "first";
+				$regtype = "01";
+                    break;
 
+            default:
+                echo " second ";
+                $type = "second";
+				$regtype = "02";
+                break;
+		}
+				
+		$registrationID = $studyYear.$term.$regtype;
+		$minStudyLoad = $_POST['minStudyLoad'];
+		
         if (!($openDay == "Day" || $openMonth == "Month" || $openYear == "Year" || $closeDay == "Day" || $closeMonth == "Month" || $closeYear == "Year")) {
             if (($openDate > $today) && (($closeDate > $today) && ($closeDate > $openDate))) {
                 require('include/database.php');
-                $openDateSQL = "insert into registration (year, term, openRegDate, closeRegDate) values ($studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay')";
+                $openDateSQL = "insert into registration (registrationID, year, term, opendate, closedate, type, minstudyload) values ($registrationID, $studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay', '$type', $minStudyLoad)";
                 if ($connection->query($openDateSQL) === TRUE) {
                     echo "<br/>Succeed adding registration date for study year $studyYear term $term
-<br/>open date : $openYear-$openMonth-$openDay
-<br/>close date : $closeYear-$closeMonth-$closeDay";
+							<br/>open date : $openYear-$openMonth-$openDay
+							<br/>close date : $closeYear-$closeMonth-$closeDay";
                 } else {
-                    echo "<br/>" . $connection->error;
+                    echo "<br/>$registrationID" . $connection->error;
                 }
             } else {
                 echo "date error. select open date after today. select close date after open date.";
@@ -296,7 +314,7 @@ function addRegistrationDate()
 
 function allowStudent()
 {
-    //add alter table student add allowToReg bit(1) not null default 0;
+    
     require('database.php');
     if (isset($_POST["submitRegDate"])) {
         $selected_radio = $_POST['allowedStudent'];
@@ -384,7 +402,7 @@ function showStudents()
             </tr>
             ";
     if ($connection) {
-        $SQL = "SELECT * FROM student;";
+        $SQL = "SELECT * FROM person WHERE type='student';";
         $result = $connection->query($SQL);
         $rows = mysqli_num_rows($result);
         //for sorting
@@ -395,9 +413,9 @@ function showStudents()
         for ($x = 0; $x < $rows; $x++) {
             $result->data_seek($x);
             $data = $result->fetch_array();
-            $name = $data['first_name'];
-            $name2 = $data['last_name'];
-            $number = $data['studentID'];
+            $name = $data['firstName'];
+            $name2 = $data['lastName'];
+            $number = $data['personID'];
             $return .= "
             <tr>
                 <td>$name" . " " . "$name2</td>
