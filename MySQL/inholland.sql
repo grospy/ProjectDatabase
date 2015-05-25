@@ -108,16 +108,26 @@ CREATE TABLE IF NOT EXISTS `type` (
 	`external`   varchar(15)
 	)
 
+	INSERT INTO `teacher` (`employee_number`, `courseID`) VALUES
+('11111', 'IBIS001'),
+('11111', 'IBIS006'),
+('22222', 'IBIS002'),
+('22222', 'IBIS007'),
+('33333', 'IBIS003'),
+('33333', 'IBIS004'),
+('33333', 'IBIS008'),
+('44444', 'IBIS005');
 --
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`employee_number`, `first_name`, `last_name`, `email`, `username`, `password`) VALUES
-('1', '', '', '', 'administrator', '200ceb26807d6bf99fd6f4f0d1ca54d4'),
-('11111', 'Drillenburg', 'Harald', 'Harald.Drillenburg@INHOLL', 'Harald.Drillenburg@I', 'harald'),
-('22222', 'Belinda', 'Kroes', 'Belinda.Kroes@INHOLLAND.n', 'Belinda.Kroes@INHOLL', 'belinda'),
-('33333', 'Margje', 'Penning', 'margje.penning@inholland.', 'margje.penning@inhol', 'margje'),
-('44444', 'Sandra', 'Reeb-Gruber', 'Sandra.ReebGruber@INHOLLA', 'Sandra.ReebGruber@IN', 'sandra');
+
+INSERT INTO `employee`  VALUES ('1', '', '', '', 'administrator', '200ceb26807d6bf99fd6f4f0d1ca54d4');
+INSERT INTO `employee`  VALUES ('11111', 'Drillenburg', 'Harald', 'Harald.Drillenburg@INHOLL', 'Harald.Drillenburg@I', 'harald');
+INSERT INTO `employee`  VALUES ('22222', 'Belinda', 'Kroes', 'Belinda.Kroes@INHOLLAND.n', 'Belinda.Kroes@INHOLL', 'belinda');
+INSERT INTO `employee`  VALUES ('33333', 'Margje', 'Penning', 'margje.penning@inholland.', 'margje.penning@inhol', 'margje');
+INSERT INTO `employee`  VALUES ('44444', 'Sandra', 'Reeb-Gruber', 'Sandra.ReebGruber@INHOLLA', 'Sandra.ReebGruber@IN', 'sandra');
+
 
 -- --------------------------------------------------------
 
@@ -135,15 +145,15 @@ CREATE TABLE IF NOT EXISTS `enrolled_students` (
 -- Dumping data for table `enrolled_students`
 --
 
-INSERT INTO `enrolled_students` (`courseID`, `studentID`) VALUES
-('IBIS001', '559942'),
- 523001, 'Shamil','5e92b6d9772966b339aef40faf6b640c');
-('IBIS003', '559942'),
-('IBIS004', '559942'),
-('IBIS005', '552301'),
-('IBIS006', '552301'),
-('IBIS007', '552301'),
-('IBIS008', '552301');
+
+INSERT INTO `enrolled_students` VALUES ('IBIS001', '559942','0627349328749');
+INSERT INTO `enrolled_students` VALUES ('IBIS002', '556789','0627349328758');
+INSERT INTO `enrolled_students` VALUES ('IBIS003', '559942','0627349328747');
+INSERT INTO `enrolled_students` VALUES ('IBIS004', '559942','0627349328745');
+INSERT INTO `enrolled_students` VALUES ('IBIS005', '552301','0627349328742');
+INSERT INTO `enrolled_students` VALUES ('IBIS006', '552301','0627349328741');
+INSERT INTO `enrolled_students` VALUES ('IBIS007', '552301','0627349328743');
+INSERT INTO `enrolled_students` VALUES ('IBIS008', '552301','0627349328767');
 
 -- --------------------------------------------------------
 
@@ -154,7 +164,8 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `Grade`   int(3),
   PRIMARY KEY(`course_ID`)
   ) 
-  
+  -- student_grade
+  CREATE TABLE IF NOT EXISTS `student_grade` (
   `student_number` varchar(6) NOT NULL,
   `courseID` char(7) NOT NULL,
   `year` year(4) NOT NULL,
@@ -178,29 +189,45 @@ CREATE TABLE IF NOT EXISTS `students&course` (
 --  Course
   PRIMARY KEY (`courseID`,`date`,`time_start`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+--Creating table lesson`
+---- Lesson
 
+
+   
+   CREATE TABLE IF NOT EXISTS `lesson` (
+  `capacity` varchar(6) NOT NULL,
+  `course_ID` varchar(20) NOT NULL,
+  `date` varchar(20) NOT NULL,
+  `start_time` varchar(25) NOT NULL,
+  `room_number` varchar(20) NOT NULL,
+  `location` varchar(32) NOT NULL,
+   PRIMARY KEY (`date`)
+)
 --
 -- Dumping data for table `lesson`
 --
 
-INSERT INTO `lesson` (`courseID`, `date`, `time_start`, `room_number`) VALUES
-('IBIS001', '2015-05-04', '09:00:00', ''),
-('IBIS001', '2015-05-22', '12:00:00', ''),
-('IBIS001', '2015-05-29', '12:00:00', ''),
-('IBIS001', '2015-06-04', '09:00:00', ''),
-('IBIS001', '2015-06-04', '12:00:00', ''),
-('IBIS001', '2015-06-04', '15:00:00', ''),
-('IBIS001', '2015-06-05', '09:00:00', ''),
-('IBIS001', '2015-06-05', '12:00:00', ''),
-('IBIS001', '2015-06-05', '15:00:00', ''),
-('IBIS001', '2015-06-08', '09:00:00', ''),
-('IBIS001', '2015-06-19', '09:00:00', ''),
-('IBIS002', '2015-04-29', '09:00:00', ''),
-('IBIS002', '2015-05-01', '12:00:00', ''),
-('IBIS002', '2015-05-22', '12:00:00', ''),
-('IBIS002', '2015-05-29', '12:00:00', ''),
-('IBIS002', '2015-06-01', '09:00:00', ''),
-('IBIS002', '2015-06-04', '12:00:00', ''),
+INSERT INTO `lesson` VALUES 
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-05-04', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-05-22', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-05-29', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-04', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-04', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-04', '15:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-05', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-05', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-05', '15:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-08', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS001', '2015-06-19', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-04-29', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-05-01', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-05-22', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-05-29', '12:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-06-01', '09:00:00', 'B2-14','Diemen');
+INSERT INTO `lesson` VALUES ('50','IBIS002', '2015-06-04', '12:00:00', 'B2-14','Diemen');
+
+-- 
+/* To be modified
 ('IBIS002', '2015-06-19', '12:00:00', ''),
 ('IBIS003', '2015-05-13', '09:00:00', ''),
 ('IBIS003', '2015-06-04', '09:00:00', ''),
@@ -328,7 +355,7 @@ INSERT INTO `lesson` (`courseID`, `date`, `time_start`, `room_number`) VALUES
 ('IBIS032', '2015-06-05', '12:00:00', ''),
 ('IBIS032', '2015-06-12', '12:00:00', ''),
 ('IBIS032', '2015-06-19', '12:00:00', '');
-
+*/
 -- --------------------------------------------------------
 
 --
@@ -353,7 +380,6 @@ CREATE TABLE IF NOT EXISTS `student` (
 INSERT INTO `student` (`student_number`, `first_name`, `last_name`, `email`, `sent`, `password`, `set_code`) VALUES
 ('559942', 'Louis', NULL, '', 2, 'cfcd208495d565ef66e7dff9f98764da', 'ZCQ2QLFS'),
 ('552301', 'Sasmita', NULL, '', 1, '3ccbda445fcce40d8aa046f393f256e0', 'SR8QYX9S'),
-('560755', 'Niki', NULL, '', 0, '', ''),
 ('523001', 'Shamil', NULL, '', 0, '', '');
 
 -- --------------------------------------------------------
@@ -367,16 +393,7 @@ CREATE TABLE IF NOT EXISTS `Course` (
    PRIMARY KEY(`course_ID`)
    )
    
--- Lesson
 
-CREATE TABLE IF NOT EXISTS `Lesson` (
-   `capacity` int(10),
-   FOREIGN KEY(`course_ID`),
-   PRIMARY KEY(`date`),
-   
-   PRIMARY KEY(`location`),
-   PRIMARY KEY(`start_time`)
-   )
 
 
 --Location
@@ -386,15 +403,7 @@ CREATE TABLE IF NOT EXISTS `Location` (
 	PRIMARY KEY(`room_number`)
 	)
   
-INSERT INTO `teacher` (`employee_number`, `courseID`) VALUES
-('11111', 'IBIS001'),
-('11111', 'IBIS006'),
-('22222', 'IBIS002'),
-('22222', 'IBIS007'),
-('33333', 'IBIS003'),
-('33333', 'IBIS004'),
-('33333', 'IBIS008'),
-('44444', 'IBIS005');
+
   
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
