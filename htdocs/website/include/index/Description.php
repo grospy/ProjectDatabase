@@ -1,3 +1,4 @@
+
 <div class="CSSTableGenerator" >
     <table >
         <tr>
@@ -17,12 +18,11 @@
         <!--------------------------------------------------------------------->
 
         <?php
-        require("./include/database.php");
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
 
         if ($connection) {
-            $number = quote_smart($number, $connection);
+            $number = quote_smart($connection,$number);
 
             $SQL = "SELECT * FROM grade WHERE student_number =  $number";
 
@@ -51,5 +51,6 @@
 
     </table>
 </div>
+
 <?php
 ?>

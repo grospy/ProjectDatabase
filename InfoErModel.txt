@@ -1,0 +1,13 @@
+Er diagram : doesnt have any important info , so we dont need it
+
+ 1 ,Er diagram  version1 : Er model for employee only. Employee entity is didiveded into twoo internal Employee and external Employee.
+
+2,Er diagram version 2: a person tables is created as mister haralld recommanded. and the sudent table and Employee table are created with thier relation ship to employee
+
+3, Er diagram version 3: All the tables are connected in Er model , tables are : person, student, employee , internal and external employees.
+
+4 Er diagram version 4,: Additional table is created for the ternary relation ship between student , grade and registration,
+
+5, Er diagram version 5, End of the Er diagram, additional table is introduced between lesson and location coz the relation ship was many to many.
+
+6,Er diagram version 5:( logical model) all the primary keys and their relation ship is identified.
