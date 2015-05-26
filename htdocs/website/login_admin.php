@@ -74,8 +74,7 @@ function login(&$error)
         $username = quote_smart($connection, $username);
         $password = quote_smart($connection, $password);
 
-        $SQL = "SELECT * FROM admin WHERE adminID = $username AND password = $password";
-		//from sasmita: I omit the md5 encryption for the password
+        $SQL = "SELECT * FROM employee WHERE username = $username AND password = md5($password)";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
 

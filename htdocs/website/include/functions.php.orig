@@ -263,9 +263,13 @@ function addRegistrationDate()
     if (isset($_POST["submitRegDate"])) {
         $studyYear = $_POST["studyYear"];
         $term = $_POST["term"];
+<<<<<<< HEAD
 		$regtype = $_POST["regtype"];
 		$minRegStudyLoad = $_POST["minRegStudyLoad"];
+		
+=======
 
+>>>>>>> 724497fba89fecdd615e1ffab1b1958441c6f8ba
         $today = date("Y-m-d");
 
         $openDay = $_POST["openDay"];
@@ -277,10 +281,31 @@ function addRegistrationDate()
         $closeMonth = $_POST["closeMonth"];
         $closeYear = $_POST["closeYear"];
         $closeDate = "$closeYear-$closeMonth-$closeDay";
+<<<<<<< HEAD
+		
+		$registrationID = $studyYear.$term.$regtype;
+		
+		
+=======
+
+        switch ($_POST['allowedStudent']) {
+            case 'allStudent':
+                echo " first ";
+                $type = "first";
+                $regtype = "01";
+                break;
+
+            default:
+                echo " second ";
+                $type = "second";
+                $regtype = "02";
+                break;
+        }
 
         $registrationID = $studyYear . $term . $regtype;
-		
+        $minStudyLoad = $_POST['minStudyLoad'];
 
+>>>>>>> 724497fba89fecdd615e1ffab1b1958441c6f8ba
         if (!($openDay == "Day" || $openMonth == "Month" || $openYear == "Year" || $closeDay == "Day" || $closeMonth == "Month" || $closeYear == "Year")) {
             if (($openDate > $today) && (($closeDate > $today) && ($closeDate > $openDate))) {
                 require('include/database.php');
@@ -304,6 +329,10 @@ function addRegistrationDate()
 
 function allowStudent()
 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 724497fba89fecdd615e1ffab1b1958441c6f8ba
     require('database.php');
     if (isset($_POST["filterStudent"])){
 		if (!isset($_POST['allowedStudent'])){

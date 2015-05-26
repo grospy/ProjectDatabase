@@ -7,13 +7,13 @@
             <td >
                 Day
             </td>
-			<td >
+            <td >
                 Date
             </td>
             <td>
                 Time
             </td>
-			<td>
+            <td>
                 Instructor
             </td>
             <td>
@@ -29,7 +29,7 @@
             $number = quote_smart($connection,$number);
 
             $SQL = 	"select c.name, dayname(l.date) as day, DATE_FORMAT(l.date, '%b %e, \'%y') as date, l.time_start, concat(p.firstName,' ',p.lastName) as instructor, l.roomnumber from course c inner join lesson l on c.courseID=l.courseID inner join teacher te on te.courseID=c.courseID inner join person p on p.personID=te.teacherID inner join enrolledstudent s on s.courseID=l.courseID WHERE s.studentID=$number AND s.status IS NULL order by l.date ASC, l.time_start ASC;";
-			
+
             $result = $connection->query($SQL);
             $num_rows = mysqli_num_rows($result);
             if ($result) {
@@ -39,10 +39,10 @@
                         $data = $result->fetch_array();
                         $description = $data['name'];
                         $day = $data['day'];
-						$date = $data['date'];
+                        $date = $data['date'];
                         $time = $data['time_start'];
-						$instructor = $data['instructor'];
-						$room = $data['roomnumber'];
+                        $instructor = $data['instructor'];
+                        $room = $data['roomnumber'];
                         echo "<tr>
 							<td>$description</td>
 							<td>$day</td>
