@@ -262,6 +262,8 @@ function addRegistrationDate()
     if (isset($_POST["submitRegDate"])) {
         $studyYear = $_POST["studyYear"];
         $term = $_POST["term"];
+		$regtype = $_POST["regtype"];
+		$minRegStudyLoad = $_POST["minRegStudyLoad"];
 		
         $today = date("Y-m-d");
 
@@ -275,27 +277,13 @@ function addRegistrationDate()
         $closeYear = $_POST["closeYear"];
         $closeDate = "$closeYear-$closeMonth-$closeDay";
 		
-		switch ($_POST['allowedStudent']) {
-            case 'allStudent':
-                echo " first ";
-                $type = "first";
-				$regtype = "01";
-                    break;
-
-            default:
-                echo " second ";
-                $type = "second";
-				$regtype = "02";
-                break;
-		}
-				
 		$registrationID = $studyYear.$term.$regtype;
-		$minStudyLoad = $_POST['minStudyLoad'];
+		
 		
         if (!($openDay == "Day" || $openMonth == "Month" || $openYear == "Year" || $closeDay == "Day" || $closeMonth == "Month" || $closeYear == "Year")) {
             if (($openDate > $today) && (($closeDate > $today) && ($closeDate > $openDate))) {
                 require('include/database.php');
-                $openDateSQL = "insert into registration (registrationID, year, term, opendate, closedate, type, minstudyload) values ($registrationID, $studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay', '$type', $minStudyLoad)";
+                $openDateSQL = "insert into registration (registrationID, year, term, opendate, closedate, type, minstudyload) values ($registrationID, $studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay', '$type', $minRegStudyLoad)";
                 if ($connection->query($openDateSQL) === TRUE) {
                     echo "<br/>Succeed adding registration date for study year $studyYear term $term
 							<br/>open date : $openYear-$openMonth-$openDay
@@ -304,83 +292,102 @@ function addRegistrationDate()
                     echo "<br/>$registrationID" . $connection->error;
                 }
             } else {
-                echo "date error. select open date after today. select close date after open date.";
+                echo "<span class='errorMsg'> date error. select open date after today. select close date after open date. </span>";
             }
         } else {
-            echo "all day, month and year field must be filled.";
+            echo "<span class='errorMsg'> all day, month and year field must be filled. </span>";
         }
     }
 }
 
 function allowStudent()
 {
-    
     require('database.php');
-    if (isset($_POST["submitRegDate"])) {
-        $selected_radio = $_POST['allowedStudent'];
-        $minStudyLoad = $_POST['minStudyLoad'];
+    if (isset($_POST["filterStudent"])){
+		if (!isset($_POST['allowedStudent'])){
+				echo "please filter some student";
+		} else {	
+			$selected_radio = $_POST['allowedStudent'];
+			$minStudyLoad = $_POST['minStudyLoad'];
+			$addStudentID = preg_replace('/\s+/', '', $_POST['addStudentID']);
+			
+			switch ($_POST['allowedStudent']) {
+				case 'allStudent':
+					echo "Registration is now opened for all student.";
+					$SQL = "update student set allowToReg=1";
+					if ($connection->query($SQL) === TRUE)
+						break;
 
-        switch ($_POST['allowedStudent']) {
-            case 'allStudent':
-                echo "all";
-                $SQL = "update student set allowToReg=1";
-                if ($connection->query($SQL) === TRUE)
-                    break;
-
-            case 'noStudent':
-                echo "no";
-                $SQL = "update student set allowToReg=0";
-                if ($connection->query($SQL) === TRUE)
-                    break;
-
-            case 'problemStudent':
-                echo "some";
-                $problemStudent = array();
-                $problemStudentSQL = "select s.studentID as studentID,sum(c.studyload) from course c inner join enrolledstudent e on c.courseID=e.courseID right join student s on e.studentID=s.studentID group by studentID having sum(c.studyload)<90 or sum(c.studyload) is null;";
-                $result = $connection->query($problemStudentSQL);
-                $num_rows = mysqli_num_rows($result);
-                if ($result) {
-                    if ($num_rows > 0) {
-                        for ($x = 0; $x < $num_rows; $x++) {
-                            $result->data_seek($x);
-                            $data = $result->fetch_array();
-                            $studentID = $data['studentID'];
-                            array_push($problemStudent, "$studentID");
-                        }
-                    }
-                }
-                $allStudent = array();
-                $allStudentSQL = "select studentID from student;";
-                $result = $connection->query($allStudentSQL);
-                $num_rows = mysqli_num_rows($result);
-                if ($result) {
-                    if ($num_rows > 0) {
-                        for ($x = 0; $x < $num_rows; $x++) {
-                            $result->data_seek($x);
-                            $data = $result->fetch_array();
-                            $studentID = $data['studentID'];
-                            array_push($allStudent, "$studentID");
-                        }
-                    }
-                }
-
-                foreach ($allStudent as $aStudent) {
-                    if (in_array($aStudent, $problemStudent)) {
-                        $reEnrolStudent = "update student set allowToReg=1 where studentID='$aStudent'";
-                        $connection->query($reEnrolStudent);
-                    }
-                    if (!(in_array($aStudent, $problemStudent))) {
-                        $noEnrolStudent = "update student set allowToReg=0 where studentID='$aStudent'";
-                        $connection->query($noEnrolStudent);
-                    }
-                }
-                echo($allStudent[0]);
-                break;
-
-
-        }
-
-
+				case 'noStudent':
+					echo "Registration is now closed for all student.";
+					echo "$addStudentID";
+					$SQL = "update student set allowToReg=0";
+					if ($connection->query($SQL) === TRUE) 
+						break;
+					
+				case 'manuallyStudent':
+					if(empty($_POST["addStudentID"])){
+						echo "Insert student ID";
+					} else {
+					$manualStudent = explode(",",$addStudentID);
+					$allStudent = array();
+					$allStudentSQL = "select personID from person WHERE type='student'";
+					$result = $connection->query($allStudentSQL);
+					$num_rows = mysqli_num_rows($result);
+					if ($result) {
+						if ($num_rows > 0) {
+							for ($x = 0; $x < $num_rows; $x++) {
+								$result->data_seek($x);
+								$data = $result->fetch_array();
+								$studentID = $data['personID'];
+								array_push($allStudent, "$studentID");
+							}
+						}
+					}
+					$text_success = "";
+					$text_fail = "";
+					foreach ($manualStudent as $aStudent){
+						if (in_array($aStudent,$allStudent)){
+							$manualSQL = "update student set allowToReg=1 where studentID='$aStudent';";
+							$connection->query($manualSQL);
+							$text_success .= "$aStudent, ";
+						}
+						else ($text_fail .= "$aStudent, ");
+					}
+					echo " <p>These studentID are able to register now : $text_success </p>
+					<p>These are not a valid studentID : $text_fail</p>"
+					;
+					}
+					break;
+					
+					
+				case 'problemStudent':
+					//close registration for all student
+					$SQL = "update student set allowToReg=0";
+					$connection->query($SQL);
+					//open registration for problem student
+					$problemStudent = array();
+					$problemStudentSQL = "select s.studentID as studentID,sum(c.studyload) from course c inner join enrolledstudent e on c.courseID=e.courseID right join student s on e.studentID=s.studentID group by studentID having sum(c.studyload)<$minStudyLoad or sum(c.studyload) is null;";
+					$result = $connection->query($problemStudentSQL);
+					$num_rows = mysqli_num_rows($result);
+					if ($result) {
+						if ($num_rows > 0) {
+							for ($x = 0; $x < $num_rows; $x++) {
+								$result->data_seek($x);
+								$data = $result->fetch_array();
+								$studentID = $data['studentID'];
+								array_push($problemStudent, "$studentID");
+							}
+						}
+					}
+					echo "<p>Registration is opened for these students: </p>";
+					foreach ($problemStudent as $aStudent) {
+						$reEnrolStudent = "update student set allowToReg=1 where studentID='$aStudent'";
+						$connection->query($reEnrolStudent);
+						echo "$aStudent, "; 
+					}
+			}
+		}
     }
 }
 

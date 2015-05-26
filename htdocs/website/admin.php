@@ -30,19 +30,6 @@ require("include/database.php");
 	</div>
 
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-2" name="tab-group-1" value="2">
-		<label class="tab-label" for="tab-2">Enrollment</label>
-		
-		<div class="tab-panel">
-			<div class="tab-content">
-				<h3>Enrollment</h3>
-				<br/>see who enrolled for what
-				<?php /* require('include/index_admin/Enrollment.php'); */ ?>
-			</div>
-		</div>
-	</div>
-	
-	<div class="tab">
 		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (isset($_POST['offerCourse'])) echo "Checked"?>>
 		<label class="tab-label" for="tab-3">Edit Courses</label>
 
