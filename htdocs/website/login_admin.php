@@ -9,13 +9,13 @@ if (isset($_POST['submit'])) {
     $username = htmlspecialchars($username);
 }
 ?>
-    <section class="loginbox">
+    <div class="loginbox">
         <div class="login">
-		<img src="image/Inholland_logo.png" id="logologin"></img>
-			<hr/>
-       <h1>Admin Login</h1>
-			<hr/>
-            
+            <img src="image/Inholland_logo.png" id="logologin"></img>
+            <hr/>
+            <h3>Admin Login</h3>
+            <hr/>
+
 
             <form method="post">
                 <p><input type="text" name="username" value="" placeholder="Username"></p>
@@ -56,7 +56,9 @@ if (isset($_POST['submit'])) {
 
             <p id="br-link"><a href="index.php">student</a></p>
         </div>
-    </section>
+        <p class="help">&nbsp;</p>
+    </div>
+
 <?php
 require("include/bot.php");
 
@@ -72,9 +74,10 @@ function login(&$error)
 
     if ($connection) {
         $username = quote_smart($connection, $username);
-        $password = quote_smart($connection, $password);
+        $saltypassword = $password . "AMADEUS";
+        $saltypassword = quote_smart($connection, $saltypassword);
 
-        $SQL = "SELECT * FROM employee WHERE username = $username AND password = md5($password)";
+        $SQL = "SELECT * FROM admin WHERE adminID = $username AND password = md5($saltypassword)";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
 

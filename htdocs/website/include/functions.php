@@ -22,9 +22,9 @@ function login(&$error)
     $number = htmlspecialchars($_POST['number']);
     if ($connection) {
         $number = quote_smart($connection, $number);
-        $password = quote_smart($connection, $password);
-
-        $SQL = "SELECT * FROM student s inner join person p on p.personID = s.studentID WHERE s.studentID = $number AND s.password = md5($password)";
+        $saltypassword = $password . "AMADEUS";
+        $saltypassword = quote_smart($connection, $saltypassword);
+        $SQL = "SELECT * FROM student s inner join person p on p.personID = s.studentID WHERE s.studentID = $number AND s.password = md5($saltypassword);";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
 
@@ -60,9 +60,8 @@ function set(&$error)
     if ($connection) {
         $number = quote_smart($connection, $number);
         $code = quote_smart($connection, $code);
-        $password = quote_smart($connection, $password);
-
-
+        $saltypassword = $password . "AMADEUS";
+        $saltypassword = quote_smart($connection, $saltypassword);
         $SQL = "SELECT * FROM student WHERE studentID = $number;";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
@@ -75,7 +74,7 @@ function set(&$error)
                 if ($connection_code != $code) {
                     $error = "Invalid registration code.";
                 } else {
-                    $connection->query("UPDATE student SET password = md5($password) WHERE studentID = $number");
+                    $connection->query("UPDATE student SET password = md5($saltypassword) WHERE studentID = $number");
                     $_SESSION['reg'] = md5("y");
                     $_SESSION['number'] = $number;
                     header("Location: index.php");
@@ -361,9 +360,9 @@ function showStudents()
         $results[] = $row['courseID'];
         }*/
         for ($x = 0; $x < $rows; $x++) {
-            $name = mysqli_result($result, 0, 'firstName');
-            $name2 = mysqli_result($result, 0, 'lastName');
-            $number = mysqli_result($result, 0, 'personID');
+            $name = mysqli_result($result, $x, 'firstName');
+            $name2 = mysqli_result($result, $x, 'lastName');
+            $number = mysqli_result($result, $x, 'personID');
             $return .= "
             <tr>
                 <td>$name" . " " . "$name2</td>
@@ -426,14 +425,14 @@ function courses()
             $offered[] = $row['courseID'];
         }
         //ENROLLED
-        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number;";
+        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number and (status = 0 or status is null);";
         $result = $connection->query($SQL);
         $enrolled = array();
         while ($row = mysqli_fetch_array($result)) {
             $enrolled[] = $row['courseID'];
         }
         //OVERLAP
-        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number'))) and courseID not in (select courseID from enrolledstudent where studentID='$number');";
+        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number' and (status = 0 or status is null))));";
         $result = $connection->query($SQL);
         $overlap = array();
         while ($row = mysqli_fetch_array($result)) {
@@ -448,26 +447,25 @@ function courses()
         }
 
         for ($x = 0; $x < $rows; $x++) {
-            // 0-enroll 1-withdraw 2-unavailable 3-full
+            // 0-enroll 1-withdraw 2-unavailable 3-full 4-passed
             if (in_array($all[$x], $offered)) {
                 if (!in_array($all[$x], $enrolled)) {
                     if (!full($all[$x])) {
-                        if (!in_array($all[$x], $overlap)) {
-
-                            $rt .= courses2(0, $all[$x]);
-
+                        if (!in_array($all[$x], $passed)) {
+                            if (!in_array($all[$x], $overlap)) {
+                                $rt .= courses2(0, $all[$x]);
+                            } else {
+                                $rt .= courses2(2, $all[$x]);
+                            }
                         } else {
-                            $rt .= courses2(2, $all[$x]);
+                            $rt .= courses2(4, $all[$x]);
                         }
                     } else {
                         $rt .= courses2(3, $all[$x]);
                     }
                 } else {
-                    if (in_array($all[$x], $passed)) {
-                        $rt .= courses2(4, $all[$x]);
-                    } else {
-                        $rt .= courses2(1, $all[$x]);
-                    }
+                    $rt .= courses2(1, $all[$x]);
+
                 }
             } else {
                 //THIS CLASS IS NOT OFFERED!
@@ -486,6 +484,11 @@ function courses2($case, $cID)
     $number = $_SESSION['number'];
     $number = htmlspecialchars($number);
 
+    $sql = "Select * from registration";
+    $result = $connection->query($sql);
+    $rID = mysqli_result($result, 0, 'registrationID');
+
+
     if (isset($_POST["withdraw$cID"])) {
         $withdrawSQL = "delete from enrolledstudent where courseID='$cID' and studentID= '$number';";
         if ($connection->query($withdrawSQL) === TRUE) {
@@ -495,7 +498,7 @@ function courses2($case, $cID)
         }
     } else if (isset($_POST["enroll$cID"])) {
         if (!full($cID)) {
-            $withdrawSQL = "insert into enrolledstudent (courseID,studentID,registrationID) values ('$cID','$number','');";
+            $withdrawSQL = "insert into enrolledstudent (courseID,studentID,registrationID) values ('$cID','$number','$rID');";
             if ($connection->query($withdrawSQL) === TRUE) {
                 $_SESSION["message"] = "Successfully enrolled.";
                 header("Location: index.php");
@@ -525,6 +528,11 @@ function courses2($case, $cID)
             $rt .= "'passedRow'>";
             break;
     }
+    $SQL = "SELECT count(*) as enrolled FROM course c inner join enrolledstudent e on c.courseID=e.courseID where c.courseID = '$cID' and (status = 0 or status is null);";
+    $result = $connection->query($SQL);
+    $enrolled = mysqli_result($result, 0);
+
+
     $SQL = "SELECT * FROM course where courseID = '$cID';";
     $result = $connection->query($SQL);
     $name = mysqli_result($result, 0, 'name');
@@ -532,7 +540,7 @@ function courses2($case, $cID)
     $load = mysqli_result($result, 0, 'studyload');
 
     $rt .= "<td>$name</td>";
-    $rt .= "<td>$capacity</td>";
+    $rt .= "<td>$enrolled/$capacity</td>";
     $rt .= "<td>$load</td>";
     $rt .= "<td>" . button($case, $cID, $name) . "</td>";
     $rt .= "</tr>";
@@ -603,7 +611,7 @@ function button($case, $cID, $name)
         </div>";
         switch ($case) {
             case 0:
-                $rt .= "<p id='overlap_message'>The course(s) below will be UNAVAILABLE if you withdraw from this course :</p>";
+                $rt .= "<p id='overlap_message'>The course(s) below will be UNAVAILABLE if you enroll to this course :</p>";
                 break;
             case 1:
                 $rt .= "<p id='overlap_message'>The course(s) below will be UNAVAILABLE if you withdraw from this course :</p>";
