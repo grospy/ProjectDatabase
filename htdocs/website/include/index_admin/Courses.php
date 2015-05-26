@@ -57,7 +57,7 @@ if ($connection) {
 				echo "<tr>
 				<td>$courseName</td>
 				<td>$participant</td>
-				<td> <button >Edit</button>	</td>
+				<td> <input type='submit' name='editCourseButton' value='$courseID'/>	</td>
 				<td><input type='checkbox' name='courseForm[]' class='courseForm' value='$courseID'></td></tr>";
 			}
 		}
