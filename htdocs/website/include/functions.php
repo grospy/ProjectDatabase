@@ -1,5 +1,6 @@
 <?php
 require('database.php');
+
 //Security function; puts quotes around value
 function quote_smart($handle, $value)
 {
@@ -16,7 +17,7 @@ function quote_smart($handle, $value)
 //Checks login values to provide access to site
 function login(&$error)
 {
-    require("database.php");
+    global $connection;
     $password = htmlspecialchars($_POST['password']);
     $number = htmlspecialchars($_POST['number']);
     if ($connection) {
@@ -29,9 +30,7 @@ function login(&$error)
 
         if ($result) {
             if ($num_rows > 0) {
-                $result->data_seek(0);
-                $data = $result->fetch_array();
-                $name = $data['firstName'];
+                $name = mysqli_result($result, 0, 'firstName');
                 session_start();
                 $_SESSION['login'] = md5("1");
                 $_SESSION['name'] = $name;
@@ -50,11 +49,10 @@ function login(&$error)
 
 }
 
-
 //Sets password
 function set(&$error)
 {
-    require("include/database.php");
+    global $connection;
     $number = $_POST["number"];
     $code = $_POST["code"];
     $password = $_POST["password"];
@@ -65,24 +63,19 @@ function set(&$error)
         $password = quote_smart($connection, $password);
 
 
-        $SQL = "SELECT * FROM student WHERE studentID = $number";
+        $SQL = "SELECT * FROM student WHERE studentID = $number;";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
 
         if ($result) {
             if ($num_rows > 0) {
-                $result->data_seek(0);
-                $data = $result->fetch_array();
-                $connection_code = $data['set_code'];
-                $connection_pass = $data['password'];
-                $connection_sent = $data['sent'] + 1;
+                $connection_code = mysqli_result($result, 0, 'set_code');
                 $connection_code = quote_smart($connection, $connection_code);
 
-                if ($connection_code != $code || $code == "'NOCODE'") {
+                if ($connection_code != $code) {
                     $error = "Invalid registration code.";
                 } else {
                     $connection->query("UPDATE student SET password = md5($password) WHERE studentID = $number");
-                    $connection->query("UPDATE student SET sent = $connection_sent WHERE studentID = $number");
                     $_SESSION['reg'] = md5("y");
                     $_SESSION['number'] = $number;
                     header("Location: index.php");
@@ -100,56 +93,10 @@ function set(&$error)
 
 }
 
-//Sends mail
-function send(&$error)
-{
-    require('functions.php');
-    $email = $_POST['email'];
-
-    $connection_handle = mysql_connect($server, $user_name, $pass_word);
-    $connection_found = mysql_select_db($database, $connection_handle);
-
-    if ($connection_found) {
-        $email = quote_smart($connection_handle, $email);
-
-        $SQL = "SELECT * FROM student WHERE email = $email";
-        $result = mysql_query($SQL);
-        $num_rows = mysql_num_rows($result);
-
-
-        if ($result) {
-            if ($num_rows > 0) {
-                $password = mysql_result($result, 0, "password");
-                $sent = mysql_result($result, 0, "sent");
-                if ($sent < 500) {
-                    $error = $password;
-                    $sent++;
-                    mysql_query("UPDATE student SET sent = $sent WHERE email =$email");
-                } else {
-                    $error = "Maximum requests exceeded(5).";
-                }
-
-
-                echo $password;
-
-
-            } else {
-                $error = "Email not found.";
-            }
-        } else {
-            $error = "Query error.";
-        }
-        mysql_close($connection_handle);
-    } else {
-        $error = "Error connecting to database.";
-    }
-
-}
-
 //make code to send
 function getcode(&$error)
 {
-    require("include/database.php");
+    global $connection;
     $number = $_POST['number'];
 
     if ($connection) {
@@ -158,9 +105,7 @@ function getcode(&$error)
         $SQL = "SELECT * FROM student WHERE studentID = $number";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
-        $result->data_seek(0);
-        $data = $result->fetch_array();
-        $limit = $data['sent'];
+        $limit = mysqli_result($result, 0, 'sent');
 
         if ($result && $limit < 5) {
             if ($num_rows > 0) {
@@ -171,7 +116,10 @@ function getcode(&$error)
                     $n = substr($alphabet, rand(0, $alphaLength), 1);
                     $code .= $n;
                 }
+                $limit = mysqli_result($result, 0, 'sent');
+                $limit += 1;
                 $connection->query("UPDATE student SET set_code = '$code' WHERE studentID = $number");
+                $connection->query("UPDATE student SET sent = $limit WHERE studentID = $number");
                 sendmail($code);
                 session_start();
                 $_SESSION['number'] = $number;
@@ -224,7 +172,7 @@ function sendmail($code)
 //Add students with cvs file
 function addStudents()
 {
-    require('database.php');
+    global $connection;
     if (isset($_POST["submit"])) {
         $filecheck = basename($_FILES['file']['name']);
         $ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
@@ -259,12 +207,12 @@ function addStudents()
 //Set registration date
 function addRegistrationDate()
 {
-    require('database.php');
+    global $connection;
     if (isset($_POST["submitRegDate"])) {
         $studyYear = $_POST["studyYear"];
         $term = $_POST["term"];
-		$regtype = $_POST["regtype"];
-		$minRegStudyLoad = $_POST["minRegStudyLoad"];
+        $regtype = $_POST["regtype"];
+        $minRegStudyLoad = $_POST["minRegStudyLoad"];
 
         $today = date("Y-m-d");
 
@@ -279,11 +227,10 @@ function addRegistrationDate()
         $closeDate = "$closeYear-$closeMonth-$closeDay";
 
         $registrationID = $studyYear . $term . $regtype;
-		
+
 
         if (!($openDay == "Day" || $openMonth == "Month" || $openYear == "Year" || $closeDay == "Day" || $closeMonth == "Month" || $closeYear == "Year")) {
             if (($openDate > $today) && (($closeDate > $today) && ($closeDate > $openDate))) {
-                require('include/database.php');
                 $openDateSQL = "insert into registration (registrationID, year, term, opendate, closedate, type, minstudyload) values ($registrationID, $studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay', '$type', $minRegStudyLoad)";
                 if ($connection->query($openDateSQL) === TRUE) {
                     echo "<br/>Succeed adding registration date for study year $studyYear term $term
@@ -304,99 +251,93 @@ function addRegistrationDate()
 
 function allowStudent()
 {
-    require('database.php');
-    if (isset($_POST["filterStudent"])){
-		if (!isset($_POST['allowedStudent'])){
-				echo "please filter some student";
-		} else {	
-			$selected_radio = $_POST['allowedStudent'];
-			$minStudyLoad = $_POST['minStudyLoad'];
-			$addStudentID = preg_replace('/\s+/', '', $_POST['addStudentID']);
-			
-			switch ($_POST['allowedStudent']) {
-				case 'allStudent':
-					echo "Registration is now opened for all student.";
-					$SQL = "update student set allowToReg=1";
-					if ($connection->query($SQL) === TRUE)
-						break;
+    global $connection;
+    if (isset($_POST["filterStudent"])) {
+        if (!isset($_POST['allowedStudent'])) {
+            echo "please filter some student";
+        } else {
+            $selected_radio = $_POST['allowedStudent'];
+            $minStudyLoad = $_POST['minStudyLoad'];
+            $addStudentID = preg_replace('/\s+/', '', $_POST['addStudentID']);
 
-				case 'noStudent':
-					echo "Registration is now closed for all student.";
-					echo "$addStudentID";
-					$SQL = "update student set allowToReg=0";
-					if ($connection->query($SQL) === TRUE) 
-						break;
-					
-				case 'manuallyStudent':
-					if(empty($_POST["addStudentID"])){
-						echo "Insert student ID";
-					} else {
-					$manualStudent = explode(",",$addStudentID);
-					$allStudent = array();
-					$allStudentSQL = "select personID from person WHERE type='student'";
-					$result = $connection->query($allStudentSQL);
-					$num_rows = mysqli_num_rows($result);
-					if ($result) {
-						if ($num_rows > 0) {
-							for ($x = 0; $x < $num_rows; $x++) {
-								$result->data_seek($x);
-								$data = $result->fetch_array();
-								$studentID = $data['personID'];
-								array_push($allStudent, "$studentID");
-							}
-						}
-					}
-					$text_success = "";
-					$text_fail = "";
-					foreach ($manualStudent as $aStudent){
-						if (in_array($aStudent,$allStudent)){
-							$manualSQL = "update student set allowToReg=1 where studentID='$aStudent';";
-							$connection->query($manualSQL);
-							$text_success .= "$aStudent, ";
-						}
-						else ($text_fail .= "$aStudent, ");
-					}
-					echo " <p>These studentID are able to register now : $text_success </p>
-					<p>These are not a valid studentID : $text_fail</p>"
-					;
-					}
-					break;
-					
-					
-				case 'problemStudent':
-					//close registration for all student
-					$SQL = "update student set allowToReg=0";
-					$connection->query($SQL);
-					//open registration for problem student
-					$problemStudent = array();
-					$problemStudentSQL = "select s.studentID as studentID,sum(c.studyload) from course c inner join enrolledstudent e on c.courseID=e.courseID right join student s on e.studentID=s.studentID group by studentID having sum(c.studyload)<$minStudyLoad or sum(c.studyload) is null;";
-					$result = $connection->query($problemStudentSQL);
-					$num_rows = mysqli_num_rows($result);
-					if ($result) {
-						if ($num_rows > 0) {
-							for ($x = 0; $x < $num_rows; $x++) {
-								$result->data_seek($x);
-								$data = $result->fetch_array();
-								$studentID = $data['studentID'];
-								array_push($problemStudent, "$studentID");
-							}
-						}
-					}
-					echo "<p>Registration is opened for these students: </p>";
-					foreach ($problemStudent as $aStudent) {
-						$reEnrolStudent = "update student set allowToReg=1 where studentID='$aStudent'";
-						$connection->query($reEnrolStudent);
-						echo "$aStudent, "; 
-					}
-			}
-		}
+            switch ($_POST['allowedStudent']) {
+                case 'allStudent':
+                    echo "Registration is now opened for all student.";
+                    $SQL = "update student set allowToReg=1";
+                    if ($connection->query($SQL) === TRUE)
+                        break;
+
+                case 'noStudent':
+                    echo "Registration is now closed for all student.";
+                    echo "$addStudentID";
+                    $SQL = "update student set allowToReg=0";
+                    if ($connection->query($SQL) === TRUE)
+                        break;
+
+                case 'manuallyStudent':
+                    if (empty($_POST["addStudentID"])) {
+                        echo "Insert student ID";
+                    } else {
+                        $manualStudent = explode(",", $addStudentID);
+                        $allStudent = array();
+                        $allStudentSQL = "select personID from person WHERE type='student'";
+                        $result = $connection->query($allStudentSQL);
+                        $num_rows = mysqli_num_rows($result);
+                        if ($result) {
+                            if ($num_rows > 0) {
+                                for ($x = 0; $x < $num_rows; $x++) {
+                                    $studentID = mysqli_result($result, 0, 'personID');
+                                    array_push($allStudent, "$studentID");
+                                }
+                            }
+                        }
+                        $text_success = "";
+                        $text_fail = "";
+                        foreach ($manualStudent as $aStudent) {
+                            if (in_array($aStudent, $allStudent)) {
+                                $manualSQL = "update student set allowToReg=1 where studentID='$aStudent';";
+                                $connection->query($manualSQL);
+                                $text_success .= "$aStudent, ";
+                            } else ($text_fail .= "$aStudent, ");
+                        }
+                        echo " <p>These studentID are able to register now : $text_success </p>
+					<p>These are not a valid studentID : $text_fail</p>";
+                    }
+                    break;
+
+
+                case 'problemStudent':
+                    //close registration for all student
+                    $SQL = "update student set allowToReg=0";
+                    $connection->query($SQL);
+                    //open registration for problem student
+                    $problemStudent = array();
+                    $problemStudentSQL = "select s.studentID as studentID,sum(c.studyload) from course c inner join enrolledstudent e on c.courseID=e.courseID right join student s on e.studentID=s.studentID group by studentID having sum(c.studyload)<$minStudyLoad or sum(c.studyload) is null;";
+                    $result = $connection->query($problemStudentSQL);
+                    $num_rows = mysqli_num_rows($result);
+                    if ($result) {
+                        if ($num_rows > 0) {
+                            for ($x = 0; $x < $num_rows; $x++) {
+                                $studentID = mysqli_result($result, 0, 'studentID');
+                                array_push($problemStudent, "$studentID");
+                            }
+                        }
+                    }
+                    echo "<p>Registration is opened for these students: </p>";
+                    foreach ($problemStudent as $aStudent) {
+                        $reEnrolStudent = "update student set allowToReg=1 where studentID='$aStudent'";
+                        $connection->query($reEnrolStudent);
+                        echo "$aStudent, ";
+                    }
+            }
+        }
     }
 }
 
 //All students into table
 function showStudents()
 {
-    require('include/database.php');
+    global $connection;
     $return = "
 <div id='lightStudents' class='white_content'>
     <div class=\"CSSTableGenerator\">
@@ -420,11 +361,9 @@ function showStudents()
         $results[] = $row['courseID'];
         }*/
         for ($x = 0; $x < $rows; $x++) {
-            $result->data_seek($x);
-            $data = $result->fetch_array();
-            $name = $data['firstName'];
-            $name2 = $data['lastName'];
-            $number = $data['personID'];
+            $name = mysqli_result($result, 0, 'firstName');
+            $name2 = mysqli_result($result, 0, 'lastName');
+            $number = mysqli_result($result, 0, 'personID');
             $return .= "
             <tr>
                 <td>$name" . " " . "$name2</td>
@@ -443,20 +382,16 @@ function showStudents()
     return $return;
 }
 
-
+//Checks if course is full
 function full($courseID)
 {
     global $connection;
 
     $result = $connection->query("SELECT capacity FROM course where courseID='$courseID';");
-    $result->data_seek(0);
-    $data = $result->fetch_array();
-    $capacity = $data['capacity'];
+    $capacity = mysqli_result($result, 0, 'capacity');
 
-    $result = $connection->query("SELECT count(*) as enrolled FROM course c inner join enrolledstudent e on c.courseID=e.courseID where c.courseID = '$courseID';");
-    $result->data_seek(0);
-    $data = $result->fetch_array();
-    $enrolled = $data['enrolled'];
+    $result = $connection->query("SELECT count(*) as enrolled FROM course c inner join enrolledstudent e on c.courseID=e.courseID where c.courseID = '$courseID' and e.status is null;");
+    $enrolled = mysqli_result($result, 0, 'enrolled');
 
     if ($enrolled < $capacity) {
         return false;
@@ -465,6 +400,7 @@ function full($courseID)
     }
 }
 
+//Sorts all the courses
 function courses()
 {
     global $connection;
@@ -503,6 +439,13 @@ function courses()
         while ($row = mysqli_fetch_array($result)) {
             $overlap[] = $row['courseID'];
         }
+        //PASSED
+        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number and status = 1;";
+        $result = $connection->query($SQL);
+        $passed = array();
+        while ($row = mysqli_fetch_array($result)) {
+            $passed[] = $row['courseID'];
+        }
 
         for ($x = 0; $x < $rows; $x++) {
             // 0-enroll 1-withdraw 2-unavailable 3-full
@@ -510,7 +453,9 @@ function courses()
                 if (!in_array($all[$x], $enrolled)) {
                     if (!full($all[$x])) {
                         if (!in_array($all[$x], $overlap)) {
+
                             $rt .= courses2(0, $all[$x]);
+
                         } else {
                             $rt .= courses2(2, $all[$x]);
                         }
@@ -518,7 +463,11 @@ function courses()
                         $rt .= courses2(3, $all[$x]);
                     }
                 } else {
-                    $rt .= courses2(1, $all[$x]);
+                    if (in_array($all[$x], $passed)) {
+                        $rt .= courses2(4, $all[$x]);
+                    } else {
+                        $rt .= courses2(1, $all[$x]);
+                    }
                 }
             } else {
                 //THIS CLASS IS NOT OFFERED!
@@ -530,11 +479,13 @@ function courses()
     return $rt;
 }
 
+//Generates rows for courses
 function courses2($case, $cID)
 {
     global $connection;
     $number = $_SESSION['number'];
     $number = htmlspecialchars($number);
+
     if (isset($_POST["withdraw$cID"])) {
         $withdrawSQL = "delete from enrolledstudent where courseID='$cID' and studentID= '$number';";
         if ($connection->query($withdrawSQL) === TRUE) {
@@ -555,6 +506,7 @@ function courses2($case, $cID)
         }
 
     }
+
     $rt = "<tr class=";
     switch ($case) {
         case 0:
@@ -569,14 +521,15 @@ function courses2($case, $cID)
         case 3:
             $rt .= "'fullRow'>";
             break;
+        case 4:
+            $rt .= "'passedRow'>";
+            break;
     }
     $SQL = "SELECT * FROM course where courseID = '$cID';";
     $result = $connection->query($SQL);
-    $result->data_seek(0);
-    $data = $result->fetch_array();
-    $name = $data['name'];
-    $capacity = $data['capacity'];
-    $load = $data['studyload'];
+    $name = mysqli_result($result, 0, 'name');
+    $capacity = mysqli_result($result, 0, 'capacity');
+    $load = mysqli_result($result, 0, 'studyload');
 
     $rt .= "<td>$name</td>";
     $rt .= "<td>$capacity</td>";
@@ -589,10 +542,9 @@ function courses2($case, $cID)
 
 }
 
+//Generates popup for courses
 function button($case, $cID, $name)
 {
-    global $connection;
-    $number = $_SESSION['number'];
     $rt = "<button class=";
     switch ($case) {
         case 0:
@@ -606,6 +558,9 @@ function button($case, $cID, $name)
             break;
         case 3:
             $rt .= "'full'";
+            break;
+        case 4:
+            $rt .= "'passed'";
             break;
     }
     if ($case == 0 || $case == 1) {
@@ -625,6 +580,9 @@ function button($case, $cID, $name)
             break;
         case 3:
             $rt .= "Full";
+            break;
+        case 4:
+            $rt .= "Passed";
             break;
     }
     $rt .= "</button>";
@@ -690,6 +648,7 @@ function button($case, $cID, $name)
     return $rt;
 }
 
+//Generates list of overlapping courses
 function overlaps($courseID)
 {
     global $connection;
@@ -717,4 +676,12 @@ function overlaps($courseID)
         }
     }
     return $rt;
+}
+
+//Gets specific result from query
+function mysqli_result($res, $row, $field = 0)
+{
+    $res->data_seek($row);
+    $datarow = $res->fetch_array();
+    return $datarow[$field];
 }
