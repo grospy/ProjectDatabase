@@ -1,6 +1,6 @@
 <?php
 if (isset($_SESSION["message"])) {
-    echo "<p class = 'message'>" . $_SESSION["message"] . "</p>";
+    echo "<span class = 'message'>" . $_SESSION["message"] . "</span>";
     $_SESSION["message"] = "";
 }
 ?>
@@ -20,7 +20,8 @@ if (isset($_SESSION["message"])) {
                             Enroll
                         </td>
                     </tr>
-        <?php courses(); ?>
+        <?php
+        echo courses();?>
 
 
     </table>

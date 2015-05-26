@@ -1,22 +1,22 @@
 <div class="CSSTableGenerator" >
-                    <table>
-                        <tr>
-                            <td>
-                                Registration ID
-                            </td>
-                            <td>
-                                Course ID
-                            </td>
-							<td>
-                                Description
-                            </td>
-                            <td>
-                                Grade
-                            </td>
-                            <td>
-                                Status
-                            </td>
-                        </tr>
+    <table>
+        <tr>
+            <td>
+                Registration ID
+            </td>
+            <td>
+                Course ID
+            </td>
+            <td>
+                Description
+            </td>
+            <td>
+                Grade
+            </td>
+            <td>
+                Status
+            </td>
+        </tr>
         <?php
         $number = $_SESSION['number'];
         $number = htmlspecialchars($number);
@@ -33,16 +33,16 @@
                     for ($x = 0; $x < $num_rows; $x++) {
                         $result->data_seek($x);
                         $data = $result->fetch_array();
-						$regID = $data['registrationID'];
+                        $regID = $data['registrationID'];
                         $courseID = $data['courseID'];
-						$coursename = $data['name'];
+                        $coursename = $data['name'];
                         $grade = $data['grade'];
                         if ($data['status'] == 1 ){
-							$status = "Final";
-						} else {
-							$status = "Resit";
-						}
-                       
+                            $status = "Final";
+                        } else {
+                            $status = "Resit";
+                        }
+
                         echo "\t\t\t<tr>\n\t\t\t\t<td>$regID</td>\n\t\t\t\t<td>$courseID</td><td>$coursename</td>\n\t\t\t\t<td>$grade</td>\n\t\t\t\t<td>$status</td>\n\t\t\t</tr>\n";
                     }
                 }
@@ -52,7 +52,7 @@
         }
 
         ?>
-                    </table>
-                </div>
+    </table>
+</div>
 <?php
 ?>

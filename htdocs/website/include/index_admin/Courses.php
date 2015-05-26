@@ -64,7 +64,7 @@ if ($connection) {
 				$courseName = $data['name'];
 				$courseID = $data['courseID'];
 				
-				$participantSQL = "select studentID from enrolledstudent where courseID='$courseID'";
+				$participantSQL = "select studentID from enrolled_students where courseID='$courseID'";
 				$participantResult = $connection->query($participantSQL);
 				$participant = mysqli_num_rows($participantResult);
 				
