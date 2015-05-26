@@ -26,3 +26,16 @@ if (window.ltIE9) {
     })(window.jQuery);
 }
 
+function CheckAll()
+{
+	var checkbox = document.getElementsByClassName("courseForm");
+	for (i = 0; i < checkbox.length; i++)
+	checkbox[i].checked = true ;
+}
+
+function UnCheckAll(chk)
+{
+	var checkbox = document.getElementsByClassName("courseForm");
+	for (i = 0; i < checkbox.length; i++)
+	checkbox[i].checked = false ;
+}
