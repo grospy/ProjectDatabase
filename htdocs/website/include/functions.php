@@ -501,14 +501,14 @@ function courses()
             // 0-enroll 1-withdraw 2-unavailable 3-full
             if (in_array($all[$x], $offered)) {
                 if (!in_array($all[$x], $enrolled)) {
-                    if (!in_array($all[$x], $overlap)) {
-                        if (!full($all[$x])) {
+                    if (!full($all[$x])) {
+                        if (!in_array($all[$x], $overlap)) {
                             $rt .= courses2(0, $all[$x]);
                         } else {
-                            $rt .= courses2(3, $all[$x]);
+                            $rt .= courses2(2, $all[$x]);
                         }
                     } else {
-                        $rt .= courses2(2, $all[$x]);
+                        $rt .= courses2(3, $all[$x]);
                     }
                 } else {
                     $rt .= courses2(1, $all[$x]);
