@@ -7,7 +7,12 @@ body {
     font-family: Arial, sans-serif;
     font-size: 9pt;
 }
-
+.errorMsg {
+ color :red;
+ font-style : italic;
+ font-weight : bold;
+ font-size: 9pt;
+}
 .creditmsg {
     text-align: right;
     margin-top: 90px;
@@ -223,4 +228,18 @@ html {
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+}
+
+.instructionButton {
+	font-size : 8pt;
+	font-style : italic;
+	color : rgb(50,50,50);
+	background:none!important;
+	border:none; 
+	padding:0!important;
+	cursor: pointer; cursor: hand; 
+}
+.instructionImage {
+	
+	max-width : 100%;
 }

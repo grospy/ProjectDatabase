@@ -176,7 +176,7 @@ function addStudents()
         $filecheck = basename($_FILES['file']['name']);
         $ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
         if (!($ext == "csv")) {
-            echo "file must be csv type";
+            echo "<span class='errorMsg'> File must be csv type</span>";
         } else {
             $file = $_FILES['file']['tmp_name'];
             $ext = pathinfo($file, PATHINFO_EXTENSION);
@@ -194,7 +194,7 @@ function addStudents()
 
                         echo "Succeed adding $studentID, $first_name, $last_name! <br/>";
                     } else {
-                        echo "<br/>" . $connection->error;
+                        echo "<br/><span class='errorMsg'>" . $connection->error."</span>";
                     }
                 }
                 fclose($handle);
@@ -206,11 +206,11 @@ function addStudents()
 function addCourseCSV()
 {
     global $connection;
-    if (isset($_POST["submit"])) {
+    if (isset($_POST["submitCourseCSV"])) {
         $filecheck = basename($_FILES['file']['name']);
         $ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
         if (!($ext == "csv")) {
-            echo "file must be csv type";
+            echo "<span class='errorMsg'> File must be csv type </span>";
         } else {
             $file = $_FILES['file']['tmp_name'];
             $ext = pathinfo($file, PATHINFO_EXTENSION);
@@ -222,11 +222,13 @@ function addCourseCSV()
                     $courseName = $data[1];
                     $capacity = $data[2];
                     $studyLoad = $data[3];
+					$teacherID = $data[4];
                     $sql1 = "INSERT INTO course VALUES ('$courseID','$courseName','$capacity','$studyLoad',0)";
-                    if ($connection->query($sql1)) {
-                        echo "Succeed adding $courseID-$courseName, capacity : $capacity, study load : '$studyLoad'! This course is still closed. <br/>";
+					$sql2 = "INSERT INTO teacher VALUES ('$teacherID','$courseID')";
+                    if ($connection->query($sql1) && $connection->query($sql2)) {
+                        echo "Succeed adding $courseID-$courseName, capacity : $capacity, study load : '$studyLoad', teacherID : $teacherID! This course is still closed. <br/>";
                     } else {
-                        echo "<br/>" . $connection->error;
+                        echo "<br/><span class='errorMsg'>" . $connection->error."</span>";
                     }
                 }
                 fclose($handle);
@@ -234,6 +236,64 @@ function addCourseCSV()
         }
     }
 }
+
+function addLessonCSV() {
+	global $connection;
+	if (isset($_POST["submitLessonCSV"])) {
+		$filecheck = basename($_FILES['file']['name']);
+		$ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
+		if (!($ext == "csv")) {
+			echo "<span class='errorMsg'> File must be csv type </span>";
+		} else {
+			$file = $_FILES['file']['tmp_name'];
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+			$handle = fopen($file, "r");
+			if ($handle !== FALSE) {
+				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+					$num = count($data);
+					$courseID = $data[0];
+					$roomNumber = $data[1];
+					$date = $data[2];
+					$timeStart = $data[3];
+					
+					$sql1 = "INSERT INTO lesson VALUES ('$courseID','$roomNumber','$date','$timeStart')";
+					
+					if ($connection->query($sql1)) {
+						echo "Succeed adding lesson! <br/>";
+					} else {
+						echo "<br/><span class='errorMsg'>" . $connection->error ."</span>";
+					}
+				}
+				fclose($handle);
+			}
+		}
+	}
+}
+
+function addNewCourse(){
+	global $connection;
+	if (isset($_POST['addCourse'])){
+		if (empty($_POST['newCourseName']) || empty($_POST['newCapacity']) || empty($_POST['newStudyLoad']) ||  empty($_POST['newInstructor']) ){
+		echo "<span class='errorMsg'> All field has to be filled </span>";
+		} else {
+		$newCourseID = $_POST['newCourseID'];
+		$newCourseName = $_POST['newCourseName'];
+		$newCapacity = $_POST['newCapacity'];
+		$newStudyLoad = $_POST['newStudyLoad'];
+		$newInstructor = $_POST['newInstructor'];
+		
+		$addCourseSQL = "insert into course value ('$newCourseID', '$newCourseName',$newCapacity,$newStudyLoad, 0);";
+		$addTeacherSQL = "insert into teacher value ('$newInstructor', '$newCourseID');";
+			if ($connection->query($addCourseSQL) === TRUE  && $connection->query($addTeacherSQL) === TRUE  ) {
+				echo "New course added! $newCourseID-$newCourseName, capacity : $newCapacity, study load : $newStudyLoad. ";
+			} 
+			else {
+				echo "<span class='errorMsg'>".$connection->error."</span>";
+			}
+		}
+	}
+}
+
 //Set registration date
 function addRegistrationDate()
 {
@@ -268,7 +328,7 @@ function addRegistrationDate()
 							<br/>close date : $closeYear-$closeMonth-$closeDay";
 
                 } else {
-                    echo "<br/>$registrationID" . $connection->error;
+                    echo "<br/><span class='errorMsg'>" . $connection->error."</span>";
                 }
             } else {
                 echo "<span class='errorMsg'> date error. select open date after today. select close date after open date. </span>";
@@ -284,7 +344,7 @@ function allowStudent()
     global $connection;
     if (isset($_POST["filterStudent"])) {
         if (!isset($_POST['allowedStudent'])) {
-            echo "please filter some student";
+            echo "<span class='errorMsg'> Please filter some student </span>";
         } else {
             $selected_radio = $_POST['allowedStudent'];
             $minStudyLoad = $_POST['minStudyLoad'];
@@ -331,7 +391,7 @@ function allowStudent()
                             } else ($text_fail .= "$aStudent, ");
                         }
                         echo " <p>These studentID are able to register now : $text_success </p>
-					<p>These are not a valid studentID : $text_fail</p>";
+					<p class='errorMsg'>These are not a valid studentID : $text_fail</p>";
                     }
                     break;
 
@@ -759,6 +819,8 @@ function tabSelect(){
     if(isset($_POST['addCourse'])){return 2;}
     if(isset($_POST['refresh'])){return 2;}
     if(isset($_POST['generateNumber'])){return 2;}
+    if(isset($_POST['submitCourseCSV'])){return 2;}
+    if(isset($_POST['submitLessonCSV'])){return 2;}
     if(isset($_POST['submit2'])){return 2;}
     if(isset($_POST['submit'])){return 3;}
     //DEFAULT TAB (0-3)

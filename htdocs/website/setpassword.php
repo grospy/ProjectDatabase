@@ -19,10 +19,12 @@ require('include/top.php');
 require('include/functions.php');
 
 ?>
-    <section class="container">
+    <section class="loginbox">
         <div class="login">
-            <h1>Set New Password</h1>
-
+            <img src="image/Inholland_logo.png" id="logologin"></img>
+            <hr/>
+			<h1>Set New Password</h1>
+			<hr/>
             <form method="post">
                 <p><input type="text" name="number" value='<?php echo htmlspecialchars($number); ?>'
                           placeholder="Student Number"></p>
