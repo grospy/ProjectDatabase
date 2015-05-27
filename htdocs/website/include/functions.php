@@ -748,3 +748,19 @@ function saveEditedCourse() {
 		}
 	}
 }
+
+function tabSelect(){
+    if(isset($_POST['submitRegDate'])){return 0;}
+    if(isset($_POST['filterStudent'])){return 0;}
+    if(isset($_POST['offerCourse'])){return 1;}
+    if(isset($_POST['editCourseButton'])){return 1;}
+    if(isset($_POST['backToCourseList'])){return 1;}
+    if(isset($_POST['saveCourse'])){return 1;}
+    if(isset($_POST['addCourse'])){return 2;}
+    if(isset($_POST['refresh'])){return 2;}
+    if(isset($_POST['generateNumber'])){return 2;}
+    if(isset($_POST['submit2'])){return 2;}
+    if(isset($_POST['submit'])){return 3;}
+    //DEFAULT TAB (0-3)
+    return 1;
+}

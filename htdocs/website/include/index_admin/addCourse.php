@@ -72,7 +72,7 @@ else { echo "";}
 <h4>Upload a .csv file : </h4>
 <form name="import" method="post" enctype="multipart/form-data">
     <input type="file" name="file"/><br/>
-    <input type="submit" name="submit" value="Submit"/><?php addCourseCSV(); ?>
+    <input type="submit" name="submit2" value="Submit"/><?php addCourseCSV(); ?>
 </form>
 </p> 
    

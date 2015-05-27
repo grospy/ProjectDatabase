@@ -18,19 +18,19 @@ require("include/database.php");
 <div class="tabs">
 	
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-1" name="tab-group-1" value="1" <?php if (isset($_POST['submitRegDate']) || isset($_POST['filterStudent'])) echo "Checked"?>>
+		<input class="tab-radio" type="radio" id="tab-1" name="tab-group-1" value="1" <?php if (tabSelect() == 0){echo "Checked";}?>>
 		<label class="tab-label" for="tab-1">Registration</label>
 
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Registration</h3>
-				<?php require('include/index_admin/Registration.php');  ?>
+				<?php require('include/index_admin/Registration.php');?>
 			</div>
 		</div>
 	</div>
 
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (isset($_POST['offerCourse']) || isset($_POST['editCourseButton']) || isset($_POST['backToCourseList']) || isset($_POST['saveCourse'])) echo "Checked"?>>
+		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (tabSelect() == 1){echo "Checked";}?>>
 		<label class="tab-label" for="tab-3">Edit Courses</label>
 
 		<div class="tab-panel">
@@ -54,7 +54,7 @@ require("include/database.php");
 	</div>
 	
 	<div class="tab">generateNumber
-		<input class="tab-radio" type="radio" id="tab-4" name="tab-group-1" value="4" <?php if (isset($_POST['addCourse']) || isset($_POST['refresh']) || isset($_POST['generateNumber']))  echo "Checked"?>>
+		<input class="tab-radio" type="radio" id="tab-4" name="tab-group-1" value="4" <?php if (tabSelect() == 2){echo "Checked";}?>>
 		<label class="tab-label" for="tab-4">Add Course</label>
 
 		<div class="tab-panel">
@@ -66,7 +66,7 @@ require("include/database.php");
 	</div>
 	
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-5" name="tab-group-1" value="5" <?php if (isset($_POST['submit'])) echo "Checked"?>>
+		<input class="tab-radio" type="radio" id="tab-5" name="tab-group-1" value="5" <?php if (tabSelect() == 3){echo "Checked";}?>>
 		<label class="tab-label" for="tab-5">Students</label>
 
 		<div class="tab-panel">
