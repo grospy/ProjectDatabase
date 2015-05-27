@@ -425,14 +425,14 @@ function courses()
             $offered[] = $row['courseID'];
         }
         //ENROLLED
-        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number and (status = 0 or status is null);";
+        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number and status is null;";
         $result = $connection->query($SQL);
         $enrolled = array();
         while ($row = mysqli_fetch_array($result)) {
             $enrolled[] = $row['courseID'];
         }
         //OVERLAP
-        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number' and (status = 0 or status is null))));";
+        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number' and status is null)));";
         $result = $connection->query($SQL);
         $overlap = array();
         while ($row = mysqli_fetch_array($result)) {
@@ -502,6 +502,9 @@ function courses2($case, $cID)
             if ($connection->query($withdrawSQL) === TRUE) {
                 $_SESSION["message"] = "Successfully enrolled.";
                 header("Location: index.php");
+            }
+            else{
+                echo $connection->error;
             }
         } else {
             $_SESSION["message"] = "Class full.";
