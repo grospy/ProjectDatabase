@@ -204,6 +204,37 @@ function addStudents()
     }
 }
 
+function addCourseCSV()
+{
+    global $connection;
+    if (isset($_POST["submit"])) {
+        $filecheck = basename($_FILES['file']['name']);
+        $ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
+        if (!($ext == "csv")) {
+            echo "file must be csv type";
+        } else {
+            $file = $_FILES['file']['tmp_name'];
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $handle = fopen($file, "r");
+            if ($handle !== FALSE) {
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $num = count($data);
+                    $courseID = $data[0];
+                    $courseName = $data[1];
+                    $capacity = $data[2];
+                    $studyLoad = $data[3];
+                    $sql1 = "INSERT INTO course VALUES ('$courseID','$courseName','$capacity','$studyLoad',0)";
+                    if ($connection->query($sql1)) {
+                        echo "Succeed adding $courseID-$courseName, capacity : $capacity, study load : '$studyLoad'! This course is still closed. <br/>";
+                    } else {
+                        echo "<br/>" . $connection->error;
+                    }
+                }
+                fclose($handle);
+            }
+        }
+    }
+}
 //Set registration date
 function addRegistrationDate()
 {
@@ -684,4 +715,25 @@ function mysqli_result($res, $row, $field = 0)
     $res->data_seek($row);
     $datarow = $res->fetch_array();
     return $datarow[$field];
+}
+
+function saveEditedCourse() {
+	global $connection;
+	if (isset($_POST['saveCourse'])) {
+		$newCourseID = $_POST['newCourseID'];
+		$newCourseName = $_POST['newCourseName'];
+		$newCapacity = $_POST['newCapacity'];
+		$newStudyLoad = $_POST['newStudyLoad'];
+		$newInstructor = $_POST['newInstructor'];
+		// update course set name='3D printing', capacity=40, studyload=50 where courseID='IBIS001';
+		$updateCourse = "update course set name='$newCourseName', capacity=$newCapacity, studyload=$newStudyLoad where courseID='$newCourseID';";
+
+		$updateInstructor = "update teacher set teacherID='$newInstructor' where courseID='$newCourseID';";
+        if ($connection->query($updateCourse) === TRUE && $connection->query($updateInstructor) === TRUE) {
+			echo "$newCourseID";
+		}
+		else {
+            echo $connection->error;
+		}
+	}
 }

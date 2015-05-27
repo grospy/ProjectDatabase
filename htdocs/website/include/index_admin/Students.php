@@ -19,6 +19,4 @@ if (isset($_SESSION["message"])) {
 
 
 
-
-
 </div>

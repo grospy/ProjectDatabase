@@ -30,7 +30,7 @@ require("include/database.php");
 	</div>
 
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (isset($_POST['offerCourse']) || isset($_POST['editCourseButton']) || !(isset($_POST['backToCourseList']))) echo "Checked"?>>
+		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (isset($_POST['offerCourse']) || isset($_POST['editCourseButton']) || isset($_POST['backToCourseList']) || isset($_POST['saveCourse'])) echo "Checked"?>>
 		<label class="tab-label" for="tab-3">Edit Courses</label>
 
 		<div class="tab-panel">
@@ -39,6 +39,8 @@ require("include/database.php");
 				<?php 
 					//require('include/index_admin/Courses.php');
 					if (isset($_POST['editCourseButton'])) {
+						require('include/index_admin/editCourse.php');
+					}elseif (isset($_POST['saveCourse'])) {
 						require('include/index_admin/editCourse.php');
 					}elseif (isset($_POST['backToCourseList'])) {
 						require('include/index_admin/Courses.php');
@@ -50,10 +52,22 @@ require("include/database.php");
 			</div>
 		</div>
 	</div>
+	
+	<div class="tab">generateNumber
+		<input class="tab-radio" type="radio" id="tab-4" name="tab-group-1" value="4" <?php if (isset($_POST['addCourse']) || isset($_POST['refresh']) || isset($_POST['generateNumber']))  echo "Checked"?>>
+		<label class="tab-label" for="tab-4">Add Course</label>
 
+		<div class="tab-panel">
+			<div class="tab-content">
+				<h3>Add Course</h3>
+				<?php require('include/index_admin/addCourse.php');  ?>
+			</div>
+		</div>
+	</div>
+	
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-4" name="tab-group-1" value="4" <?php if (isset($_POST['submit'])) echo "Checked"?>>
-		<label class="tab-label" for="tab-4">Students</label>
+		<input class="tab-radio" type="radio" id="tab-5" name="tab-group-1" value="5" <?php if (isset($_POST['submit'])) echo "Checked"?>>
+		<label class="tab-label" for="tab-5">Students</label>
 
 		<div class="tab-panel">
 			<div class="tab-content">
