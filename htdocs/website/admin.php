@@ -18,7 +18,7 @@ require("include/database.php");
 <div class="tabs">
 	
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-1" name="tab-group-1" value="1" <?php if (!isset($_POST['submit']) || !isset($_POST['editCourseButton']) ) echo "Checked"?>>
+		<input class="tab-radio" type="radio" id="tab-1" name="tab-group-1" value="1" <?php if (isset($_POST['submitRegDate']) || isset($_POST['filterStudent'])) echo "Checked"?>>
 		<label class="tab-label" for="tab-1">Registration</label>
 
 		<div class="tab-panel">
@@ -42,7 +42,7 @@ require("include/database.php");
 						require('include/index_admin/editCourse.php');
 					}elseif (isset($_POST['saveCourse'])) {
 						require('include/index_admin/editCourse.php');
-					}elseif (isset($_POST['backToCourseList'])) {
+					}else if (isset($_POST['backToCourseList'])) {
 						require('include/index_admin/Courses.php');
 					}else {
 						require('include/index_admin/Courses.php');

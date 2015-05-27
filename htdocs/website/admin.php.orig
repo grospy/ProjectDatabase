@@ -1,88 +1,86 @@
 <?PHP
 session_start();
 if ($_SESSION['login'] != md5("2")) {
-    header("Location: login.php");
+    header("Location: login_admin.php");
 }
 require('include/top.php');
-<<<<<<< HEAD
+require('include/functions.php');
 require("include/database.php");
 
-=======
-require('include/functions.php');
-require("include/admin/dash.php");
->>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
 ?>
+<div class="dash">
+    <?php require("include/index_admin/dash.php"); ?>
+</div>
 
-
-
+<div class="creditmsg">
+</div>
 
 <div class="tabs">
 	
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-1" name="tab-group-1">
+		<input class="tab-radio" type="radio" id="tab-1" name="tab-group-1" value="1" <?php if (isset($_POST['submitRegDate']) || isset($_POST['filterStudent'])) echo "Checked"?>>
 		<label class="tab-label" for="tab-1">Registration</label>
 
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Registration</h3>
-<<<<<<< HEAD
-				<br/>Set registration date:
-				<br/>Open from ... Close at ...
-				<?php /* require('include/index_admin/Registration.php'); */ ?>
-=======
-				<?php require('include/admin/Registration.php');  ?>
->>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
+				<?php require('include/index_admin/Registration.php');  ?>
 			</div>
 		</div>
 	</div>
 
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-2" name="tab-group-1" checked>
-		<label class="tab-label" for="tab-2">Enrollment</label>
-		
-		<div class="tab-panel">
-			<div class="tab-content">
-				<h3>Enrollment</h3>
 <<<<<<< HEAD
-				<br/>see who enrolled for what
-				<?php /* require('include/index_admin/Enrollment.php'); */ ?>
+		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (isset($_POST['offerCourse']) || isset($_POST['editCourseButton']) || isset($_POST['backToCourseList']) || isset($_POST['saveCourse'])) echo "Checked"?>>
 =======
-                <?php require('include/admin/Enrollment.php');  ?>
->>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
-			</div>
-		</div>
-	</div>
-	
-	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1">
+		<input class="tab-radio" type="radio" id="tab-3" name="tab-group-1" value="3" <?php if (isset($_POST['offerCourse']) || isset($_POST['editCourseButton']) || isset($_POST['backToCourseList']) || isset($_POST['saveCourse']) || isset($_POST['Un_CheckAll']) || (!isset($_POST['submitRegDate']) && !isset($_POST['filterStudent']))){echo "Checked";}?>>
+>>>>>>> 2a8064d6ba38eebc012dffed7a9e664d14616feb
 		<label class="tab-label" for="tab-3">Edit Courses</label>
 
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Edit Course</h3>
+				<?php 
+					//require('include/index_admin/Courses.php');
+					if (isset($_POST['editCourseButton'])) {
+						require('include/index_admin/editCourse.php');
 <<<<<<< HEAD
-				add course, delete course, edit course
-				<?php /* require('include/index_admin/Course.php'); */ ?>
+					}elseif (isset($_POST['saveCourse'])) {
+						require('include/index_admin/editCourse.php');
+					}elseif (isset($_POST['backToCourseList'])) {
 =======
-                <?php require('include/admin/Courses.php');  ?>
->>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
+					}else if (isset($_POST['backToCourseList'])) {
+>>>>>>> 2a8064d6ba38eebc012dffed7a9e664d14616feb
+						require('include/index_admin/Courses.php');
+					}else {
+						require('include/index_admin/Courses.php');
+					}
+					
+				?>
 			</div>
 		</div>
 	</div>
+	
+	<div class="tab">generateNumber
+		<input class="tab-radio" type="radio" id="tab-4" name="tab-group-1" value="4" <?php if (isset($_POST['addCourse']) || isset($_POST['refresh']) || isset($_POST['generateNumber']))  echo "Checked"?>>
+		<label class="tab-label" for="tab-4">Add Course</label>
 
+		<div class="tab-panel">
+			<div class="tab-content">
+				<h3>Add Course</h3>
+				<?php require('include/index_admin/addCourse.php');  ?>
+			</div>
+		</div>
+	</div>
+	
 	<div class="tab">
-		<input class="tab-radio" type="radio" id="tab-4" name="tab-group-1">
-		<label class="tab-label" for="tab-4">Student</label>
+		<input class="tab-radio" type="radio" id="tab-5" name="tab-group-1" value="5" <?php if (isset($_POST['submit'])) echo "Checked"?>>
+		<label class="tab-label" for="tab-5">Students</label>
 
 		<div class="tab-panel">
 			<div class="tab-content">
 				<h3>Student</h3>
-<<<<<<< HEAD
-				
-				<?php require('include/index_admin/Student.php');  ?>
-=======
-                <?php require('include/admin/Students.php');  ?>
->>>>>>> cdbe7fcd49a4b41bbe010a4bd4929ddd2fd7bd96
+				<?php require('include/index_admin/Students.php');  ?>
 			</div>
 		</div>
 	</div>
@@ -90,33 +88,5 @@ require("include/admin/dash.php");
 	
 	
 </div>
-	
-<!--------------------------------------------------------------- -->
-
-
-<!--<section class="container">
-    <div id="content">
-        <h1>Welcome, admin</h1>
-        <p><a href="addstudent.php">Add a student to the database</a> </p>
-        <p>
-            <a href="logout.php">Log out</a>
-        </p>
-    </div>
-</section>	
-	<div class="dash">
-    <img src="image/Inholland_logo.png" id="logotop">
-    <div id="webtitle">
-        International Business Innovation Studies
-        <br/>Elective Courses Enrolment
-    </div>
-
-    <div id="welcome">
-        Welcome, <?php echo htmlspecialchars($_SESSION['name'] . ".") ?>
-        <br/>Registration deadline: 
-		<br/><span id="logout"><a href="logout.php">Log out</a></span>
-    </div>
-    <?php if(isset($_SESSION["message"])){echo $_SESSION["message"]; $_SESSION["message"] = "";} ?>
-</div> -->
-
 <?php
 require('include/bot.php');

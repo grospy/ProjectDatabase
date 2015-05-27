@@ -77,7 +77,11 @@ function login(&$error)
         $saltypassword = $password . "AMADEUS";
         $saltypassword = quote_smart($connection, $saltypassword);
 
+<<<<<<< HEAD
+        $SQL = "SELECT * FROM admin WHERE adminID = $username AND password = md5($password");
+=======
         $SQL = "SELECT * FROM admin WHERE adminID = $username AND password = md5($saltypassword)";
+>>>>>>> 2a8064d6ba38eebc012dffed7a9e664d14616feb
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
 
