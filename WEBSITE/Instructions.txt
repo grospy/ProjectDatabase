@@ -1,0 +1,13 @@
+SETUP PHP:
+	1 - OPEN /website/include/database.php
+	2 - EDIT username and password for your MySQL server
+	3 - MOVE /website TO HTDOCS
+
+SETUP DATABASE:
+	1 - OPEN inholland.sql
+	2 - COPY all the text in it
+	3 - PASTE it in MySQL cmd
+	4 - PRESS enter
+
+TO RUN:
+	1 - OPEN /website in web browser
