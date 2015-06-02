@@ -1,12 +1,14 @@
 <?PHP
 ob_start();
 session_start();
+require("include/functions.php");
 if ($_SESSION['login'] != md5("1")) {
     header("Location: login.php");
+}else if(!access($_SESSION['number'])){
+    header("Location: regclosed.php");
 }
 require("include/top.php");
 require("include/database.php");
-require("include/functions.php");
 ?>
 <div class="dash">
     <?php require("include/index/dash.php"); ?>

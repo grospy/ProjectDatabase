@@ -874,3 +874,16 @@ function tabSelect()
     //DEFAULT TAB (0-3)
     return 1;
 }
+
+function access($sID){
+    global $connection;
+    if($connection){
+        if(mysqli_result($connection->query("SELECT allowtoreg from student where studentID=$sID"),0)){
+            return true;
+        }else {
+            return false;
+        }
+    }else{
+        return false;
+    }
+}
