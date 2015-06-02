@@ -7,13 +7,12 @@ if (isset($_POST['editCourseButton'])) {
 	if ($result) {
 		if ($num_rows > 0) {
 			for ($x = 0; $x < $num_rows; $x++) {
-				$result->data_seek($x);
-				$data = $result->fetch_array();
-				$courseName = $data['name'];
-				$courseID = $data['courseID'];
-				$capacity = $data['capacity'];
-				$studyload = $data['studyload'];
-				$instructor = $data['instructor'];
+                $courseName = mysqli_result($result,$x,"name");
+                $courseID = mysqli_result($result,$x,"courseID");
+                $capacity = mysqli_result($result,$x,"capacity");
+                $studyload = mysqli_result($result,$x,"studyload");
+                $instructor = mysqli_result($result,$x,"instructor");
+                $courseName = mysqli_result($result,$x,"name");
 			}
 		}
 	}	
@@ -21,32 +20,28 @@ if (isset($_POST['editCourseButton'])) {
 ?>
 <form name="editCourse" method="post" >
 	<p> 
-	Course ID :	<input type="text" name="newCourseID" readonly value="
-		<?php 
+	Course ID :	<input type="text" name="newCourseID" value="<?php
 		if (isset($_POST['saveCourse'])) {
 			echo $_POST['newCourseID'];} 
 		else { echo "$courseID";}
-		?>"/>
+		?>" readonly/>
 	</p>
 	
-	<p> Course name : <input type="text" name="newCourseName" size="50" value="
-		<?php
+	<p> Course name : <input type="text" name="newCourseName" size="50" value="<?php
 		if (isset($_POST['saveCourse'])) {
 			echo $_POST['newCourseName'];} 
 		else { echo "$courseName";}
 		?>" />
 	</p>
 	
-	<p> Student capacity: <input type="text" name="newCapacity" value="
-		<?php 
+	<p> Student capacity: <input type="text" name="newCapacity" value="<?php
 		if (isset($_POST['saveCourse'])) {
 			echo $_POST['newCapacity'];} 
 		else { echo $capacity;}
 		?>" />
 	</p>
 	
-	<p> Study load : <input type="text" name="newStudyLoad" value="
-		<?php 
+	<p> Study load : <input type="text" name="newStudyLoad" value="<?php
 		if (isset($_POST['saveCourse'])) {
 			echo $_POST['newStudyLoad'];} 
 		else { echo $studyload;}
