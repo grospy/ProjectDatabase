@@ -322,7 +322,7 @@ function addRegistrationDate()
 
         if (!($openDay == "Day" || $openMonth == "Month" || $openYear == "Year" || $closeDay == "Day" || $closeMonth == "Month" || $closeYear == "Year")) {
             if (($openDate > $today) && (($closeDate > $today) && ($closeDate > $openDate))) {
-                $openDateSQL = "insert into registration (registrationID, year, term, opendate, closedate, type, minstudyload) values ($registrationID, $studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay', '$type', $minRegStudyLoad)";
+                $openDateSQL = "insert into registration (registrationID, year, term, opendate, closedate, type, minstudyload) values ($registrationID, $studyYear, $term,'$openYear-$openMonth-$openDay', '$closeYear-$closeMonth-$closeDay', '$regtype', $minRegStudyLoad)";
                 if ($connection->query($openDateSQL) === TRUE) {
                     echo "<br/>Succeed adding registration date for study year $studyYear term $term
 							<br/>open date : $openYear-$openMonth-$openDay
@@ -835,7 +835,13 @@ function tabSelect()
     if (isset($_POST['submitRegDate'])) {
         return 0;
     }
+    if (isset($_POST['setReg'])) {
+        return 0;
+    }
     if (isset($_POST['filterStudent'])) {
+        return 0;
+    }
+    if (isset($_POST['openReg'])) {
         return 0;
     }
     if (isset($_POST['offerCourse'])) {
@@ -875,15 +881,36 @@ function tabSelect()
     return 1;
 }
 
-function access($sID){
+function access($sID)
+{
     global $connection;
-    if($connection){
-        if(mysqli_result($connection->query("SELECT allowtoreg from student where studentID=$sID"),0)){
+    if ($connection) {
+        if (mysqli_result($connection->query("SELECT allowtoreg from student where studentID=$sID"), 0)) {
             return true;
-        }else {
+        } else {
             return false;
         }
-    }else{
+    } else {
         return false;
+    }
+}
+
+function regType()
+{
+    global $connection;
+    if ($connection) {
+        $sql = "SELECT *, (opendate < CURDATE()) as open from registration ORDER by opendate desc;";
+        $res = $connection->query($sql);
+        if (mysqli_result($res,0,'current')){
+            if(mysqli_result($res,0,'open')){
+                return 1;
+            }else{
+                return 2;
+            }
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
     }
 }

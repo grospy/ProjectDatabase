@@ -104,11 +104,11 @@ body {
     text-align: center;
 }
 
-.enroll, .unavailable, .withdraw, .back, .full, .passed {
+.enroll, .unavailable, .withdraw, .back, .full, .passed, input[name="backToCourseList"], input[name="saveCourse"] {
     width: 90px;
 }
 
-.enroll, .schedule, .back, .withdraw, .unavailable, .full, .passed {
+.enroll, .schedule, .back, .withdraw, .unavailable, .full, .passed, input[name="backToCourseList"], input[name="saveCourse"] {
     -moz-box-shadow: inset 0px 1px 0px 0px #91b8b3;
     -webkit-box-shadow: inset 0px 1px 0px 0px #91b8b3;
     box-shadow: inset 0px 1px 0px 0px #91b8b3;
@@ -127,15 +127,15 @@ body {
     text-decoration: none;
 }
 
-.back {
+.back, input[name="backToCourseList"], input[name="saveCourse"] {
     margin-top: 5px;
 }
 
-.enroll:hover {
+.enroll:hover , input[name="saveCourse"]:hover{
     background-color: rgb(75, 75, 75);
 }
 
-.back:hover {
+.back:hover, input[name="backToCourseList"]:hover {
     background-color: rgb(151, 151, 151);
 }
 
@@ -154,7 +154,7 @@ body {
     background-color: rgb(128, 26, 21);
 }
 
-.unavailable, .back, .full {
+.unavailable, .back, input[name="backToCourseList"], .full {
     -moz-box-shadow: inset 0px 1px 0px 0px rgb(150, 150, 150);
     -webkit-box-shadow: inset 0px 1px 0px 0px rgb(150, 150, 150);
     box-shadow: inset 0px 1px 0px 0px rgb(150, 150, 150);
@@ -167,7 +167,7 @@ body {
      background-color: rgb(60, 120, 180);
  }
 
-.enroll:active, .schedule:active, .back:active, .withdraw:active, .unavailable:active, .full:active {
+.enroll:active, .schedule:active, .back:active, input[name="saveCourse"]:active, input[name="backToCourseList"]:active, .withdraw:active, .unavailable:active, .full:active {
     position: relative;
     top: 1px;
 }
@@ -242,4 +242,26 @@ html {
 .instructionImage {
 	
 	max-width : 100%;
+}
+
+input[name="editCourseButton"] {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0px;
+    -webkit-box-shadow: 3px 3px 5px #666666;
+    -moz-box-shadow: 3px 3px 5px #666666;
+    box-shadow: 3px 3px 5px #666666;
+    color: #000000;
+    background: #88d9d2;
+    padding: 2px 4px 2px 4px;
+}
+
+input[name="editCourseButton"]:hover {
+    background: #3f6d66;
+}
+#testdiv1{
+    position:fixed;
+    visibility:hidden;
+    background-color:white;
+    layer-background-color:white;
 }
