@@ -4,6 +4,7 @@ if (isset($_SESSION["message"])) {
     $_SESSION["message"] = "";
 }
 ?>
+</h3>
 <div class="CSSTableGenerator">
                 <table>
                     <tr>

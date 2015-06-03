@@ -24,6 +24,8 @@ function login(&$error)
         $number = quote_smart($connection, $number);
         $saltypassword = $password . "AMADEUS";
         $saltypassword = quote_smart($connection, $saltypassword);
+        $SQL = "UPDATE person set last_login = CURRENT_TIMESTAMP where personID = 'admin'";
+        $connection->query($SQL);
         $SQL = "SELECT * FROM student s inner join person p on p.personID = s.studentID WHERE s.studentID = $number AND s.password = md5($saltypassword);";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
@@ -597,7 +599,7 @@ function courses2($case, $cID)
     $number = $_SESSION['number'];
     $number = htmlspecialchars($number);
 
-    $sql = "Select * from registration";
+    $sql = "Select * from registration where current = 1";
     $result = $connection->query($sql);
     $rID = mysqli_result($result, 0, 'registrationID');
 
@@ -605,7 +607,7 @@ function courses2($case, $cID)
     if (isset($_POST["withdraw$cID"])) {
         $withdrawSQL = "delete from enrolledstudent where courseID='$cID' and studentID= '$number';";
         if ($connection->query($withdrawSQL) === TRUE) {
-            $_SESSION["message"] = "Successfully withdrawn.";
+            $_SESSION["message"] = " - Successfully withdrawn.";
             header("Location: index.php");
         } else {
         }
@@ -613,13 +615,13 @@ function courses2($case, $cID)
         if (!full($cID)) {
             $withdrawSQL = "insert into enrolledstudent (courseID,studentID,registrationID) values ('$cID','$number','$rID');";
             if ($connection->query($withdrawSQL) === TRUE) {
-                $_SESSION["message"] = "Successfully enrolled.";
+                $_SESSION["message"] = " - Successfully enrolled.";
                 header("Location: index.php");
             } else {
                 echo $connection->error;
             }
         } else {
-            $_SESSION["message"] = "Class full.";
+            $_SESSION["message"] = " - Class full.";
             header("Location: index.php");
         }
 
@@ -777,7 +779,7 @@ function overlaps($courseID)
     global $connection;
     $rt = "";
     if ($connection) {
-        $SQL = "select concat(courseID, ' - ', name) as overlap from course where courseID in(select le . courseID from lesson le where concat(le . date, le . time_start) in(select concat(date, time_start) from lesson where courseID = '$courseID') and le . courseID in(le . courseID = '$courseID'));";
+        $SQL = "select concat(courseID, ' - ', name) as overlap from course where courseID in(select le.courseID from lesson le where concat(le.date, le.time_start) in(select concat(date, time_start) from lesson where courseID = '$courseID') and le.courseID in(le.courseID = '$courseID'));";
         $result = $connection->query($SQL);
         $num_rows = mysqli_num_rows($result);
         if ($result) {
@@ -786,10 +788,8 @@ function overlaps($courseID)
                 for ($x = 0;
                      $x < $num_rows;
                      $x++) {
-                    $result->data_seek($x);
-                    $data = $result->fetch_array();
                     $rt .= "<li>";
-                    $rt .= $data["overlap"];
+                    $rt .= mysqli_result($result, $x, 'overlap');
                     $rt .= " </li><br/>";
                 }
                 $rt .= "</ul> ";
@@ -832,10 +832,15 @@ function saveEditedCourse()
 
 function tabSelect()
 {
+    if(isset($_SESSION['tab'])){
+        if($_SESSION['tab'] == '123') {
+            return 0;
+        }
+    }
     if (isset($_POST['submitRegDate'])) {
         return 0;
     }
-    if (isset($_POST['clickOpenReg'])) {
+    if (isset($_POST['clickSetReg'])) {
         return 0;
     }
     if (isset($_POST['clickCloseReg'])) {
@@ -894,6 +899,27 @@ function access($sID)
 {
     global $connection;
     if ($connection) {
+
+        $now = Date('YYY-MM-dd');
+
+
+        $result = $connection->query("Select * from registration where current = 1");
+        $open = mysqli_result($result, 0, 'opendate');
+        $close = mysqli_result($result, 0, 'closedate');
+        $num = mysqli_num_rows($result);
+        if ($num > 0) {
+            if (mysqli_result($connection->query("SELECT allowtoreg from student where studentID=$sID"), 0) && (($open <= $now) && ($close >= $now || $close == null))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    if ($connection) {
         if (mysqli_result($connection->query("SELECT allowtoreg from student where studentID=$sID"), 0)) {
             return true;
         } else {
@@ -908,14 +934,14 @@ function regType()
 {
     global $connection;
     if ($connection) {
-        $sql = "SELECT *, (opendate <= CURDATE()) as open from registration where current = 1 ORDER by opendate desc;";
+        $sql = "SELECT *, (opendate <= CURDATE()) as open, (closedate >= CURDATE()) as open2 from registration where current = 1 ORDER by opendate desc;";
         $res = $connection->query($sql);
         $rows = mysqli_num_rows($res);
 
         if ($rows < 1) {
             return 0;
         } else if (mysqli_result($res, 0, 'current')) {
-            if (mysqli_result($res, 0, 'open')) {
+            if (mysqli_result($res, 0, 'open') && mysqli_result($res, 0, 'open2')) {
                 return 1;
             } else {
                 return 2;
