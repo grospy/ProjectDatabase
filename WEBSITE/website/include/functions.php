@@ -835,13 +835,22 @@ function tabSelect()
     if (isset($_POST['submitRegDate'])) {
         return 0;
     }
-    if (isset($_POST['setReg'])) {
+    if (isset($_POST['clickOpenReg'])) {
+        return 0;
+    }
+    if (isset($_POST['clickCloseReg'])) {
         return 0;
     }
     if (isset($_POST['filterStudent'])) {
         return 0;
     }
     if (isset($_POST['openReg'])) {
+        return 0;
+    }
+    if (isset($_POST['backToReg'])) {
+        return 0;
+    }
+    if (isset($_POST['closeReg'])) {
         return 0;
     }
     if (isset($_POST['offerCourse'])) {
@@ -899,18 +908,18 @@ function regType()
 {
     global $connection;
     if ($connection) {
-        $sql = "SELECT *, (opendate < CURDATE()) as open from registration ORDER by opendate desc;";
+        $sql = "SELECT *, (opendate <= CURDATE()) as open from registration where current = 1 ORDER by opendate desc;";
         $res = $connection->query($sql);
-        if (mysqli_result($res,0,'current')){
-            if(mysqli_result($res,0,'open')){
+        $rows = mysqli_num_rows($res);
+
+        if ($rows < 1) {
+            return 0;
+        } else if (mysqli_result($res, 0, 'current')) {
+            if (mysqli_result($res, 0, 'open')) {
                 return 1;
-            }else{
+            } else {
                 return 2;
             }
-        } else {
-            return 0;
         }
-    } else {
-        return 0;
     }
 }

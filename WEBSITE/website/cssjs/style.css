@@ -265,3 +265,7 @@ input[name="editCourseButton"]:hover {
     background-color:white;
     layer-background-color:white;
 }
+
+input[name="openReg"] {
+    margin-top: 15px;
+}
