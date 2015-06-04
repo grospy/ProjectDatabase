@@ -17,7 +17,6 @@ require("include/database.php");
 
 <div class="creditmsg">
     <?php require("include/index/credit.php"); ?>
-
 </div>
 
 <div class="tabs">
@@ -38,7 +37,7 @@ require("include/database.php");
 
         <div class="tab-panel">
             <div class="tab-content">
-                <h3>Enroll</h3>
+                <h3>Enroll
                 <?php require('include/index/Enroll.php'); ?>
             </div>
         </div>

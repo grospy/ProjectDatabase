@@ -20,7 +20,7 @@ require("include/database.php");
         <div class="tab">
             <input class="tab-radio" type="radio" id="tab-1" name="tab-group-1" value="1" <?php if (tabSelect() == 0) {
                 echo "Checked";
-            } ?>>
+            }?>>
             <label class="tab-label" for="tab-1">Registration</label>
 
             <div class="tab-panel">
@@ -74,7 +74,8 @@ require("include/database.php");
         <div class="tab">
             <input class="tab-radio" type="radio" id="tab-5" name="tab-group-1" value="5" <?php if (tabSelect() == 3) {
                 echo "Checked";
-            } ?>>
+            }
+            $_SESSION['tab'] = 'none';?>>
             <label class="tab-label" for="tab-5">Students</label>
 
             <div class="tab-panel">
