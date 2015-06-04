@@ -4,7 +4,7 @@ body {
     max-width: 1000px;
     height: 100%;
     overflow-y: scroll;
-    font-family: Arial, sans-serif;
+    font-family: "Arial", Arial, sans-serif;
     font-size: 9pt;
 }
 .errorMsg {
@@ -34,7 +34,7 @@ body {
 }
 
 #webtitle {
-    font-family: "Myriad Pro";
+    font-family: "Arial", Arial, sans-serif;;
     font-weight: bold;
     font-size: 13pt;
     color: #336699;
@@ -163,10 +163,6 @@ html {
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
-
-
-
-
 
 #testdiv1{
     position:fixed;
