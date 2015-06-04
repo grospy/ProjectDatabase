@@ -117,18 +117,20 @@ function editRegistrationForm()
             </SCRIPT>";
 
     echo "<FORM method='post'>
-                <b>Open on:</b><br />
+                <p><b>Open on:</b><br/>
                 <INPUT TYPE = \"text\" NAME = \"date1xx\" VALUE = \"$d1\" SIZE = 25 readonly>
-                <A HREF=\"#\" onClick=\"cal1xx.select(document.forms[0].date1xx,'anchor1xx','MM/dd/yyyy'); return false;\"  NAME=\"anchor1xx\" ID=\"anchor1xx\">Calendar</A><br/>
+                <A HREF=\"#\" onClick=\"cal1xx.select(document.forms[0].date1xx,'anchor1xx','MM/dd/yyyy'); return false;\"  NAME=\"anchor1xx\" ID=\"anchor1xx\">Calendar</A>
+				</p>
 
-                <b>Close on:</b><br />
+                <p><b>Close on:</b><br />
                 <INPUT TYPE = \"text\" NAME = \"date2xx\" VALUE = \"$d2\" SIZE = 25 readonly>
                 <A HREF = \"#\" onClick = \"cal2xx.select(document.forms[0].date2xx,'anchor2xx','MM/dd/yyyy'); return false;\"  NAME = \"anchor2xx\" ID = \"anchor2xx\" >Calendar</A ><br/>
                 <br /><b>Minimum students:</b><br />
-                <input type = 'number' value = '$d3' name='minstudents'><span style='font-size: 80%'>(Classes with participants lower than this number will be closed after closing date)<br />
-
-                <input type='submit' value = 'back' class = 'back' name =\"backToReg\">
-                <input type='submit' value = 'set' name =\"clickSetReg\">
+                <input type = 'number' value = '$d3' name='minstudents'><span style='font-size: 80%'>(Classes with participants lower than this number will be closed after closing date)
+				</p>
+				
+                <input type='submit' value = 'Back' class = 'back' name =\"backToReg\">
+                <input type='submit' value = 'Set' name =\"clickSetReg\">
             </FORM >
             <DIV ID = \"testdiv1\"></DIV >
             <DIV ID = \"testdiv2\"></DIV >";

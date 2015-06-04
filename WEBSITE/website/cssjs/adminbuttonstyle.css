@@ -1,0 +1,60 @@
+button,input[type='submit'],input[type='button'] {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #cccccc));
+	background:-moz-linear-gradient(top, #ededed 5%, #cccccc 100%);
+	background:-webkit-linear-gradient(top, #ededed 5%, #cccccc 100%);
+	background:-o-linear-gradient(top, #ededed 5%, #cccccc 100%);
+	background:-ms-linear-gradient(top, #ededed 5%, #cccccc 100%);
+	background:linear-gradient(to bottom, #ededed 5%, #cccccc 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#cccccc',GradientType=0);
+	background-color:#ededed;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#555555;
+	font-family:Arial;
+	font-size:12px;
+	padding:4px 16px;
+	text-decoration:none;
+}
+input[type='submit']:hover ,input[type='button']:hover{
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #c4c4c4), color-stop(1, #ededed));
+	background:-moz-linear-gradient(top, #c4c4c4 5%, #ededed 100%);
+	background:-webkit-linear-gradient(top, #c4c4c4 5%, #ededed 100%);
+	background:-o-linear-gradient(top, #c4c4c4 5%, #ededed 100%);
+	background:-ms-linear-gradient(top, #c4c4c4 5%, #ededed 100%);
+	background:linear-gradient(to bottom, #c4c4c4 5%, #ededed 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c4c4c4', endColorstr='#ededed',GradientType=0);
+	background-color:#ffffff;
+}
+button:active {
+	position:relative;
+	top:1px;
+}
+.instructionButton, #anchor1xx, #anchor2xx {
+	font-size : 8pt;
+	font-style : italic;
+	text-decoration: none; 
+	color : rgb(50,50,50);
+	background:none!important;
+	border:none; 
+	padding:0!important;
+	cursor: pointer; cursor: hand; 
+}
+
+
+.instructionButton:hover, #anchor1xx:hover, #anchor2xx:hover {
+	font-size : 8pt;
+	font-style : italic;
+	text-decoration: underline; 
+	color : rgb(50,50,50);
+	background:none!important;
+	border:none; 
+	padding:0!important;
+	cursor: pointer; cursor: hand; 
+}
+.instructionImage {
+	max-width : 100%;
+}

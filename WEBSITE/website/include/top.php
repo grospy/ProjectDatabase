@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Amadeus</title>
+	
     <link href="cssjs/style.css" rel="stylesheet" type="text/css">
     <link href="cssjs/table.css" rel="stylesheet" type="text/css">
     <link href="cssjs/login.css" rel="stylesheet" type="text/css">
@@ -10,7 +11,4 @@
     <script language="JavaScript" src="cssjs/CalendarPopup.js"></script>
     <!--[if lt IE 9]><script>window.ltIE9=true</script><![endif]-->
     <SCRIPT LANGUAGE="JavaScript">document.write(getCalendarStyles());</SCRIPT>
-</head>
-<body>
-
-<div id='fade' class='black_overlay'></div>
+	

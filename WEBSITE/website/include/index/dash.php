@@ -1,3 +1,10 @@
+<link href="cssjs/studentbuttonstyle.css" rel="stylesheet" type="text/css">
+	
+</head>
+<body>
+
+<div id='fade' class='black_overlay'></div>
+
 <img src="image/Inholland_logo.png" id="logotop">
     <div id="webtitle">
         International Business Innovation Studies</br>
