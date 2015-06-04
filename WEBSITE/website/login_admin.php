@@ -3,11 +3,10 @@ require("include/top.php");
 ob_start();
 $errorMessage = "";
 $num_rows = 0;
-$username = "";
-if (isset($_POST['submit'])) {
-    $username = $_POST["username"];
-    $username = htmlspecialchars($username);
-}
+
+isset($_POST['username']) ? $un = htmlspecialchars($_POST['username']) : $un = "";
+isset($_POST['password']) ? $pw = htmlspecialchars($_POST['password']) : $pw = "";
+
 ?>
     <div class="loginbox">
         <div class="login">
@@ -18,9 +17,9 @@ if (isset($_POST['submit'])) {
 
 
             <form method="post">
-                <p><input type="text" name="username" value="" placeholder="Username"></p>
+                <p><input type="text" name="username" value="<?php echo "$un"; ?>" placeholder="Username"></p>
 
-                <p><input type="password" name="password" value='<?php echo "$username"; ?>' placeholder="Password"></p>
+                <p><input type="password" name="password" value='<?php echo "$pw"; ?>' placeholder="Password"></p>
 
                 <p class="submit"><input type="submit" name="submit" value="Login"></p>
             </form>

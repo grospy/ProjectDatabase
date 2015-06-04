@@ -900,7 +900,7 @@ function access($sID)
     global $connection;
     if ($connection) {
 
-        $now = Date('Y-M-d');
+        $now = Date('Y-m-d');
 
 
         $result = $connection->query("Select * from registration where current = 1");
