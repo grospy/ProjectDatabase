@@ -39,3 +39,11 @@ function UnCheckAll(chk)
 	for (i = 0; i < checkbox.length; i++)
 	checkbox[i].checked = false ;
 }
+
+function printSchedule() {
+	var restorepage = document.body.innerHTML;
+	var printcontent = document.getElementById('printthis').outerHTML;
+	document.body.innerHTML = printcontent;
+	window.print();
+	document.body.innerHTML = restorepage;
+}

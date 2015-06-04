@@ -1,6 +1,10 @@
-<div class="CSSTableGenerator" >
+<button onClick="printSchedule()">Print schedule</button>
+
+
+
+<div class="CSSTableGenerator" id="printthis">
     <table >
-        <tr>
+		<tr>
             <td>
                 Description
             </td>
