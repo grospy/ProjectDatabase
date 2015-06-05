@@ -238,7 +238,6 @@ function addStudents()
             }
         }
     }
-}
 
 function addCourseCSV()
 {
@@ -299,7 +298,6 @@ function addCourseCSV()
             fclose($handle);
         }
     }
-}
 
 
 function addLessonCSV()

@@ -13,6 +13,12 @@ body {
  font-weight : bold;
  font-size: 9pt;
 }
+.confirmMsg {
+ color : #3cda19;
+ font-style : italic;
+ font-weight : bold;
+ font-size: 9pt;
+}
 .creditmsg {
     text-align: right;
     margin-top: 95px;
