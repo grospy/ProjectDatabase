@@ -30,7 +30,9 @@ function students()
 
 <form name='import' method='post' enctype='multipart/form-data'>
     <input type='file' name='file'/><br/>
-    <input type='submit' name='submit' value='Submit'/>
+    <input type='submit' name='submit' value='Submit'/> ";
+	 addStudents(); 
+	 echo "
 </form>
 
 <br/>
