@@ -2,12 +2,8 @@ drop database inholland;
 create database inholland;
 use inholland;
 
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-
 
 CREATE TABLE IF NOT EXISTS `admin` (
   `adminID` varchar(6) NOT NULL DEFAULT 'admin',
@@ -66,6 +62,9 @@ CREATE TABLE IF NOT EXISTS `enrolledstudent` (
   `grade` tinyint(1) unsigned DEFAULT NULL,
   `status` bit(1) DEFAULT NULL COMMENT '0 for fail, 1 for pass, null for currently taking'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `enrolledstudent` (`registrationID`, `studentID`, `courseID`, `grade`, `status`) VALUES
+('8', '559942', 'IBIS001', NULL, NULL);
 
 CREATE TABLE IF NOT EXISTS `guestlecturer` (
   `guestID` varchar(6) NOT NULL,
@@ -244,7 +243,7 @@ INSERT INTO `person` (`personID`, `firstName`, `lastName`, `type`, `last_login`)
 ('552301', 'Sasmita', 'Santoso', 'student', NULL),
 ('557797', 'Abraham', 'Foto', 'student', NULL),
 ('559942', 'Louis', 'Le', 'student', NULL),
-('admin', 'admin', 'admin', 'admin', '2015-06-05 00:01:23'),
+('admin', 'admin', 'admin', 'admin', '2015-06-05 09:19:41'),
 ('ext001', 'Michael', 'Guirella', 'guest-lecturer', NULL),
 ('ext002', 'Jan', 'Bakker', 'guest-lecturer', NULL),
 ('ext003', 'Tim', 'Timmerman', 'guest-lecturer', NULL);
@@ -256,12 +255,17 @@ CREATE TABLE IF NOT EXISTS `registration` (
   `closedate2` date NOT NULL,
   `type` enum('first','second') NOT NULL DEFAULT 'first',
   `minimumstudents` int(2) NOT NULL DEFAULT '0',
+  `minimumcredits` tinyint(3) unsigned NOT NULL,
   `current` enum('1','0') NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
-INSERT INTO `registration` (`registrationID`, `opendate`, `closedate`, `closedate2`, `type`, `minimumstudents`, `current`) VALUES
-(6, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 5, '0'),
-(7, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 4, '0');
+INSERT INTO `registration` (`registrationID`, `opendate`, `closedate`, `closedate2`, `type`, `minimumstudents`, `minimumcredits`, `current`) VALUES
+(6, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 5, 0, '0'),
+(7, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 4, 0, '0'),
+(8, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 1, 0, '0'),
+(9, '2015-06-05', '2015-06-06', '2015-06-07', 'first', 10, 60, '0'),
+(10, '2015-06-05', '2015-06-06', '2015-06-07', 'first', 10, 60, '0'),
+(11, '2015-06-05', '2015-06-06', '2015-07-11', 'first', 10, 60, '1');
 
 CREATE TABLE IF NOT EXISTS `room` (
   `room_number` varchar(6) NOT NULL,
@@ -363,7 +367,7 @@ ALTER TABLE `teacher`
 
 
 ALTER TABLE `registration`
-  MODIFY `registrationID` mediumint(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+  MODIFY `registrationID` mediumint(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 
 ALTER TABLE `student`
   ADD CONSTRAINT `fk_student_person1` FOREIGN KEY (`studentID`) REFERENCES `person` (`personID`) ON DELETE CASCADE ON UPDATE CASCADE;

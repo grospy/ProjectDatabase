@@ -5,15 +5,24 @@ $number = htmlspecialchars($number);
 if ($connection) {
     $number = quote_smart($connection, $number);
     $SQL = "SELECT SUM(c.studyload) AS total FROM course c INNER JOIN enrolledstudent en ON c.courseID=en.courseID WHERE en.studentID=$number AND en.status IS NULL";
+    $SQL2 = "SELECT * FROM registration WHERE current = 1";
 
     $result = $connection->query($SQL);
+    $result2 = $connection->query($SQL2);
     $num_rows = mysqli_num_rows($result);
+    $num_rows2 = mysqli_num_rows($result2);
+
     if ($result) {
-        if ($num_rows > 0) {
-            $data = $result->fetch_array();
-            $total = $data['total'];
-            if($total > 0){echo "You have enrolled ".$total." out of 60 credits.<br/>";}
-            else {echo "You are not enrolled in any classes.<br/>";}
+        if ($num_rows2 > 0) {
+            if ($num_rows > 0) {
+                $total = mysqli_result($result, 0, 'total');
+                $needed = mysqli_result($result2, 0, 'minimumcredits');
+                if ($total > 0) {
+                    echo "You have enrolled $total out of the $needed needed credits.<br/>";
+                } else {
+                    echo "You are not enrolled in any classes.<br/>";
+                }
+            }
         }
     }
 }
