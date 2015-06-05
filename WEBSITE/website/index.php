@@ -6,8 +6,10 @@ session_start();
 require("include/functions.php");
 if ($_SESSION['login'] != md5("1")) {
     header("Location: login.php");
+    exit();
 }else if(!access($_SESSION['number'])){
     header("Location: regclosed.php");
+    exit();
 }
 require("include/top.php");
 require("include/database.php");

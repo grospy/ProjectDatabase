@@ -2,6 +2,7 @@
 session_start();
 if ($_SESSION['login'] != md5("2")) {
     header("Location: login_admin.php");
+    exit();
 }
 require('include/top.php');
 require('include/functions.php');
@@ -80,7 +81,7 @@ require("include/database.php");
 
             <div class="tab-panel">
                 <div class="tab-content">
-                    <h3>Student</h3>
+                    <h3>Students</h3>
                     <?php require('include/index_admin/Students.php'); ?>
                 </div>
             </div>

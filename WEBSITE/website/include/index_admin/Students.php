@@ -5,6 +5,11 @@ if (isset($_SESSION["message"])) {
 }
 ?>
 <div class="CSSTableGenerator">
+
+    <button onclick='function1("Students")'>Show students</button>
+    <?php echo showStudents()?>
+
+
     <h4>Upload a .csv file (for adding students): <button class="instructionButton" onclick='function1("StudentInstruction")'>instruction</button></h4>
 	
     <form name="import" method="post" enctype="multipart/form-data">
@@ -12,9 +17,8 @@ if (isset($_SESSION["message"])) {
         <input type="submit" name="submit" value="Submit"/> <?php addStudents();?>
 	</form>
    
-    <br/><hr/><br/>
-    <button onclick='function1("Students")'>Show students</button>
-    <?php echo showStudents()?>
+    <br/>
+    <br />
 </div>
 
 <div id='lightStudentInstruction' class='white_content'>

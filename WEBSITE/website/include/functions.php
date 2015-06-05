@@ -38,6 +38,7 @@ function login(&$error)
                 $_SESSION['name'] = $name;
                 $_SESSION['number'] = $number;
                 header("Location: index.php");
+                exit();
             } else {
                 $error = "Invalid student number or password.";
             }
@@ -80,6 +81,7 @@ function set(&$error)
                     $_SESSION['reg'] = md5("y");
                     $_SESSION['number'] = $number;
                     header("Location: index.php");
+                    exit();
                 }
             } else {
                 $error = "Student number not found.";
@@ -126,6 +128,7 @@ function getcode(&$error)
                 $_SESSION['number'] = $number;
                 $_SESSION['login'] = md5("3");
                 header("Location: setpassword.php");
+                exit();
 
             } else {
                 $error = "Student number not found.";
@@ -609,6 +612,7 @@ function courses2($case, $cID)
         if ($connection->query($withdrawSQL) === TRUE) {
             $_SESSION["message"] = " - Successfully withdrawn.";
             header("Location: index.php");
+            exit();
         } else {
         }
     } else if (isset($_POST["enroll$cID"])) {
@@ -617,12 +621,14 @@ function courses2($case, $cID)
             if ($connection->query($withdrawSQL) === TRUE) {
                 $_SESSION["message"] = " - Successfully enrolled.";
                 header("Location: index.php");
+                exit();
             } else {
                 echo $connection->error;
             }
         } else {
             $_SESSION["message"] = " - Class full.";
             header("Location: index.php");
+            exit();
         }
 
     }
@@ -832,12 +838,15 @@ function saveEditedCourse()
 
 function tabSelect()
 {
-    if(isset($_SESSION['tab'])){
-        if($_SESSION['tab'] == '123') {
+    if(isset($_SESSION["tab"])) {
+        if( $_SESSION["tab"] == "123" ) {
             return 0;
         }
     }
     if (isset($_POST['clickSetReg'])) {
+        return 0;
+    }
+    if (isset($_POST["deleteReg"])) {
         return 0;
     }
     if (isset($_POST['openReg'])) {
@@ -939,17 +948,21 @@ function regType()
 {
     global $connection;
     if ($connection) {
-        $sql = "SELECT *, (opendate <= CURDATE()) as open, (closedate >= CURDATE()) as open2 from registration where current = 1 ORDER by opendate desc;";
+        $sql = "SELECT *, (opendate <= CURDATE()) as afteropen, (closedate >= CURDATE()) as beforeclose, (closedate < CURDATE()) as afterclose, (closedate2 >= CURDATE()) as beforeclose2 from registration where current = 1 ORDER by opendate desc;";
         $res = $connection->query($sql);
         $rows = mysqli_num_rows($res);
 
         if ($rows < 1) {
             return 0;
         } else if (mysqli_result($res, 0, 'current')) {
-            if (mysqli_result($res, 0, 'open') && mysqli_result($res, 0, 'open2')) {
+            if (mysqli_result($res, 0, 'afteropen') && mysqli_result($res, 0, 'beforeclose')) {
                 return 1;
-            } else {
+            } else if (mysqli_result($res, 0, 'afterclose') && mysqli_result($res, 0, 'beforeclose2')){
                 return 2;
+            }  else if (!mysqli_result($res, 0, 'afteropen')){
+                return 3;
+            } else{
+                return 0;
             }
         }
     }

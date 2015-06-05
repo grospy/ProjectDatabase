@@ -85,6 +85,7 @@ function login(&$error)
                 session_start();
                 $_SESSION['login'] = md5("2");
                 header("Location: admin.php");
+                exit();
             } else {
                 $error = "Invalid username or password.";
             }

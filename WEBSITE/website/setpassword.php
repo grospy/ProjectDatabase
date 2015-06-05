@@ -2,6 +2,7 @@
 session_start();
 if ($_SESSION['login'] != md5("3")) {
     header("Location:index.php");
+    exit();
 }
 $errorMessage = "";
 $num_rows = 0;
