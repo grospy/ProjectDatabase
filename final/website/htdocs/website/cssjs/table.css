@@ -1,0 +1,54 @@
+
+.CSSTableGenerator {
+    box-shadow: 3px 3px 4px #888888;
+	height: auto;
+    overflow: hidden;
+}
+
+.CSSTableGenerator table{
+     border-collapse: collapse;
+     border-spacing: 0;
+     width:100%;
+     height:100%;
+	 overflow-y:hidden;
+ }
+ 
+.CSSTableGenerator table td{
+    vertical-align:middle;
+    background-color:rgb(249,249,249);
+    border:1px solid rgb(201,205,206);
+    border-width:1px 1px 1px 1px;
+    text-align:center;
+    padding:5px;
+	font-size:10pt;
+}
+
+.CSSTableGenerator table tr:nth-child(even) td {
+    background: rgb(253,253,253);
+}
+
+.CSSTableGenerator table tr td:first-child{
+   text-align:left;
+}
+/* .CSSTableGenerator tr:last-child td{
+     border-width:0px 1px 0px 0px;
+ }.CSSTableGenerator tr td:last-child{
+      border-width:0px 0px 1px 0px;
+  }.CSSTableGenerator tr:last-child td:last-child{
+       border-width:0px 0px 0px 0px;
+   } */
+
+.CSSTableGenerator table tr:hover td{
+      background-color:#cccccc;
+}
+.CSSTableGenerator table tr:first-child td{
+    background-color:rgb(221,225,226);
+    text-align:center;
+	font-size:10pt;
+    color:#003366;
+	font-weight: bold;
+}
+
+.CSSTableGenerator table #unavailableCourse td{
+   background-color: rgb(255,220,179);
+}
