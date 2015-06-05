@@ -192,6 +192,7 @@ function addStudents()
 				$properData = array();
 				$wrongData = TRUE;
 				
+
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $num = count($data);
                     $studentID = $data[0];
@@ -221,8 +222,16 @@ function addStudents()
 						$connection->query($sql1);
 						$connection->query($sql2);
 						$numberOfStudent++;						
+                            $email = $properData[$i][3];
+                            $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
+                            $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
+                            $connection->query($sql1);
+                            $connection->query($sql2);
+                            $numberOfStudent++;
+                        }
+                        echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
 					}
-					echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
+
 				}
 					
                 fclose($handle);
@@ -284,11 +293,14 @@ function addCourseCSV()
 					}
                     
 				
-                fclose($handle);
+                }
+
             }
+            fclose($handle);
         }
     }
 }
+
 
 function addLessonCSV()
 {
