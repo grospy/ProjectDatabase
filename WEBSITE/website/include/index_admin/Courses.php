@@ -11,19 +11,18 @@
                 if (!isset($_POST['courseForm'])) {
                     $closeAllCourseSQL = "update course set offer=0";
                     $connection->query($closeAllCourseSQL);
-                    echo "All course is now closed.";
+                    echo "<span class='errorMsg'> All course is now closed! </span>";
                 } else {
                     $offeredCourse = $_POST['courseForm'];
                     $closeAllCourseSQL = "update course set offer=0";
                     $connection->query($closeAllCourseSQL);
 
-                    $text = "These course are opened : ";
                     foreach ($offeredCourse as $acourse) {
-                        $text .= " $acourse .";
                         $offerCourseSQL = "update course set offer=1 where courseID='$acourse'";
                         $connection->query($offerCourseSQL);
                     }
-                    echo "$text";
+                    echo "<span class='confirmMsg'> Successfully open checked courses!</span>";
+
                 }
             }
             ?>

@@ -366,4 +366,4 @@ ALTER TABLE `registration`
   MODIFY `registrationID` mediumint(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 
 ALTER TABLE `student`
-  ADD CONSTRAINT `fk_student_person1` FOREIGN KEY (`studentID`) REFERENCES `person` (`personID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_student_person1` FOREIGN KEY (`studentID`) REFERENCES `person` (`personID`) ON DELETE CASCADE ON UPDATE CASCADE;
