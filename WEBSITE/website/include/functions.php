@@ -837,13 +837,13 @@ function tabSelect()
             return 0;
         }
     }
-    if (isset($_POST['submitRegDate'])) {
-        return 0;
-    }
     if (isset($_POST['clickSetReg'])) {
         return 0;
     }
-    if (isset($_POST['clickCloseReg'])) {
+    if (isset($_POST['openReg'])) {
+        return 0;
+    }
+    if (isset($_POST['editReg'])) {
         return 0;
     }
     if (isset($_POST['filterStudent'])) {
