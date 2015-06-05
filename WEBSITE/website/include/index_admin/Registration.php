@@ -45,7 +45,7 @@ function open()
     if (!mysqli_result($result, 0, 'closedate')) {
         echo "<form method='post'><input type='submit' name='closeReg' value='Set Close Date'></form>";
     } else {
-        echo "<b>Closing on</b> $closeDate - <i>($diff day(s) from today)</i>";
+        echo "<b>Closing on:</b> $closeDate - <i>($diff day(s) from today)</i>";
     }
 
 
@@ -55,7 +55,7 @@ function opening()
 {
     global $connection;
     echo "<h4>Status: <span style='color:#dac308;'>Closed</span></h4>";
-    echo "<b>Opening on</b> ";
+    echo "<b>Opening on:</b> ";
     $result = $connection->query("Select date_format(closedate, '%b %e, %Y') as closedate,date_format(opendate, '%b %e, %Y') as opendate, datediff(opendate, CURDATE()) as diff from registration where CURRENT = 1");
     $openDate = mysqli_result($result, 0, 'opendate');
     $closeDate = mysqli_result($result, 0, 'closedate');

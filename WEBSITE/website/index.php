@@ -17,7 +17,6 @@ require("include/database.php");
 
 <div class="creditmsg">
     <?php require("include/index/credit.php"); ?>
-
 </div>
 
 <div class="tabs">

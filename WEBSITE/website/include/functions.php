@@ -900,17 +900,22 @@ function access($sID)
     global $connection;
     if ($connection) {
 
-        $now = Date('YYY-MM-dd');
+        $now = Date('Y-M-d');
 
 
         $result = $connection->query("Select * from registration where current = 1");
         $open = mysqli_result($result, 0, 'opendate');
         $close = mysqli_result($result, 0, 'closedate');
         $num = mysqli_num_rows($result);
+
+        $res = $connection->query("SELECT allowtoreg from student where studentID=$sID");
+
         if ($num > 0) {
-            if (mysqli_result($connection->query("SELECT allowtoreg from student where studentID=$sID"), 0) && (($open <= $now) && ($close >= $now || $close == null))) {
+            if (mysqli_result($res, 0, 'allowtoreg') && ($open <= $now && $close >= $now)) {
+                $_SESSION['error'] = $now;
                 return true;
             } else {
+                $_SESSION['error'] = $now;
                 return false;
             }
         } else {
