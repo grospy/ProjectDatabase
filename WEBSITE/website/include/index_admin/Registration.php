@@ -374,6 +374,7 @@ function endRegistration()
     $SQL = "update registration set closedate = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
+        start2();
         status();
     } else {
         endRegistrationForm();
@@ -399,6 +400,7 @@ function endRegistration2()
     $SQL = "update registration set closedate2 = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
+        endProcess();
         status();
     } else {
         endRegistrationForm2();
@@ -424,6 +426,7 @@ function openRegNowConfirm()
     $SQL = "update registration set opendate = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
+        start1();
         status();
     } else {
         endRegistrationForm();
@@ -472,17 +475,23 @@ function setRegistration()
         //"Archives" other registrations
         $SQL = "update registration set current = '0'";
         if ($connection->query($SQL) === TRUE) {
-            $SQL = "insert into registration (opendate, closedate, closedate2, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', $minStudents, $minCredits, '1')";
-            if ($connection->query($SQL) === TRUE) {
-                $_SESSION['tab'] = "123";
-                header("Location:admin.php");
-                exit();
+            $SQL2 = "UPDATE course set minimumstudents = $minStudents";
+            if ($connection->query($SQL2) === TRUE) {
+                $SQL = "insert into registration (opendate, closedate, closedate2, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', $minStudents, $minCredits, '1')";
+                if ($connection->query($SQL) === TRUE) {
+                    $_SESSION['tab'] = "123";
+                    header("Location:admin.php");
+                    exit();
+                } else {
+                    echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
+                }
             } else {
+                setRegistrationForm();
                 echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
             }
         } else {
             setRegistrationForm();
-            echo "<br/><span class='errorMsg'>" . $connection->error . "2</span>";
+            echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
         }
     }
 }

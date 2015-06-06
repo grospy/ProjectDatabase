@@ -1,5 +1,9 @@
 <?php
 ob_start();
+require("include/top.php");
+require("include/database.php");
+require("include/functions.php");
+runCheck();
 session_start();
 $errorMessage = "";
 $num_rows = 0;
@@ -15,8 +19,6 @@ if (isset($_POST['submit'])) {
     $number = $_POST["number"];
     $number = htmlspecialchars($number);
 }
-require("include/top.php");
-require("include/functions.php");
 session_destroy();
 ?>
 
