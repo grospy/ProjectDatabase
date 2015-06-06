@@ -23,6 +23,10 @@ if (isset($_POST['clickSetReg'])) {
     grades();
 } else if (isset($_POST["setPassed"]) || isset($_POST["setFailed"])) {
     submitStatus();
+} else if (isset($_POST["nextReg"])) {
+    nextReg();
+}  else if (isset($_POST["nextRegConfirm"])) {
+    nextRegConfirm();
 } else {
     status();
 }
@@ -124,6 +128,7 @@ function over()
     echo "<hr style='visibility: hidden'>
 <form method='post'>
 <input type='submit' name='grades' value='Input pass/fail'>
+<input type='submit' name='nextReg' value='Start next registration'>
 </form>";
 
 }
@@ -133,7 +138,7 @@ function grades()
     global $connection;
     echo "<h4>Input pass/fail</h4>
 		<form name='submitStatus' method='post'> ";
-    echo "    <input type='button' name='Check_All' value='Check All' onClick=\"CheckAll(1)\"><input type='button' name='Un_CheckAll' value='Uncheck All' onClick=\"UnCheckAll(1)\"<i>Change selected to:</i>
+    echo "    <input type='button' name='Check_All' value='Check All' onClick=\"CheckAll(1)\"><input type='button' name='Un_CheckAll' value='Uncheck All' onClick=\"UnCheckAll(1)\"><i>Change selected to:</i>
 			<input type='submit' name='setPassed' value='Passed'><input type='submit' name='setFailed' value='Failed'><br/>";
     $regSQL = "SELECT * from registration where CURRENT = '1';";
     $regResult = $connection->query($regSQL);
@@ -220,6 +225,29 @@ function statusCheck ($courseID,$studentID) {
 	}
 }
 
+function nextReg(){
+    Echo "<span class='errorMsg' style='font-size: 100%'> Are you sure you want to close this registration period and start the next one?</span><hr style='visibility: hidden'>
+            <form method='post'>
+                <input type='submit' value = 'Yes' class = 'back' name =\"nextRegConfirm\">
+                <input type='submit' value = 'No' name =\"backToReg\">
+            </FORM >";
+}
+
+function nextRegConfirm(){
+    global $connection;
+    if($connection->query("UPDATE registration set current = '0';")){
+        status();
+        echo "<span class = 'confirmMsg'> Registration closed successfully.";
+    }
+    else {
+        echo $connection->error;
+    }
+
+
+
+
+
+}
 
 function submitStatus() {
 	global $connection;

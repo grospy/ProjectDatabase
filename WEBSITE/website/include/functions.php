@@ -1053,6 +1053,12 @@ function tabSelect()
     if (isset($_POST['setFailed'])) {
         return 0;
     }
+    if (isset($_POST['nextReg'])) {
+        return 0;
+    }
+    if (isset($_POST['nextRegConfirm'])) {
+        return 0;
+    }
     if (isset($_POST['offerCourse'])) {
         return 1;
     }
