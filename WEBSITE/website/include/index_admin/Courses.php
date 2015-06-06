@@ -11,18 +11,19 @@
                 if (!isset($_POST['courseForm'])) {
                     $closeAllCourseSQL = "update course set offer=0";
                     $connection->query($closeAllCourseSQL);
-                    echo "<span class='errorMsg'> All course is now closed! </span>";
+                    echo "All course is now closed.";
                 } else {
                     $offeredCourse = $_POST['courseForm'];
                     $closeAllCourseSQL = "update course set offer=0";
                     $connection->query($closeAllCourseSQL);
 
+                    $text = "These course are opened : ";
                     foreach ($offeredCourse as $acourse) {
+                        $text .= " $acourse .";
                         $offerCourseSQL = "update course set offer=1 where courseID='$acourse'";
                         $connection->query($offerCourseSQL);
                     }
-                    echo "<span class='confirmMsg'> Successfully open checked courses!</span>";
-
+                    echo "$text";
                 }
             }
             ?>
@@ -31,13 +32,14 @@
                 <td></td>
                 <td>Course</td>
                 <td>Participants</td>
+                <td>Instructor</td>
                 <td>Edit</td>
                 <td>Offered</td>
             </tr>
 
             <?php
             if ($connection) {
-                $courseNameSQL = "SELECT name, courseID, capacity FROM course order by courseID";
+                $courseNameSQL = "SELECT c.name, c.courseID, c.capacity, c.studyload, concat(p.firstName,' ',p.lastName) as instructor FROM course c INNER JOIN teacher te on te.courseID=c.courseID INNER JOIN person p ON p.personID=te.teacherID";
                 $result = $connection->query($courseNameSQL);
                 $num_rows = mysqli_num_rows($result);
                 if ($result) {
@@ -46,6 +48,7 @@
                             $courseName = mysqli_result($result, $x, "name");
                             $courseID = mysqli_result($result, $x, "courseID");
                             $capacity = mysqli_result($result, $x, "capacity");
+                            $instructor = mysqli_result($result, $x, "instructor");
 
                             $participantSQL = "select studentID from enrolledstudent where courseID='$courseID' and status is null";
                             $participantResult = $connection->query($participantSQL);
@@ -53,9 +56,10 @@
 
                             echo "<tr>
                             <td><input type='checkbox' name='courseForm[]' class='courseForm' value='$courseID'></td>
-							<td > $courseName</td >
-							<td > $participant / $capacity</td >
-							<td > <input type = 'submit' name = 'editCourseButton' value = '$courseID' />	</td >
+							<td>$courseName</td >
+							<td>$participant / $capacity</td >
+							<td>$instructor</td >
+							<td><input type = 'submit' name = 'editCourseButton' value = '$courseID' />	</td >
                             <td>" . (offered($courseID) == true ? "Yes" : "No") . "</tr>";
                         }
                     }

@@ -1,7 +1,6 @@
 drop database inholland;
 create database inholland;
 use inholland;
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -62,9 +61,6 @@ CREATE TABLE IF NOT EXISTS `enrolledstudent` (
   `grade` tinyint(1) unsigned DEFAULT NULL,
   `status` bit(1) DEFAULT NULL COMMENT '0 for fail, 1 for pass, null for currently taking'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO `enrolledstudent` (`registrationID`, `studentID`, `courseID`, `grade`, `status`) VALUES
-('8', '559942', 'IBIS001', NULL, NULL);
 
 CREATE TABLE IF NOT EXISTS `guestlecturer` (
   `guestID` varchar(6) NOT NULL,
@@ -231,22 +227,22 @@ CREATE TABLE IF NOT EXISTS `person` (
   `firstName` varchar(45) NOT NULL,
   `lastName` varchar(45) NOT NULL,
   `type` enum('student','teacher','guest-lecturer','admin') NOT NULL,
-  `last_login` timestamp NULL DEFAULT NULL
+  `current` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `person` (`personID`, `firstName`, `lastName`, `type`, `last_login`) VALUES
-('11111', 'Harald', 'Drillenburg', 'teacher', NULL),
-('22222', 'Kroes', 'Belinda', 'teacher', NULL),
-('33333', 'Penning', 'Margje', 'teacher', NULL),
-('44444', 'Reeb-Gruber', 'Sandra', 'teacher', NULL),
-('523001', 'Shamil', 'Karimli', 'student', NULL),
-('552301', 'Sasmita', 'Santoso', 'student', NULL),
-('557797', 'Abraham', 'Foto', 'student', NULL),
-('559942', 'Louis', 'Le', 'student', NULL),
-('admin', 'admin', 'admin', 'admin', '2015-06-05 09:19:41'),
-('ext001', 'Michael', 'Guirella', 'guest-lecturer', NULL),
-('ext002', 'Jan', 'Bakker', 'guest-lecturer', NULL),
-('ext003', 'Tim', 'Timmerman', 'guest-lecturer', NULL);
+INSERT INTO `person` (`personID`, `firstName`, `lastName`, `type`, `current`) VALUES
+('11111', 'Harald', 'Drillenburg', 'teacher', '1'),
+('22222', 'Kroes', 'Belinda', 'teacher', '1'),
+('33333', 'Penning', 'Margje', 'teacher', '1'),
+('44444', 'Reeb-Gruber', 'Sandra', 'teacher', '1'),
+('523001', 'Shamil', 'Karimli', 'student', '0'),
+('552301', 'Sasmita', 'Santoso', 'student', '1'),
+('557797', 'Abraham', 'Foto', 'student', '1'),
+('559942', 'Louis', 'Le', 'student', '1'),
+('admin', 'admin', 'admin', 'admin', '1'),
+('ext001', 'Michael', 'Guirella', 'guest-lecturer', '1'),
+('ext002', 'Jan', 'Bakker', 'guest-lecturer', '1'),
+('ext003', 'Tim', 'Timmerman', 'guest-lecturer', '1');
 
 CREATE TABLE IF NOT EXISTS `registration` (
   `registrationID` mediumint(6) NOT NULL,
@@ -257,15 +253,7 @@ CREATE TABLE IF NOT EXISTS `registration` (
   `minimumstudents` int(2) NOT NULL DEFAULT '0',
   `minimumcredits` tinyint(3) unsigned NOT NULL,
   `current` enum('1','0') NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-
-INSERT INTO `registration` (`registrationID`, `opendate`, `closedate`, `closedate2`, `type`, `minimumstudents`, `minimumcredits`, `current`) VALUES
-(6, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 5, 0, '0'),
-(7, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 4, 0, '0'),
-(8, '2015-06-05', '2015-06-06', '2015-06-13', 'first', 1, 0, '0'),
-(9, '2015-06-05', '2015-06-06', '2015-06-07', 'first', 10, 60, '0'),
-(10, '2015-06-05', '2015-06-06', '2015-06-07', 'first', 10, 60, '0'),
-(11, '2015-06-05', '2015-06-06', '2015-07-11', 'first', 10, 60, '1');
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `room` (
   `room_number` varchar(6) NOT NULL,
@@ -313,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `teacher` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `teacher` (`teacherID`, `courseID`) VALUES
-('33333', 'IBIS001'),
+('44444', 'IBIS001'),
 ('11111', 'IBIS002'),
 ('22222', 'IBIS003'),
 ('44444', 'IBIS004'),
@@ -347,6 +335,12 @@ INSERT INTO `teacher` (`teacherID`, `courseID`) VALUES
 ('44444', 'IBIS032');
 
 
+ALTER TABLE `course`
+  ADD PRIMARY KEY (`courseID`);
+
+ALTER TABLE `enrolledstudent`
+  ADD PRIMARY KEY (`registrationID`,`studentID`,`courseID`);
+
 ALTER TABLE `person`
   ADD PRIMARY KEY (`personID`),
   ADD KEY `personID` (`personID`);
@@ -367,7 +361,7 @@ ALTER TABLE `teacher`
 
 
 ALTER TABLE `registration`
-  MODIFY `registrationID` mediumint(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `registrationID` mediumint(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 
 ALTER TABLE `student`
-  ADD CONSTRAINT `fk_student_person1` FOREIGN KEY (`studentID`) REFERENCES `person` (`personID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_student_person1` FOREIGN KEY (`studentID`) REFERENCES `person` (`personID`) ON DELETE NO ACTION ON UPDATE NO ACTION;

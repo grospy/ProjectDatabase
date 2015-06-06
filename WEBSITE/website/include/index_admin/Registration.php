@@ -89,9 +89,10 @@ function opening()
     $mc = mysqli_result($result, 0, 'minimumcredits');
     $diff = mysqli_result($result, 0, 'diff');
     echo $openDate . " - <i>($diff day(s) from today)</i><br /><br />";
-    echo "<b>Closing on</b> $closeDate";
-    echo "<b>Second registration closing on</b> $closeDate2";
-    echo "<b>Second registration closing on</b> $mc";
+    echo "<b>Closing on</b> $closeDate<br /><br />";
+    echo "<b>Second registration closing on</b> $closeDate2<br /><br />";
+    echo "<b>Minimum credits:</b> $mc";
+    echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'></form>";
 
 }
 

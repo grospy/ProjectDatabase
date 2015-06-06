@@ -1,5 +1,3 @@
-
-
 <?PHP
 ob_start();
 session_start();
@@ -23,7 +21,7 @@ require("include/database.php");
 
 <div class="tabs">
     <div class="tab">
-        <input class="tab-radio" type="radio" id="tab-1" name="tab-group-1">
+        <input class="tab-radio" type="radio" id="tab-1" name="tab-group-1"<?php if(tabSelect2() == "G"){echo " Checked";} ?>>
         <label class="tab-label" for="tab-1">Grades</label>
 
         <div class="tab-panel">
@@ -34,7 +32,7 @@ require("include/database.php");
         </div>
     </div>
     <div  class="tab" <?php if(!access($_SESSION['number'])){echo "style=\"display: none\"";}?> >
-        <input class="tab-radio" type="radio" id="tab-2" name="tab-group-1" checked>
+        <input class="tab-radio" type="radio" id="tab-2" name="tab-group-1" <?php if(tabSelect2() == "E"){echo " Checked";} ?>>
         <label class="tab-label" for="tab-2">Enroll</label>
 
         <div class="tab-panel">
@@ -45,7 +43,7 @@ require("include/database.php");
         </div>
     </div>
     <div class="tab">
-        <input class="tab-radio" type="radio" id="tab-3" name="tab-group-1">
+        <input class="tab-radio" type="radio" id="tab-3" name="tab-group-1"<?php if(tabSelect2() == "S"){echo " Checked";} ?>>
         <label class="tab-label" for="tab-3">Schedule</label>
 
         <div class="tab-panel">

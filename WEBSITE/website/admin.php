@@ -1,4 +1,5 @@
 <?PHP
+ob_start();
 session_start();
 if ($_SESSION['login'] != md5("2")) {
     header("Location: login_admin.php");

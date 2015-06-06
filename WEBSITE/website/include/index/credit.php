@@ -4,7 +4,7 @@ $number = htmlspecialchars($number);
 
 if ($connection) {
     $number = quote_smart($connection, $number);
-    $SQL = "SELECT SUM(c.studyload) AS total FROM course c INNER JOIN enrolledstudent en ON c.courseID=en.courseID WHERE en.studentID=$number AND en.status IS NULL";
+    $SQL = "SELECT SUM(c.studyload) AS total FROM course c INNER JOIN enrolledstudent en ON c.courseID=en.courseID WHERE en.studentID=$number AND en.status IS NULL AND en.registrationID in (SELECT registrationID from registration where current = 1)";
     $SQL2 = "SELECT * FROM registration WHERE current = 1";
 
     $result = $connection->query($SQL);
@@ -23,6 +23,12 @@ if ($connection) {
                     echo "You are not enrolled in any classes.<br/>";
                 }
             }
+            else {
+                echo "You are not enrolled in any classes.<br/>";
+            }
+        }else {
+            echo "Registration not open.<br/>";
+
         }
     }
 }
