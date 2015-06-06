@@ -1047,6 +1047,12 @@ function tabSelect()
     if (isset($_POST['closeReg'])) {
         return 0;
     }
+    if (isset($_POST['setPassed'])) {
+        return 0;
+    }
+    if (isset($_POST['setFailed'])) {
+        return 0;
+    }
     if (isset($_POST['offerCourse'])) {
         return 1;
     }
