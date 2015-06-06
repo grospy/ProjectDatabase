@@ -24,7 +24,7 @@ session_destroy();
 
 <div class="loginbox">
     <div class="login">
-		<img src="image/Inholland_logo.png" id="logologin"></img>
+		<img src="image/Inholland_logo.png" id="logologin">
 		<hr/>
         <h3>IBIS Students Enrollment</h3>
 		<hr/>

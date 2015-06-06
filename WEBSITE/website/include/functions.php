@@ -182,17 +182,17 @@ function addStudents()
     if (isset($_POST["submit"])) {
         $filecheck = basename($_FILES['file']['name']);
         $ext = strtolower(substr($filecheck, strrpos($filecheck, '.') + 1));
-        
-		if (!($ext == "csv")) {
+
+        if (!($ext == "csv")) {
             echo "<span class='errorMsg'> File must be csv type</span>";
         } else {
             $file = $_FILES['file']['tmp_name'];
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             $handle = fopen($file, "r");
             if ($handle !== FALSE) {
-				$properData = array();
-				$wrongData = TRUE;
-				
+                $properData = array();
+                $wrongData = TRUE;
+
 
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $num = count($data);
@@ -200,45 +200,45 @@ function addStudents()
                     $first_name = $data[1];
                     $last_name = $data[2];
                     $email = $studentID . "@student.inholland.nl";
-					
-					if(strlen($studentID) == 6 && preg_match("/^[0-9]+$/",$studentID) &&
-					ctype_alpha($first_name) && ctype_alpha($last_name) ) {
-						array_push($properData,[$studentID,$first_name,$last_name,$email]);
-					}	
-					else{
-						$wrongData=FALSE;
-					}
-                }
-				if (!$wrongData){
-					echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
-				} else {
-					$numberOfStudent = 0;
-					for($i=0;$i<count($properData); $i++){
-						$studentID=$properData[$i][0];
-						$first_name=$properData[$i][1];
-						$last_name=$properData[$i][2];
-						$email=$properData[$i][3];
-						$sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
-						$sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
-						$connection->query($sql1);
-						$connection->query($sql2);
-						$numberOfStudent++;						
-                            $email = $properData[$i][3];
-                            $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
-                            $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
-                            $connection->query($sql1);
-                            $connection->query($sql2);
-                            $numberOfStudent++;
-                        }
-                        echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
-					}
 
-				}
-					
-                fclose($handle);
+                    if (strlen($studentID) == 6 && preg_match("/^[0-9]+$/", $studentID) &&
+                        ctype_alpha($first_name) && ctype_alpha($last_name)
+                    ) {
+                        array_push($properData, [$studentID, $first_name, $last_name, $email]);
+                    } else {
+                        $wrongData = FALSE;
+                    }
+                }
+                if (!$wrongData) {
+                    echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
+                } else {
+                    $numberOfStudent = 0;
+                    for ($i = 0; $i < count($properData); $i++) {
+                        $studentID = $properData[$i][0];
+                        $first_name = $properData[$i][1];
+                        $last_name = $properData[$i][2];
+                        $email = $properData[$i][3];
+                        $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
+                        $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
+                        $connection->query($sql1);
+                        $connection->query($sql2);
+                        $numberOfStudent++;
+                        $email = $properData[$i][3];
+                        $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
+                        $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
+                        $connection->query($sql1);
+                        $connection->query($sql2);
+                        $numberOfStudent++;
+                    }
+                    echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
+                }
+
             }
+
+            fclose($handle);
         }
     }
+}
 
 function addCourseCSV()
 {
@@ -253,52 +253,50 @@ function addCourseCSV()
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             $handle = fopen($file, "r");
             if ($handle !== FALSE) {
-                $properData=array();
-				$wrongData=TRUE;
-					
-					while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-						$num = count($data);
-						$courseID = $data[0];
-						$courseName = $data[1];
-						$capacity = $data[2];
-						$studyLoad = $data[3];
-						$teacherID = $data[4];
-						
-						if (strlen($courseID) == 7 && substr($courseID,0,4) == "IBIS" && preg_match("/^[0-9]+$/",substr($courseID,4,3)) && preg_match("/^[0-9]+$/",$teacherID)  && preg_match("/^[0-9]+$/",$capacity) && preg_match("/^[0-9]+$/",$studyLoad)) {
-							array_push($properData,[$courseID,$courseName,$capacity,$studyLoad,$teacherID,"0"]);
-						}
-						else {
-							$wrongData=FALSE;
-							
-						}
-					}
-					if (!$wrongData) {
-						echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
-					}
-					else {
-						$numberOfCourse = 0;
-						for($i=0;$i<count($properData); $i++){
-							$courseID=$properData[$i][0];
-							$courseName=$properData[$i][1];
-							$capacity=$properData[$i][2];
-							$studyLoad=$properData[$i][3];
-							
-							$sql1 = "INSERT INTO course VALUES ('$courseID','$courseName','$capacity','$studyLoad',0)";
-							$sql2 = "INSERT INTO teacher VALUES ('$teacherID','$courseID')";
-							if ($connection->query($sql1) && $connection->query($sql2)) {
-								$numberOfCourse++;
-							} 
-						}
-						echo "<span class='confirmMsg'>Successfully adding $numberOfCourse courses!</span>";
-					}
-                    
-				
+                $properData = array();
+                $wrongData = TRUE;
+
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $num = count($data);
+                    $courseID = $data[0];
+                    $courseName = $data[1];
+                    $capacity = $data[2];
+                    $studyLoad = $data[3];
+                    $teacherID = $data[4];
+
+                    if (strlen($courseID) == 7 && substr($courseID, 0, 4) == "IBIS" && preg_match("/^[0-9]+$/", substr($courseID, 4, 3)) && preg_match("/^[0-9]+$/", $teacherID) && preg_match("/^[0-9]+$/", $capacity) && preg_match("/^[0-9]+$/", $studyLoad)) {
+                        array_push($properData, [$courseID, $courseName, $capacity, $studyLoad, $teacherID, "0"]);
+                    } else {
+                        $wrongData = FALSE;
+
+                    }
+                }
+                if (!$wrongData) {
+                    echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
+                } else {
+                    $numberOfCourse = 0;
+                    for ($i = 0; $i < count($properData); $i++) {
+                        $courseID = $properData[$i][0];
+                        $courseName = $properData[$i][1];
+                        $capacity = $properData[$i][2];
+                        $studyLoad = $properData[$i][3];
+
+                        $sql1 = "INSERT INTO course VALUES ('$courseID','$courseName','$capacity','$studyLoad',0)";
+                        $sql2 = "INSERT INTO teacher VALUES ('$teacherID','$courseID')";
+                        if ($connection->query($sql1) && $connection->query($sql2)) {
+                            $numberOfCourse++;
+                        }
+                    }
+                    echo "<span class='confirmMsg'>Successfully adding $numberOfCourse courses!</span>";
                 }
 
+
             }
-            fclose($handle);
+
         }
+        fclose($handle);
     }
+}
 
 
 function addLessonCSV()
@@ -342,11 +340,11 @@ function addNewCourse()
         if (empty($_POST['newCourseName']) || empty($_POST['newCapacity']) || empty($_POST['newStudyLoad']) || empty($_POST['newInstructor'])) {
             echo "<span class='errorMsg'> All field have to be filled</span>";
         } else {
-            $newCourseID = quote_smart($connection,htmlspecialchars($_POST['newCourseID']));
-            $newCourseName = quote_smart($connection,htmlspecialchars($_POST['newCourseName']));
-            $newCapacity = quote_smart($connection,htmlspecialchars($_POST['newCapacity']));
-            $newStudyLoad = quote_smart($connection,htmlspecialchars($_POST['newStudyLoad']));
-            $newInstructor = quote_smart($connection,htmlspecialchars($_POST['newInstructor']));
+            $newCourseID = quote_smart($connection, htmlspecialchars($_POST['newCourseID']));
+            $newCourseName = quote_smart($connection, htmlspecialchars($_POST['newCourseName']));
+            $newCapacity = quote_smart($connection, htmlspecialchars($_POST['newCapacity']));
+            $newStudyLoad = quote_smart($connection, htmlspecialchars($_POST['newStudyLoad']));
+            $newInstructor = quote_smart($connection, htmlspecialchars($_POST['newInstructor']));
 
             $addCourseSQL = "insert into course value ($newCourseID, $newCourseName,$newCapacity,$newStudyLoad, 0);";
             $addTeacherSQL = "insert into teacher value ($newInstructor, $newCourseID);";
@@ -936,10 +934,34 @@ function tabSelect()
     if (isset($_POST['clickSetReg'])) {
         return 0;
     }
+    if (isset($_POST['grades'])) {
+        return 0;
+    }
+    if (isset($_POST['clickEditReg'])) {
+        return 0;
+    }
     if (isset($_POST["deleteReg"])) {
         return 0;
     }
     if (isset($_POST['openReg'])) {
+        return 0;
+    }
+    if (isset($_POST['openRegNow'])) {
+        return 0;
+    }
+    if (isset($_POST['openRegNowConfirm'])) {
+        return 0;
+    }
+    if (isset($_POST['endReg'])) {
+        return 0;
+    }
+    if (isset($_POST['endRegConfirm'])) {
+        return 0;
+    }
+    if (isset($_POST['endReg2'])) {
+        return 0;
+    }
+    if (isset($_POST['endReg2Confirm'])) {
         return 0;
     }
     if (isset($_POST['editReg'])) {
@@ -1060,17 +1082,58 @@ function regType()
         $rows = mysqli_num_rows($res);
 
         if ($rows < 1) {
-            return 0;
-        } else if (mysqli_result($res, 0, 'current')) {
-            if (mysqli_result($res, 0, 'afteropen') && mysqli_result($res, 0, 'beforeclose')) {
-                return 1;
-            } else if (mysqli_result($res, 0, 'afterclose') && mysqli_result($res, 0, 'beforeclose2')) {
-                return 2;
-            } else if (!mysqli_result($res, 0, 'afteropen')) {
-                return 3;
-            } else {
-                return 0;
-            }
+            return 0; //No Current
+        } else if (mysqli_result($res, 0, 'afteropen') && mysqli_result($res, 0, 'beforeclose')) {
+            return 1; //first
+        } else if (mysqli_result($res, 0, 'afterclose') && mysqli_result($res, 0, 'beforeclose2')) {
+            return 2; //second
+        } else if (!mysqli_result($res, 0, 'afteropen')) {
+            return 3; //before
+        } else {
+            return 4; //After
         }
     }
+
 }
+
+function runCheck()
+{
+
+
+    switch (regType()) {
+        case 0:
+
+        case 1:
+
+        case 2:
+
+        case 3:
+
+        case 4:
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

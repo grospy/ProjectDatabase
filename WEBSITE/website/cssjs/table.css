@@ -55,3 +55,145 @@
 .CSSTableGenerator table #unavailableCourse td {
     background-color: rgb(255, 220, 179);
 }
+
+/*INHOLLAND*/
+
+
+ .PSLEVEL1GRIDWBO {
+     border-width: 1px;
+     border-color: rgb(201, 206, 213);
+     border-style: solid;
+ }
+
+.PSLEVEL1GRIDLABEL, .PSLEVEL2GRIDLABEL, .PSLEVEL3GRIDLABEL {
+    font-family: Arial, sans-serif;
+    font-size: 10pt;
+    font-weight: normal;
+    font-style: normal;
+    color: rgb(171, 91, 26);
+    background-color: rgb(241, 245, 246);
+    text-indent: 1px;
+    padding-top: 0.75px;
+    padding-bottom: 0.75px;
+    padding-left: 2px;
+    padding-right: 0.75px;
+    border-top-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    border-right-style: none;
+}
+
+.PSPUSHBUTTON {
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+    font-weight: normal;
+    font-style: normal;
+    color: rgb(51, 51, 51);
+    margin-left: 1px;
+    margin-right: 1px;
+    cursor: hand;
+}
+
+.PSLEVEL1GRID, .PSLEVEL2GRID, .PSLEVEL3GRID {
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+    font-weight: normal;
+    font-style: normal;
+    color: rgb(60, 60, 60);
+    border-width: 1px;
+    border-color: rgb(163, 190, 216);
+    border-style: solid;
+}
+
+.PSLEVEL1GRIDCOLUMNHDR, .PSLEVEL2GRIDCOLUMNHDR, .PSLEVEL3GRIDCOLUMNHDR {
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+    font-weight: normal;
+    font-style: normal;
+    color: rgb(97, 128, 159);
+    background-color: rgb(249, 249, 249);
+    border-top-width: 1px;
+    border-bottom-width: 2px;
+    border-right-width: 1px;
+    border-top-color: rgb(230, 230, 230);
+    border-bottom-color: rgb(230, 230, 230);
+    border-right-color: rgb(230, 230, 230);
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-right-style: solid;
+}
+
+
+.PSLEVEL1GRIDCOLUMNHDR:link, .PSLEVEL1GRIDCOLUMNHDR:visited, .PSLEVEL1GRIDCOLUMNHDRDISABLED, .PSLEVEL3GRIDCOLUMNHDR:link, .PSLEVEL3GRIDCOLUMNHDR:visited, .PSLEVEL3GRIDCOLUMNHDRDISABLED, .PSLEVEL1GRIDCOLUMNHDR, .PSLEVEL2GRIDCOLUMNHDR, .PSLEVEL3GRIDCOLUMNHDR, .PSLEVEL1GRIDCOLUMNHDRTXT, .PSLEVEL2GRIDCOLUMNHDRTXT, .PSLEVEL3GRIDCOLUMNHDRTXT {
+    background-color: #f9f9f9;
+    color: #426a92;
+    font-family: Arial, sans-serif;
+    font-size: 8pt;
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+.PSPUSHBUTTON span, .PSPUSHBUTTONTB span, .PSPUSHBUTTON span:hover,
+.PSPUSHBUTTONTBABORT span, .PSPUSHBUTTONTBADD span, .PSPUSHBUTTONTBADDMODE span, .PSPUSHBUTTONTBAPPLY span,
+.PSPUSHBUTTONTBCANCEL span, .PSPUSHBUTTONTBCLEAR span, .PSPUSHBUTTONTBCONTINUE span, .PSPUSHBUTTONTBCORRECTMODE span,
+.PSPUSHBUTTONTBDELETE span, .PSPUSHBUTTONTBIGNORE span, .PSPUSHBUTTONTBLOOKUP span, .PSPUSHBUTTONTBNEXTINLIST span,
+.PSPUSHBUTTONTBNEXTINWORKLIST span, .PSPUSHBUTTONTBNEXTTAB span, .PSPUSHBUTTONTBNO span, .PSPUSHBUTTONTBOK span,
+.PSPUSHBUTTONTBPOPUP span, .PSPUSHBUTTONTBPREVIEW span, .PSPUSHBUTTONTBPREVINLIST span, .PSPUSHBUTTONTBPREVINWORKLIST span,
+.PSPUSHBUTTONTBPREVTAB span, .PSPUSHBUTTONTBREFRESH span, .PSPUSHBUTTONTBREFRESH2 span, .PSPUSHBUTTONTBRETRY span,
+.PSPUSHBUTTONTBRETURN span, .PSPUSHBUTTONTBSAVE span, .PSPUSHBUTTONTBSEARCH span, .PSPUSHBUTTONTBSENDNOTIFY span,
+.PSPUSHBUTTONTBSPELLCHECK span, .PSPUSHBUTTONTBUPDATEALLMODE span, .PSPUSHBUTTONTBUPDATEMODE span,
+.PSPUSHBUTTONTBVIEWWORKLIST span, .PSPUSHBUTTONTBYES span, .PSPUSHBUTTONRETURN span, .PSPUSHBUTTONDISABLED span {
+    display: inline-block;
+    margin-right: 0px;
+    margin-left: 0px;
+    background-color: #EACCAEAE;
+    border: 0px;
+    width: auto;
+    -moz-outline: none;
+    text-align: center;
+    border-top: 1px solid #fefbf4 !important;
+}
+
+.PSPUSHBUTTONDISABLED input {
+    color: #999999;
+}
+
+
+.PSPUSHBUTTON {
+    background-color: transparent;
+    height: auto;
+    border: 0px solid #EACCAE;
+    vertical-align: text-top;
+    border-radius: 2px;
+    padding-bottom: 1px;
+}
+
+.PSPUSHBUTTON#Left {
+    display: inline-block;
+
+    border: 1px solid #d8a676 !important;
+    border-radius: 2px 2px 2px 2px;
+    text-decoration: none;
+    cursor: pointer;
+    height: 18px;
+    cursor: pointer;
+    padding: 0px;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FCF0DA', endColorstr='#FAE6BF');
+    background: -webkit-gradient(linear, left top, left bottom, from(#FCF0DA), to(#FAE6BF));
+    background: -moz-linear-gradient(top, #FCF0DA, #FAE6BF);
+}
+
+* html input.PSPUSHBUTTON, {
+    height: 18px;
+}
+
+
+.PSPUSHBUTTON#Left:hover {
+    display: inline-block;
+    background: #fad9a5;
+    text-decoration: none;
+    cursor: pointer;
+    height: 18px;
+}

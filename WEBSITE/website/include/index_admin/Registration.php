@@ -7,8 +7,20 @@ if (isset($_POST['clickSetReg'])) {
     setRegistrationForm();
 } else if (isset($_POST["editReg"])) {
     editRegistrationForm();
-} else if (isset($_POST["deleteReg"])) {
-    deleteReg();
+} else if (isset($_POST["endReg"])) {
+    endRegistrationForm();
+} else if (isset($_POST["endRegConfirm"])) {
+    endRegistration();
+} else if (isset($_POST["endReg2"])) {
+    endRegistrationForm2();
+} else if (isset($_POST["endReg2Confirm"])) {
+    endRegistration2();
+} else if (isset($_POST["openRegNow"])) {
+    openRegNow();
+} else if (isset($_POST["openRegNowConfirm"])) {
+    openRegNowConfirm();
+} else if (isset($_POST["grades"])) {
+    grades();
 } else {
     status();
 }
@@ -27,6 +39,9 @@ function status()
             break;
         case 3:
             opening();
+            break;
+        case 4:
+            over();
             break;
     }
 }
@@ -52,7 +67,11 @@ function open()
     echo "<b>Closing on:</b> $closeDate - <i>($diff day(s) from today)</i><br /><br />";
     echo "<b>Second registration closing on:</b> $closeDate2 - <i>($diff2 day(s) from today)</i><br /><br />";
     echo "<b>Minimum credits:</b> $mc";
-    echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'></form>";
+    echo "<hr style='visibility: hidden'>
+        <form method='post'>
+            <input type='submit' name='editReg' value='Edit'>
+            <input type='submit' name='endReg' value='End now'>
+    </form>";
 
 
 }
@@ -60,19 +79,17 @@ function open()
 function open2()
 {
     global $connection;
-    echo "<h4>Status: <span style='color:#3cda19;'>Open</span> - <span style='font-size: 60%;'><i>(Second registration)</i></span></h4>";
+    echo "<h4>Status: <span style='color:#3cda19;'>Open - <i>(Second registration)</i></span></h4>";
 
 
     $result = $connection->query("Select *,date_format(closedate, '%b %e, %Y') as closedate, datediff(closedate, CURDATE()) as diff, date_format(closedate2, '%b %e, %Y') as closedate2, datediff(closedate2, CURDATE()) as diff2 from registration where CURRENT = 1");
-    $closeDate = mysqli_result($result, 0, 'closedate');
-    $diff = mysqli_result($result, 0, 'diff');
     $closeDate2 = mysqli_result($result, 0, 'closedate2');
     $diff2 = mysqli_result($result, 0, 'diff2');
     $mc = mysqli_result($result, 0, 'minimumcredits');
-    echo "<b>Closing on:</b> $closeDate - <i>($diff day(s) from today)</i><br /><br />";
-    echo "<b>Second registration closing on:</b> $closeDate2 - <i>($diff2 day(s) from today)</i><br /><br />";
+    echo "<b>Closing on:</b> $closeDate2 - <i>($diff2 day(s) from today)</i><br /><br />";
     echo "<b>Minimum credits:</b> $mc";
-    echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'></form>";
+    echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'>
+            <input type='submit' name='endReg2' value='End now'></form>";
 
 
 }
@@ -92,7 +109,92 @@ function opening()
     echo "<b>Closing on</b> $closeDate<br /><br />";
     echo "<b>Second registration closing on</b> $closeDate2<br /><br />";
     echo "<b>Minimum credits:</b> $mc";
-    echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'></form>";
+    echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'><input type='submit' name='openRegNow' value='Open Now'></form>";
+
+}
+
+function over()
+{
+
+    global $connection;
+    echo "<h4>Status: <span style='color:#4cdacc;'>Over</span></h4>";
+
+    echo "<hr style='visibility: hidden'>
+<form method='post'>
+<input type='submit' name='grades' value='Input pass/fail'>
+</form>";
+
+}
+
+function grades()
+{
+
+    global $connection;
+    echo "<h4>Input pass/fail</h4>";
+    $regSQL = "SELECT * from registration where CURRENT = '1';";
+    $regResult = $connection->query($regSQL);
+    echo $connection->error;
+    if (mysqli_num_rows($regResult)) {
+        $regID = mysqli_result($regResult, 0, 'registrationID');
+        $SQL = "SELECT * from course where courseID in(select c.courseID from enrolledstudent en inner join course c on en.courseID = c.courseID where en.registrationID = '$regID' group by c.courseID);";
+        $result = $connection->query($SQL);
+        for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+            $courseID = mysqli_result($result,$i,'courseID');
+
+            echo "    <table cellspacing=\"0\" class=\"PSLEVEL1GRIDWBO\" id=\"IH_PT_INS\$scroll$0\" dir=\"ltr\" cols=\"1\" width=\"851\"
+           cellpadding=\"0\">
+        <tbody>
+        <tr>
+            <td class=\"PSLEVEL1GRIDLABEL\" align=\"left\">
+                <div id=\"win1divIH_PT_INSGP$0\">" . mysqli_result($result,$i,'name') . "</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table  border=\"0\" cellpadding=\"2\" cellspacing=\"0\" cols=\"9\" width=\"100%\" class=\"PSLEVEL1GRID\"
+                       style=\"border-style:none\">
+                    <tbody>
+                    <tr>
+                        <th width='25px' align=\"left\" class=\"PSLEVEL1GRIDCOLUMNHDR\">&nbsp;</th>
+                        <th align=\"left\" class=\"PSLEVEL1GRIDCOLUMNHDR\">Student</th>
+                        <th width='100px' align=\"left\" class=\"PSLEVEL1GRIDCOLUMNHDR\">Status</th>
+                    </tr>";
+
+            $SQLstudent = "SELECT *,p.firstname from course c inner join enrolledstudent en on c.courseID = en.courseID inner join person p on p.personID  = en.studentID where c.courseID = '$courseID';";
+            $resultStudent = $connection->query($SQLstudent);
+                for($j = 0; $j < mysqli_num_rows($resultStudent) ; $j++){
+                    echo "                    <tr id=\"trIH_PT_INS$0_row1\" valign=\"center\">
+                    <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
+                            <input type='checkbox' name='courseForm[]' class='courseForm' value=''>
+                        </td>
+                        <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
+                            ".mysqli_result($resultStudent,$j,'firstname')."
+                        </td>
+                        <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
+                            Something
+                        </td> </tr>";
+                }
+
+
+                   echo "
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>";
+
+
+        }
+
+
+    }
+
+
+    echo "<hr style='visibility: hidden'>
+<form method='post'>
+<input type='submit' name='backToReg' value='Back'>
+</form>";
 
 }
 
@@ -110,10 +212,10 @@ function setRegistrationForm()
             var cal1xx = new CalendarPopup(\"testdiv1\");
             cal1xx.addDisabledDates(null,formatDate(date,\"yyyy-MM-dd\"));
             cal1xx.showNavigationDropdowns();
-            var cal2xx = new CalendarPopup(\"testdiv2\");
+            var cal2xx = new CalendarPopup(\"testdiv1\");
             cal2xx.addDisabledDates(null,formatDate(date,\"yyyy-MM-dd\"));
             cal2xx.showNavigationDropdowns();
-            var cal3xx = new CalendarPopup(\"testdiv3\");
+            var cal3xx = new CalendarPopup(\"testdiv1\");
             cal3xx.addDisabledDates(null,formatDate(date,\"yyyy-MM-dd\"));
             cal3xx.showNavigationDropdowns();
             </SCRIPT>";
@@ -142,9 +244,7 @@ function setRegistrationForm()
                 <input type='submit' value = 'back' class = 'back' name =\"backToReg\">
                 <input type='submit' value = 'set' name =\"clickSetReg\">
             </FORM >
-            <DIV ID = \"testdiv1\"></DIV >
-            <DIV ID = \"testdiv2\"></DIV >
-            <DIV ID = \"testdiv3\"></DIV >";
+            <DIV ID = \"testdiv1\"></DIV >";
 }
 
 function editRegistrationForm()
@@ -172,10 +272,10 @@ function editRegistrationForm()
             var cal1xx = new CalendarPopup(\"testdiv1\");
             cal1xx.addDisabledDates(null,formatDate(date,\"yyyy-MM-dd\"));
             cal1xx.showNavigationDropdowns();
-            var cal2xx = new CalendarPopup(\"testdiv2\");
+            var cal2xx = new CalendarPopup(\"testdiv1\");
             cal2xx.addDisabledDates(null,formatDate(date,\"yyyy-MM-dd\"));
             cal2xx.showNavigationDropdowns();
-            var cal3xx = new CalendarPopup(\"testdiv3\");
+            var cal3xx = new CalendarPopup(\"testdiv1\");
             cal3xx.addDisabledDates(null,formatDate(date,\"yyyy-MM-dd\"));
             cal3xx.showNavigationDropdowns();
             </SCRIPT>";
@@ -199,14 +299,85 @@ function editRegistrationForm()
                 <INPUT TYPE = \"text\" NAME = \"date3xx\" VALUE = \"$d3\" SIZE = 15 readonly>
                 <A HREF = \"#\" onClick = \"cal3xx.select(document.forms[0].date3xx,'anchor3xx','MM/dd/yyyy'); return false;\"  NAME = \"anchor3xx\" ID = \"anchor3xx\" >Calendar</A ><br/>
 
-
-                <input type='submit' value = 'delete' class = 'back' name =\"deleteReg\">
                 <input type='submit' value = 'back' class = 'back' name =\"backToReg\">
                 <input type='submit' value = 'set' name =\"clickEditReg\">
             </FORM >
-            <DIV ID = \"testdiv1\"></DIV >
-            <DIV ID = \"testdiv2\"></DIV >
-            <DIV ID = \"testdiv3\"></DIV >";
+            <DIV ID = \"testdiv1\"></DIV >";
+}
+
+function endRegistrationForm()
+{
+    Echo "<span class='errorMsg' style='font-size: 100%'> Are you sure you want to end registration now?</span><hr style='visibility: hidden'>";
+    Echo "  <form method='post'>
+                <input type='submit' value = 'Yes' class = 'back' name =\"endRegConfirm\">
+                <input type='submit' value = 'No' name =\"backToReg\">
+            </FORM >";
+}
+
+function endRegistration()
+{
+    global $connection;
+    $yesterday = new DateTime();
+    $yesterday->add(DateInterval::createFromDateString('yesterday'));
+    $yesterday = $yesterday->format('Y-m-d');
+    $SQL = "update registration set closedate = '$yesterday' where CURRENT =1";
+
+    if ($connection->query($SQL)) {
+        status();
+    } else {
+        endRegistrationForm();
+        echo "<span class='errorMSG'>$connection->error</span>";
+    }
+}
+
+function endRegistrationForm2()
+{
+    Echo "<span class='errorMsg' style='font-size: 100%'> Are you sure you want to end the second registration now?</span><hr style='visibility: hidden'>";
+    Echo "  <form method='post'>
+                <input type='submit' value = 'Yes' class = 'back' name =\"endReg2Confirm\">
+                <input type='submit' value = 'No' name =\"backToReg\">
+            </FORM >";
+}
+
+function endRegistration2()
+{
+    global $connection;
+    $yesterday = new DateTime();
+    $yesterday->add(DateInterval::createFromDateString('yesterday'));
+    $yesterday = $yesterday->format('Y-m-d');
+    $SQL = "update registration set closedate2 = '$yesterday' where CURRENT =1";
+
+    if ($connection->query($SQL)) {
+        status();
+    } else {
+        endRegistrationForm2();
+        echo "<span class='errorMSG'>$connection->error</span>";
+    }
+}
+
+function openRegNow()
+{
+    Echo "<span class='errorMsg' style='font-size: 100%'> Are you sure you want to open registration now?</span><hr style='visibility: hidden'>";
+    Echo "  <form method='post'>
+                <input type='submit' value = 'Yes' class = 'back' name =\"openRegNowConfirm\">
+                <input type='submit' value = 'No' name =\"backToReg\">
+            </FORM >";
+}
+
+function openRegNowConfirm()
+{
+    global $connection;
+    $yesterday = new DateTime();
+    $yesterday->add(DateInterval::createFromDateString('yesterday'));
+    $yesterday = $yesterday->format('Y-m-d');
+    $SQL = "update registration set opendate = '$yesterday' where CURRENT =1";
+
+    if ($connection->query($SQL)) {
+        status();
+    } else {
+        endRegistrationForm();
+        echo "<span class='errorMSG'>$connection->error</span>";
+    }
 }
 
 function setRegistration()
@@ -250,7 +421,7 @@ function setRegistration()
         //"Archives" other registrations
         $SQL = "update registration set current = '0'";
         if ($connection->query($SQL) === TRUE) {
-            $SQL = "insert into registration (opendate, closedate, closedate2, type, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', '1', $minStudents, $minCredits, '1')";
+            $SQL = "insert into registration (opendate, closedate, closedate2, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', $minStudents, $minCredits, '1')";
             if ($connection->query($SQL) === TRUE) {
                 $_SESSION['tab'] = "123";
                 header("Location:admin.php");
@@ -273,10 +444,10 @@ function editRegistration()
     if (!$_POST['date1xx'] || !$_POST['date2xx'] || !$_POST['date3xx']) {
         editRegistrationForm();
         echo "<br/><span class='errorMsg'>All dates have to be set.</span>";
-    } else if ($_POST['date1xx'] > $_POST['date2xx'] || $_POST['date1xx'] > $_POST['date3xx']) {
+    } else if ($_POST['date1xx'] >= $_POST['date2xx'] || $_POST['date1xx'] >= $_POST['date3xx']) {
         editRegistrationForm();
         echo "<br/><span class='errorMsg'>Closing date(s) have to be after opening date.</span>";
-    } else if ($_POST['date2xx'] > $_POST['date3xx']) {
+    } else if ($_POST['date2xx'] >= $_POST['date3xx']) {
         editRegistrationForm();
         echo "<br/><span class='errorMsg'>Second closing date has to be after first closing date.</span>";
     } else if ($_POST['minstudents'] == "" || $_POST['minstudents'] < 0) {
@@ -314,17 +485,5 @@ function editRegistration()
             editRegistrationForm();
             echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
         }
-    }
-}
-
-function deleteReg()
-{
-    global $connection;
-    $SQL = "UPDATE registration set current = '0'";
-    if ($connection->query($SQL) === TRUE) {
-        status();
-        echo "<br/><span class='errorMsg'> Deleted successfully.</span>";
-    } else {
-        status();
     }
 }

@@ -1,6 +1,6 @@
 <?php
-require("include/top.php");
 ob_start();
+require("include/top.php");
 $errorMessage = "";
 $num_rows = 0;
 
