@@ -263,6 +263,7 @@ function addCourseCSV()
 
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $num = count($data);
+					
                     $courseID = $data[0];
                     $courseName = $data[1];
                     $capacity = $data[2];

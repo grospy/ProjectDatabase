@@ -1,4 +1,4 @@
-	Course ID :	<input type="text" name="newCourseID"  value="
+
 <?php
 $f1 = "";
 if (isset($_POST['addCourse'])) {
