@@ -188,20 +188,43 @@ function addStudents()
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             $handle = fopen($file, "r");
             if ($handle !== FALSE) {
+                $properData = array();
+                $wrongData = array();
+
+
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $num = count($data);
                     $studentID = $data[0];
                     $first_name = $data[1];
                     $last_name = $data[2];
                     $email = $studentID . "@student.inholland.nl";
-                    $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
-                    $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
-                    if ($connection->query($sql1) && $connection->query($sql2)) {
 
-                        echo "Succeed adding $studentID, $first_name, $last_name! <br/>";
+                    if (strlen($studentID) == 6 && preg_match("/^[0-9]+$/", $studentID) &&
+                        ctype_alpha($first_name) && ctype_alpha($last_name)
+                    ) {
+                        array_push($properData, [$studentID, $first_name, $last_name, $email]);
                     } else {
-                        echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
+                        array_push($wrongData, $studentID);
                     }
+
+                    if (count($wrongData) != 0) {
+                        echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
+                    } else {
+                        $numberOfStudent = 0;
+                        for ($i = 0; $i < count($properData); $i++) {
+                            $studentID = $properData[$i][0];
+                            $first_name = $properData[$i][1];
+                            $last_name = $properData[$i][2];
+                            $email = $properData[$i][3];
+                            $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
+                            $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
+                            $connection->query($sql1);
+                            $connection->query($sql2);
+                            $numberOfStudent++;
+                        }
+                        echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
+                    }
+
                 }
                 fclose($handle);
             }
@@ -222,6 +245,9 @@ function addCourseCSV()
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             $handle = fopen($file, "r");
             if ($handle !== FALSE) {
+                $properData = array();
+                $wrongData = TRUE;
+
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $num = count($data);
                     $courseID = $data[0];
@@ -229,19 +255,41 @@ function addCourseCSV()
                     $capacity = $data[2];
                     $studyLoad = $data[3];
                     $teacherID = $data[4];
-                    $sql1 = "INSERT INTO course VALUES ('$courseID','$courseName','$capacity','$studyLoad',0)";
-                    $sql2 = "INSERT INTO teacher VALUES ('$teacherID','$courseID')";
-                    if ($connection->query($sql1) && $connection->query($sql2)) {
-                        echo "Succeed adding $courseID-$courseName, capacity : $capacity, study load : '$studyLoad', teacherID : $teacherID! This course is still closed. <br/>";
+
+                    if (strlen($courseID) == 7 && substr($courseID, 0, 4) == "IBIS" && preg_match("/^[0-9]+$/", substr($courseID, 4, 3)) && preg_match("/^[0-9]+$/", $teacherID) && preg_match("/^[0-9]+$/", $capacity) && preg_match("/^[0-9]+$/", $studyLoad)) {
+                        array_push($properData, [$courseID, $courseName, $capacity, $studyLoad, $teacherID, "0"]);
                     } else {
-                        echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
+                        $wrongData = FALSE;
+
                     }
                 }
-                fclose($handle);
+                if (!$wrongData) {
+                    echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
+                } else {
+                    $numberOfCourse = 0;
+                    for ($i = 0; $i < count($properData); $i++) {
+                        $courseID = $properData[$i][0];
+                        $courseName = $properData[$i][1];
+                        $capacity = $properData[$i][2];
+                        $studyLoad = $properData[$i][3];
+
+                        $sql1 = "INSERT INTO course VALUES ('$courseID','$courseName','$capacity','$studyLoad',0)";
+                        $sql2 = "INSERT INTO teacher VALUES ('$teacherID','$courseID')";
+                        if ($connection->query($sql1) && $connection->query($sql2)) {
+                            $numberOfCourse++;
+                        } else {
+                            echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
+                        }
+                    }
+                    echo "<span class='confirmMsg'>Successfully adding $numberOfCourse courses!</span>";
+                }
+
             }
+            fclose($handle);
         }
     }
 }
+
 
 function addLessonCSV()
 {
