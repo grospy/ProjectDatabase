@@ -937,6 +937,9 @@ function tabSelect()
     if (isset($_POST['grades'])) {
         return 0;
     }
+	if (isset($_POST['submitStatus'])) {
+        return 0;
+    }
     if (isset($_POST['clickEditReg'])) {
         return 0;
     }

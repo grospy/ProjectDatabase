@@ -21,6 +21,8 @@ if (isset($_POST['clickSetReg'])) {
     openRegNowConfirm();
 } else if (isset($_POST["grades"])) {
     grades();
+} else if (isset($_POST["submitStatus"])) {
+    grades();
 } else {
     status();
 }
@@ -128,9 +130,9 @@ function over()
 
 function grades()
 {
-
     global $connection;
-    echo "<h4>Input pass/fail</h4>";
+    echo "<h4>Input pass/fail</h4>
+		<form name='submitStatus' method='post'> ";
     $regSQL = "SELECT * from registration where CURRENT = '1';";
     $regResult = $connection->query($regSQL);
     echo $connection->error;
@@ -141,7 +143,10 @@ function grades()
         for ($i = 0; $i < mysqli_num_rows($result); $i++) {
             $courseID = mysqli_result($result,$i,'courseID');
 
-            echo "    <table cellspacing=\"0\" class=\"PSLEVEL1GRIDWBO\" id=\"IH_PT_INS\$scroll$0\" dir=\"ltr\" cols=\"1\" width=\"851\"
+            echo "    <input type='button' name='Check_All' value='Check All' onClick='CheckAll()'>
+            <input type='button' name='Un_CheckAll' value='Uncheck All' onClick='UnCheckAll()'>
+			
+			<table cellspacing=\"0\" class=\"PSLEVEL1GRIDWBO\" id=\"IH_PT_INS\$scroll$0\" dir=\"ltr\" cols=\"1\" width=\"851\"
            cellpadding=\"0\">
         <tbody>
         <tr>
@@ -160,43 +165,89 @@ function grades()
                         <th width='100px' align=\"left\" class=\"PSLEVEL1GRIDCOLUMNHDR\">Status</th>
                     </tr>";
 
-            $SQLstudent = "SELECT *,p.firstname from course c inner join enrolledstudent en on c.courseID = en.courseID inner join person p on p.personID  = en.studentID where c.courseID = '$courseID';";
+            $SQLstudent = "SELECT *,concat(p.personID,' - ',p.firstName,' ',p.lastName) as student, p.personID, en.status from course c inner join enrolledstudent en on c.courseID = en.courseID inner join person p on p.personID  = en.studentID where c.courseID = '$courseID';";
             $resultStudent = $connection->query($SQLstudent);
                 for($j = 0; $j < mysqli_num_rows($resultStudent) ; $j++){
-                    echo "                    <tr id=\"trIH_PT_INS$0_row1\" valign=\"center\">
+					$courseID = mysqli_result($result,$i,'courseID');
+					$studentID = mysqli_result($resultStudent,$j,'personID');
+                    echo "<tr id=\"trIH_PT_INS$0_row1\" valign=\"center\">
                     <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
-                            <input type='checkbox' name='courseForm[]' class='courseForm' value=''>
+                            <input type='checkbox' name='statusForm[]' class='statusForm' value=".$courseID."_".$studentID.">
+						</td>
+                        <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
+                            ".mysqli_result($resultStudent,$j,'student')."
                         </td>
                         <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
-                            ".mysqli_result($resultStudent,$j,'firstname')."
-                        </td>
-                        <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
-                            Something
+                            ".statusCheck($courseID,$studentID)."
                         </td> </tr>";
                 }
-
-
                    echo "
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        </tbody>
-    </table>";
-
-
-        }
-
-
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>";
+		}
     }
-
-
-    echo "<hr style='visibility: hidden'>
-<form method='post'>
-<input type='submit' name='backToReg' value='Back'>
-</form>";
-
+	echo "<br/>
+			<input type='submit' name='backToReg' value='Back'>
+			<input type='submit' name='submitStatus' value='Submit'>
+		</form>";
+	submitStatus();
 }
+
+function statusCheck ($courseID,$studentID) {
+	global $connection;
+	$regSQL = "SELECT * from registration where CURRENT = '1';";
+	$regResult = $connection->query($regSQL);
+	$regID = mysqli_result($regResult, 0, 'registrationID');
+	$checkStatusSQL = "SELECT status from enrolledStudent where studentID='$studentID' and courseID='$courseID' and registrationID='$regID';";
+	$result = $connection->query($checkStatusSQL);
+	switch (mysqli_result($result,0,'status')) {
+		case '1':
+			return "Pass";
+			break;
+		case '0':
+			return "Fail";
+			break;
+		default:
+			return "Pending";
+			break;
+	}
+}
+
+
+function submitStatus () {
+	global $connection;
+	
+	if(isset($_POST['submitStatus'])) {
+		if (!isset($_POST['statusForm'])) {
+			echo "<span class='errorMsg'> No students checked! </span>";
+		} else {
+			$regSQL = "SELECT * from registration where CURRENT = '1';";
+			$regResult = $connection->query($regSQL);
+			$regID = mysqli_result($regResult, 0, 'registrationID');
+			$clearStatusSQL = "update enrolledstudent set status=0 WHERE registrationID='$regID' ";
+            $connection->query($clearStatusSQL);
+			$passedStudent = $_POST['statusForm'];
+			foreach ($passedStudent as $aStudent) {
+				//echo $aStudent ."<br/>";
+				$inputData = explode('_',"$aStudent");
+				$courseID = $inputData[0];
+				$studentID = $inputData[1];
+				$updateStatusSQL = "update enrolledstudent set status=1 where courseID='$courseID' and studentID='$studentID' and registrationID='$regID' ";
+                $connection->query($updateStatusSQL);
+			}
+			echo "<span class='confirmMsg'> Successfully update grade status!</span>";
+
+		}
+		
+	}
+	
+}
+
+
 
 function setRegistrationForm()
 {
