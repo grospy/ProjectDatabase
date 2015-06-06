@@ -1,6 +1,6 @@
 <form name="editCourse" method="post" >
 	<p> 
-	Course ID :	<input type="text" name="newCourseID" readonly  value="
+	Course ID :	<input type="text" name="newCourseID"  value="
 		<?php
 		if (isset($_POST['addCourse'])) {
 			echo "";} elseif (isset($_POST['clearfield'])) {

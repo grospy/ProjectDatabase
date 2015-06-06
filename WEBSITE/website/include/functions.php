@@ -212,24 +212,29 @@ function addStudents()
 					echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
 				} else {
 					$numberOfStudent = 0;
+					$sqlerror = FALSE;
+					$connection->query("START TRANSACTION;");
 					for($i=0;$i<count($properData); $i++){
 						$studentID=$properData[$i][0];
 						$first_name=$properData[$i][1];
 						$last_name=$properData[$i][2];
 						$email=$properData[$i][3];
+						
 						$sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
 						$sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
-						$connection->query($sql1);
-						$connection->query($sql2);
-						$numberOfStudent++;						
-                            $email = $properData[$i][3];
-                            $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
-                            $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
-                            $connection->query($sql1);
-                            $connection->query($sql2);
-                            $numberOfStudent++;
-                        }
-                        echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
+						if ($connection->query($sql1) && $connection->query($sql2)) {
+							$numberOfStudent++;	
+						} else {
+							echo "<span class='errorMsg'> The csv file contains error. Please check the data! </span>";
+							$connection->query("ROLLBACK;");
+							$sqlerror = TRUE;
+							break ;
+						}
+                    }
+						if (!$sqlerror) {
+							$connection->query("COMMIT;"); 
+							echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
+						}
 					}
 
 				}
@@ -262,20 +267,22 @@ function addCourseCSV()
 						$capacity = $data[2];
 						$studyLoad = $data[3];
 						$teacherID = $data[4];
-						
+						//check if teacher is in the DB
 						if (strlen($courseID) == 7 && substr($courseID,0,4) == "IBIS" && preg_match("/^[0-9]+$/",substr($courseID,4,3)) && preg_match("/^[0-9]+$/",$teacherID)  && preg_match("/^[0-9]+$/",$capacity) && preg_match("/^[0-9]+$/",$studyLoad)) {
 							array_push($properData,[$courseID,$courseName,$capacity,$studyLoad,$teacherID,"0"]);
 						}
 						else {
 							$wrongData=FALSE;
-							
 						}
 					}
+					
 					if (!$wrongData) {
 						echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
 					}
 					else {
 						$numberOfCourse = 0;
+						$sqlerror = FALSE;
+						$connection->query("START TRANSACTION;");
 						for($i=0;$i<count($properData); $i++){
 							$courseID=$properData[$i][0];
 							$courseName=$properData[$i][1];
@@ -287,8 +294,17 @@ function addCourseCSV()
 							if ($connection->query($sql1) && $connection->query($sql2)) {
 								$numberOfCourse++;
 							} 
+							else {
+								echo "<span class='errorMsg'> The csv file contains error. Please check the data! </span>";
+								$connection->query("ROLLBACK;");
+								$sqlerror = TRUE;
+								break ;
+							}
 						}
-						echo "<span class='confirmMsg'>Successfully adding $numberOfCourse courses!</span>";
+						if (!$sqlerror) {
+							$connection->query("COMMIT;"); 
+							echo "<span class='confirmMsg'> Succeed adding $numberOfCourse! </span><br/>";
+						}
 					}
                     
 				
@@ -313,6 +329,8 @@ function addLessonCSV()
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             $handle = fopen($file, "r");
             if ($handle !== FALSE) {
+				$connection->query("START TRANSACTION");
+				$sqlerror = FALSE;
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $num = count($data);
                     $courseID = $data[0];
@@ -326,7 +344,14 @@ function addLessonCSV()
                         echo "Succeed adding lesson! <br/>";
                     } else {
                         echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
+						$sqlerror = TRUE;
+						$connection->query("ROLLBACK");
+						break; ;
                     }
+					
+					if (!$sqlerror) {
+						$connection->query("COMMIT");
+					}
                 }
                 fclose($handle);
             }
