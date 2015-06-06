@@ -26,16 +26,18 @@ if (window.ltIE9) {
     })(window.jQuery);
 }
 
-function CheckAll()
-{
-	var checkbox = document.getElementsByClassName("courseForm");
+function CheckAll(x)
+{	if(x==1) {var form="statusForm"};
+	if(x==2) {var form="courseForm"};
+	var checkbox = document.getElementsByClassName(form);
 	for (i = 0; i < checkbox.length; i++)
 	checkbox[i].checked = true ;
 }
 
-function UnCheckAll(chk)
-{
-	var checkbox = document.getElementsByClassName("courseForm");
+function UnCheckAll(x)
+{	if(x==1) {var form="statusForm"};
+	if(x==2) {var form="courseForm"};
+	var checkbox = document.getElementsByClassName(form);
 	for (i = 0; i < checkbox.length; i++)
 	checkbox[i].checked = false ;
 }

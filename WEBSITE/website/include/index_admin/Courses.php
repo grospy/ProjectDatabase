@@ -3,8 +3,8 @@
     <table>
         <form name="offerCourse" method="post">
             <input type="submit" name="offerCourse" value="Offer checked courses"/>
-            <input type="button" name="Check_All" value="Check All" onClick="CheckAll()">
-            <input type="button" name="Un_CheckAll" value="Uncheck All" onClick="UnCheckAll()">
+            <input type="button" name="Check_All" value="Check All" onClick="CheckAll(2)">
+            <input type="button" name="Un_CheckAll" value="Uncheck All" onClick="UnCheckAll(2)">
 
             <?php
             if (isset($_POST["offerCourse"]) && $connection) {

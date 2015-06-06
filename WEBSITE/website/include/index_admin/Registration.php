@@ -143,8 +143,8 @@ function grades()
         for ($i = 0; $i < mysqli_num_rows($result); $i++) {
             $courseID = mysqli_result($result,$i,'courseID');
 
-            echo "    <input type='button' name='Check_All' value='Check All' onClick='CheckAll()'>
-            <input type='button' name='Un_CheckAll' value='Uncheck All' onClick='UnCheckAll()'>
+            echo "    <input type='button' name='Check_All' value='Check All' onClick=\"CheckAll(1)\">
+            <input type='button' name='Un_CheckAll' value='Uncheck All' onClick=\"UnCheckAll(1)\">
 			
 			<table cellspacing=\"0\" class=\"PSLEVEL1GRIDWBO\" id=\"IH_PT_INS\$scroll$0\" dir=\"ltr\" cols=\"1\" width=\"851\"
            cellpadding=\"0\">
