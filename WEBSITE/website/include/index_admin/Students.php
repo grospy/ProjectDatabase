@@ -8,8 +8,6 @@ if (isset($_POST['editStudent'])) {
     editStudent();
 } else if (isset($_POST['edSt'])) {
     saveStudent();
-} else if (isset($_POST['deleteStudent'])) {
-    deleteStudent();
 } else if (isset($_POST['search'])) {
     echo showStudents($_POST["sQuery"]);
 } else {
@@ -69,7 +67,6 @@ function editStudent()
         <input type='text' name='edStLn' value='$lastname'><br />
         Email:<br/>
         <input type='email' name='edStEm' value='$email'><br/>
-        <input type='submit' name='deleteStudent' value='Delete'>
         <input type='submit' name='edSt' value='Save'>
 
 
