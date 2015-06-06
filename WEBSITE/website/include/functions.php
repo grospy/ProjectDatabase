@@ -1244,17 +1244,15 @@ function start2()
             $en = mysqli_result($connection->query("SELECT count(*) FROM enrolledstudent where courseID = '$id' and registrationID = $regID;"), 0);
             if ($en < $min) {
                 $connection->query("UPDATE course set offer = 0 where courseID = '$id';");
-                $connection->query("DELETE FROM enroledstudent where registrationID=$regID and courseID = $id;");
+                $connection->query("DELETE FROM enrolledstudent where registrationID=$regID and courseID = '$id';");
             }
         }
         $result = $connection->query("select * from person where CURRENT = '1' and type = 'student';");
         for ($j = 0; $j < mysqli_num_rows($result); $j++) {
             $number = mysqli_result($result, $j, 'personID');
-            $result2 = $connection->query("select * from enrolledstudent e inner join course c on e.courseID = c.courseID where e.studentID = $number && e.registrationID = $regID;");
-            $credits = 0;
-            for ($k = 0; $k < mysqli_num_rows($result2); $k++) {
-                $credits .= mysqli_result($result2, $k, 'studyload');
-            }
+            $SQL = "SELECT SUM(c.studyload) AS total FROM course c INNER JOIN enrolledstudent en ON c.courseID=en.courseID WHERE en.studentID=$number AND en.status IS NULL AND en.registrationID in (SELECT registrationID from registration where current = 1)";
+            $res = $connection->query($SQL);
+            $credits = mysqli_result($res,0,'total');
             if ($credits < $minC) {
                 $connection->query("UPDATE student set allowToReg = 1 where studentID = '$number';");
             }
@@ -1272,26 +1270,25 @@ function start2v2()
     $regID = mysqli_result($result, 0, 'registrationID');
     $minC = mysqli_result($result, 0, 'minimumcredits');
 
-    $connection->query("UPDATE student set allowToReg = 0;");
+
+    $connection->query("UPDATE student set allowToReg = 0");
     $result = $connection->query("SELECT * FROM course where offer = 1;");
+
     for ($i = 0; $i < mysqli_num_rows($result); $i++) {
         $id = mysqli_result($result, $i, 'courseID');
         $min = mysqli_result($result, $i, 'minimumstudents');
-
         $en = mysqli_result($connection->query("SELECT count(*) FROM enrolledstudent where courseID = '$id' and registrationID = $regID;"), 0);
         if ($en < $min) {
             $connection->query("UPDATE course set offer = 0 where courseID = '$id';");
-            $connection->query("DELETE FROM enroledstudent where registrationID=$regID and courseID = $id;");
+            $connection->query("DELETE FROM enrolledstudent where registrationID=$regID and courseID = '$id';");
         }
     }
     $result = $connection->query("select * from person where CURRENT = '1' and type = 'student';");
     for ($j = 0; $j < mysqli_num_rows($result); $j++) {
         $number = mysqli_result($result, $j, 'personID');
-        $result2 = $connection->query("select * from enrolledstudent e inner join course c on e.courseID = c.courseID where e.studentID = $number && e.registrationID = $regID;");
-        $credits = 0;
-        for ($k = 0; $k < mysqli_num_rows($result2); $k++) {
-            $credits .= mysqli_result($result2, $k, 'studyload');
-        }
+        $SQL = "SELECT SUM(c.studyload) AS total FROM course c INNER JOIN enrolledstudent en ON c.courseID=en.courseID WHERE en.studentID=$number AND en.status IS NULL AND en.registrationID in (SELECT registrationID from registration where current = 1)";
+        $res = $connection->query($SQL);
+        $credits = mysqli_result($res,0,'total');
         if ($credits < $minC) {
             $connection->query("UPDATE student set allowToReg = 1 where studentID = '$number';");
         }
