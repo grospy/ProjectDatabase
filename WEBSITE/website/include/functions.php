@@ -803,7 +803,7 @@ function courses2($case, $cID)
             $rt .= "'passedRow'>";
             break;
     }
-    $SQL = "SELECT count(*) as enrolled FROM course c inner join enrolledstudent e on c.courseID=e.courseID where c.courseID = '$cID' and (status = 0 or status is null);";
+    $SQL = "SELECT count(*) as enrolled FROM course c inner join enrolledstudent e on c.courseID=e.courseID where c.courseID = '$cID' and registrationID in(SELECT registrationID from registration where current = 1);";
     $result = $connection->query($SQL);
     $enrolled = mysqli_result($result, 0);
 
@@ -1207,6 +1207,8 @@ function start1(){
     if ($last < $compare) {
         $connection->query("UPDATE student set allowToReg = 1 where CURRENT = 1;");
     }
+    $now = Date('Y-m-d');
+    $connection->query("UPDATE log set lastdate = '$now';");
 }
 
 function start2(){
@@ -1275,4 +1277,6 @@ function endProcess(){
             }
         }
     }
+    $now = Date('Y-m-d');
+    $connection->query("UPDATE log set lastdate = '$now';");
 }
