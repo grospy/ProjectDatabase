@@ -22,7 +22,7 @@
         if ($connection) {
             $number = quote_smart($connection, $number);
 
-            $SQL = "SELECT e.registrationID, e.courseID, c.name, e.status FROM enrolledstudent e INNER JOIN course c ON c.courseID=e.courseID WHERE e.studentID ='$number' AND e.status IS NOT NULL";
+            $SQL = "SELECT e.registrationID, e.courseID, c.name, e.status FROM enrolledstudent e INNER JOIN course c ON c.courseID=e.courseID WHERE e.studentID ='$number'";
 
             $result = $connection->query($SQL);
             $num_rows = mysqli_num_rows($result);

@@ -38,7 +38,7 @@
 
             <?php
             if ($connection) {
-                $courseNameSQL = "SELECT c.name, c.courseID, c.capacity, c.studyload, concat(p.firstName,' ',p.lastName) as instructor FROM course c INNER JOIN teacher te on te.courseID=c.courseID INNER JOIN person p ON p.personID=te.teacherID";
+                $courseNameSQL = "SELECT c.name, c.courseID, c.capacity, c.studyload, concat(p.firstName,' ',p.lastName) as instructor FROM course c INNER JOIN teacher te on te.courseID=c.courseID INNER JOIN person p ON p.personID=te.teacherID order by name";
                 $result = $connection->query($courseNameSQL);
                 $num_rows = mysqli_num_rows($result);
                 if ($result) {

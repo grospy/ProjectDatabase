@@ -7,6 +7,7 @@ if ($_SESSION['login'] != md5("2")) {
 }
 require('include/top.php');
 require('include/functions.php');
+runCheck();
 require("include/database.php");
 
 ?>

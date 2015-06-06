@@ -410,7 +410,7 @@ function addNewCourse()
             $newStudyLoad = quote_smart($connection, htmlspecialchars($_POST['newStudyLoad']));
             $newInstructor = quote_smart($connection, htmlspecialchars($_POST['newInstructor']));
 
-            $addCourseSQL = "insert into course value ($newCourseID, $newCourseName,$newCapacity,$newStudyLoad, 0);";
+            $addCourseSQL = "insert into course value ($newCourseID, $newCourseName,$newCapacity,0,$newStudyLoad, 0);";
             $addTeacherSQL = "insert into teacher value ($newInstructor, $newCourseID);";
             if ($connection->query($addCourseSQL) === TRUE && $connection->query($addTeacherSQL) === TRUE) {
                 echo "New course added! $newCourseID-$newCourseName, capacity : $newCapacity, study load : $newStudyLoad. ";

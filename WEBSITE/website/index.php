@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 require("include/functions.php");
+runCheck();
 if ($_SESSION['login'] != md5("1")) {
     header("Location: login.php");
     exit();

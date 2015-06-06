@@ -36,8 +36,7 @@ if ($result) {
         Course ID : <input type="text" name="newCourseID" value="<?php echo $courseID ?>" readonly/>
     </p>
 
-    <p> Course name : <input type="text" name="newCourseName" size="50" value="<?php echo $courseName; ?>"/>
-    </p>
+    <p> Course name : <input type="text" name="newCourseName" size="50" value="<?php echo $courseName; ?>"/></p>
 
     <p> Student capacity: <input type="text" name="newCapacity" value="<?php echo $capacity; ?>"/>
     </p>

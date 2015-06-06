@@ -494,10 +494,10 @@ function setRegistration()
     if (!$_POST['date1xx'] || !$_POST['date2xx'] || !$_POST['date3xx']) {
         setRegistrationForm();
         echo "<br/><span class='errorMsg'>All dates have to be set.</span>";
-    } else if ($_POST['date1xx'] >= $_POST['date2xx'] || $_POST['date1xx'] >= $_POST['date3xx']) {
+    } else if ($_POST['date1xx'] > $_POST['date2xx'] || $_POST['date1xx'] > $_POST['date3xx']) {
         setRegistrationForm();
         echo "<br/><span class='errorMsg'>Closing date(s) have to be after opening date.</span>";
-    } else if ($_POST['date2xx'] >= $_POST['date3xx']) {
+    } else if ($_POST['date2xx'] > $_POST['date3xx']) {
         setRegistrationForm();
         echo "<br/><span class='errorMsg'>Second closing date has to be after first closing date.</span>";
     } else if ($_POST['minstudents'] == "" || $_POST['minstudents'] < 0) {
@@ -557,10 +557,10 @@ function editRegistration()
     if (!$_POST['date1xx'] || !$_POST['date2xx'] || !$_POST['date3xx']) {
         editRegistrationForm();
         echo "<br/><span class='errorMsg'>All dates have to be set.</span>";
-    } else if ($_POST['date1xx'] >= $_POST['date2xx'] || $_POST['date1xx'] >= $_POST['date3xx']) {
+    } else if ($_POST['date1xx'] > $_POST['date2xx'] || $_POST['date1xx'] > $_POST['date3xx']) {
         editRegistrationForm();
         echo "<br/><span class='errorMsg'>Closing date(s) have to be after opening date.</span>";
-    } else if ($_POST['date2xx'] >= $_POST['date3xx']) {
+    } else if ($_POST['date2xx'] > $_POST['date3xx']) {
         editRegistrationForm();
         echo "<br/><span class='errorMsg'>Second closing date has to be after first closing date.</span>";
     } else if ($_POST['minstudents'] == "" || $_POST['minstudents'] < 0) {
