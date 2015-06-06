@@ -1,6 +1,9 @@
 <?php
-ob_start();
 require("include/top.php");
+require("include/database.php");
+require("include/functions.php");
+runCheck();
+ob_start();
 $errorMessage = "";
 $num_rows = 0;
 
@@ -45,7 +48,7 @@ isset($_POST['password']) ? $pw = htmlspecialchars($_POST['password']) : $pw = "
                             $errorMessage = "Please enter your username";
                             break;
                         case 3:
-                            login($errorMessage);
+                            login_admin($errorMessage);
                             break;
                     }
                 }
@@ -60,53 +63,3 @@ isset($_POST['password']) ? $pw = htmlspecialchars($_POST['password']) : $pw = "
 
 <?php
 require("include/bot.php");
-
-function login(&$error)
-{
-
-    $password = $_POST['password'];
-    $username = $_POST['username'];
-    $username = htmlspecialchars($username);
-    $password = htmlspecialchars($password);
-
-    require("include/database.php");
-
-    if ($connection) {
-        $username = quote_smart($connection, $username);
-        $saltypassword = $password . "AMADEUS";
-        $saltypassword = quote_smart($connection, $saltypassword);
-
-        $SQL = "SELECT * FROM admin WHERE adminID = $username AND password = md5($saltypassword)";
-        $result = $connection->query($SQL);
-        $num_rows = mysqli_num_rows($result);
-
-        if ($result) {
-            if ($num_rows > 0) {
-                session_start();
-                $_SESSION['login'] = md5("2");
-                header("Location: admin.php");
-                exit();
-            } else {
-                $error = "Invalid username or password.";
-            }
-        } else {
-            $error = "Query error.";
-        }
-        mysqli_close($connection);
-    } else {
-        $error = "Error connecting to database.";
-    }
-
-}
-
-function quote_smart($handle, $value)
-{
-    if (get_magic_quotes_gpc()) {
-        $value = stripslashes($value);
-    }
-
-    if (!is_numeric($value)) {
-        $value = "'" . mysqli_real_escape_string($handle, $value) . "'";
-    }
-    return $value;
-}

@@ -1,4 +1,8 @@
 <?php
+require("include/top.php");
+require("include/database.php");
+require("include/functions.php");
+runCheck();
 ob_start();
 session_start();
 $errorMessage = "";
@@ -15,8 +19,6 @@ if (isset($_POST['submit'])) {
     $number = $_POST["number"];
     $number = htmlspecialchars($number);
 }
-require("include/top.php");
-require("include/functions.php");
 session_destroy();
 ?>
 
