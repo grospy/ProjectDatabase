@@ -53,6 +53,44 @@ function login(&$error)
 
 }
 
+function login_admin(&$error)
+{
+    global $connection;
+    $password = $_POST['password'];
+    $username = $_POST['username'];
+    $username = htmlspecialchars($username);
+    $password = htmlspecialchars($password);
+
+    require("include/database.php");
+
+    if ($connection) {
+        $username = quote_smart($connection, $username);
+        $saltypassword = $password . "AMADEUS";
+        $saltypassword = quote_smart($connection, $saltypassword);
+
+        $SQL = "SELECT * FROM admin WHERE adminID = $username AND password = md5($saltypassword)";
+        $result = $connection->query($SQL);
+        $num_rows = mysqli_num_rows($result);
+
+        if ($result) {
+            if ($num_rows > 0) {
+                session_start();
+                $_SESSION['login'] = md5("2");
+                header("Location: admin.php");
+                exit();
+            } else {
+                $error = "Invalid username or password.";
+            }
+        } else {
+            $error = "Query error.";
+        }
+        mysqli_close($connection);
+    } else {
+        $error = "Error connecting to database.";
+    }
+
+}
+
 //Sets password
 function set(&$error)
 {
@@ -695,12 +733,13 @@ function courses2($case, $cID)
 
     if (isset($_POST["withdraw$cID"])) {
         if ($rID) {
-            $withdrawSQL = "delete from enrolledstudent where courseID='$cID' and studentID= '$number' and regisrationID='$rID';";
+            $withdrawSQL = "delete from enrolledstudent where courseID='$cID' and studentID= '$number' and registrationID='$rID';";
             if ($connection->query($withdrawSQL) === TRUE) {
                 $_SESSION["message"] = " - Successfully withdrawn.";
                 header("Location: index.php");
                 exit();
             }
+            echo $connection->error;
         }
     } else if (isset($_POST["enroll$cID"])) {
         if (!full($cID)) {
@@ -1099,24 +1138,103 @@ function regType()
 function runCheck()
 {
 
-
     switch (regType()) {
-        case 0:
-
         case 1:
+            start1();
+            break;
 
         case 2:
-
-        case 3:
+            start2();
+            break;
 
         case 4:
-
-
+            endProcess();
+            break;
     }
 }
 
+function start1(){
 
+    global $connection;
 
+    $result = $connection->query("SELECT * FROM log;");
+    $last = mysqli_result($result, 0, 'lastdate');
+
+    $result = $connection->query("SELECT * FROM registration WHERE current = 1;");
+    $compare = mysqli_result($result, 0, 'opendate');
+
+    if ($last < $compare) {
+        $connection->query("UPDATE student set allowToReg = 1 where CURRENT = 1;");
+    }
+}
+
+function start2(){
+    global $connection;
+
+    $result = $connection->query("SELECT * FROM log;");
+    $last = mysqli_result($result, 0, 'lastdate');
+
+    $result = $connection->query("SELECT * FROM registration WHERE current = 1;");
+    $regID = mysqli_result($result, 0, 'registrationID');
+    $minC = mysqli_result($result, 0, 'minimumcredits');
+
+    $compare = mysqli_result($result, 0, 'closedate');
+    $compare = date('Y-m-d', strtotime($compare . ' + 1 day'));
+    if ($last < $compare) {
+        $connection->query("UPDATE student set allowToReg = 0 where CURRENT = 1;");
+        $result = $connection->query("SELECT * FROM course where offer = 1;");
+        for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+            $id = mysqli_result($result, $i, 'courseID');
+            $min = mysqli_result($result, $i, 'minimumstudents');
+            $en = mysqli_result($connection->query("SELECT count(*) FROM enrolledstudent where courseID = '$id' and registrationID = $regID;"), 0);
+            if ($en < $min) {
+                $connection->query("UPDATE course set offer = 0 where courseID = '$id';");
+                $connection->query("DELETE FROM enroledstudent where registrationID=$regID and courseID = $id;");
+            }
+        }
+        $result = $connection->query(" select * from student where CURRENT = 1;");
+        for ($j = 0; $j < mysqli_num_rows($result); $j++) {
+            $number = mysqli_result($result, $j, 'studentID');
+            $result2 = $connection->query(" select * from enrolledstudent e inner join course c on e.courseID = c.courseID where estudentID = $number && eregistrationID = $regID;");
+            $credits = 0;
+            for ($k = 0; $k < mysqli_num_rows($result2); $k++) {
+                $credits .= mysqli_result($result2, $k, 'studyload');
+            }
+            if ($credits < $minC) {
+                $connection->query("UPDATE student set allowToReg = 1 where studentID = $number;");
+            }
+        }
+    }
+    $now = Date('Y-m-d');
+    $connection->query("UPDATE log set lastdate = '$now';");
+}
+
+function endProcess(){
+    global $connection;
+
+    $result = $connection->query("SELECT * FROM log;");
+    $last = mysqli_result($result, 0, 'lastdate');
+
+    $result = $connection->query("SELECT * FROM registration WHERE current = 1;");
+    $regID = mysqli_result($result, 0, 'registrationID');
+
+    $compare = mysqli_result($result, 0, 'closedate2');
+    $compare = date('Y-m-d', strtotime($compare . ' + 1 day'));
+
+    if ($last < $compare) {
+        $connection->query("UPDATE student set allowToReg = 0 where CURRENT = 1;");
+        $result = $connection->query("SELECT * FROM course where offer = 1");
+        for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+            $id = mysqli_result($result, $i, 'courseID');
+            $min = mysqli_result($result, $i, 'minimumstudents');
+            $en = mysqli_result($connection->query("SELECT count(*) FROM enrolledstudent where courseID = '$id' and registrationID = $regID;"), 0);
+            if ($en < $min) {
+                $connection->query("UPDATE course set offer = 0 where courseID = '$id';");
+                $connection->query("DELETE FROM enrol +edstudent where registrationID=$regID and courseID = $id");
+            }
+        }
+    }
+}
 
 
 

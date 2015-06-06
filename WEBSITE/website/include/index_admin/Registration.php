@@ -139,14 +139,14 @@ function grades()
         $SQL = "SELECT * from course where courseID in(select c.courseID from enrolledstudent en inner join course c on en.courseID = c.courseID where en.registrationID = '$regID' group by c.courseID);";
         $result = $connection->query($SQL);
         for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-            $courseID = mysqli_result($result,$i,'courseID');
+            $courseID = mysqli_result($result, $i, 'courseID');
 
             echo "    <table cellspacing=\"0\" class=\"PSLEVEL1GRIDWBO\" id=\"IH_PT_INS\$scroll$0\" dir=\"ltr\" cols=\"1\" width=\"851\"
            cellpadding=\"0\">
         <tbody>
         <tr>
             <td class=\"PSLEVEL1GRIDLABEL\" align=\"left\">
-                <div id=\"win1divIH_PT_INSGP$0\">" . mysqli_result($result,$i,'name') . "</div>
+                <div id=\"win1divIH_PT_INSGP$0\">" . mysqli_result($result, $i, 'name') . "</div>
             </td>
         </tr>
         <tr>
@@ -162,21 +162,21 @@ function grades()
 
             $SQLstudent = "SELECT *,p.firstname from course c inner join enrolledstudent en on c.courseID = en.courseID inner join person p on p.personID  = en.studentID where c.courseID = '$courseID';";
             $resultStudent = $connection->query($SQLstudent);
-                for($j = 0; $j < mysqli_num_rows($resultStudent) ; $j++){
-                    echo "                    <tr id=\"trIH_PT_INS$0_row1\" valign=\"center\">
+            for ($j = 0; $j < mysqli_num_rows($resultStudent); $j++) {
+                echo "                    <tr id=\"trIH_PT_INS$0_row1\" valign=\"center\">
                     <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
                             <input type='checkbox' name='courseForm[]' class='courseForm' value=''>
                         </td>
                         <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
-                            ".mysqli_result($resultStudent,$j,'firstname')."
+                            " . mysqli_result($resultStudent, $j, 'firstname') . "
                         </td>
                         <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
                             Something
                         </td> </tr>";
-                }
+            }
 
 
-                   echo "
+            echo "
                     </tbody>
                 </table>
             </td>
@@ -323,6 +323,7 @@ function endRegistration()
     $SQL = "update registration set closedate = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
+        start2();
         status();
     } else {
         endRegistrationForm();
@@ -348,6 +349,7 @@ function endRegistration2()
     $SQL = "update registration set closedate2 = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
+        endProcess();
         status();
     } else {
         endRegistrationForm2();
@@ -373,6 +375,7 @@ function openRegNowConfirm()
     $SQL = "update registration set opendate = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
+        start1();
         status();
     } else {
         endRegistrationForm();
@@ -421,18 +424,25 @@ function setRegistration()
         //"Archives" other registrations
         $SQL = "update registration set current = '0'";
         if ($connection->query($SQL) === TRUE) {
-            $SQL = "insert into registration (opendate, closedate, closedate2, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', $minStudents, $minCredits, '1')";
-            if ($connection->query($SQL) === TRUE) {
-                $_SESSION['tab'] = "123";
-                header("Location:admin.php");
-                exit();
+            $SQL2 = "UPDATE course set minimumstudents = $minStudents";
+            if ($connection->query($SQL2) === TRUE) {
+                $SQL = "insert into registration (opendate, closedate, closedate2, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', $minStudents, $minCredits, '1')";
+                if ($connection->query($SQL) === TRUE) {
+                    $_SESSION['tab'] = "123";
+                    header("Location:admin.php");
+                    exit();
+                } else {
+                    echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
+                }
             } else {
+                setRegistrationForm();
                 echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
             }
         } else {
             setRegistrationForm();
-            echo "<br/><span class='errorMsg'>" . $connection->error . "2</span>";
+            echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
         }
+
     }
 }
 
