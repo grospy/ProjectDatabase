@@ -25,7 +25,7 @@ if (isset($_POST['clickSetReg'])) {
     submitStatus();
 } else if (isset($_POST["nextReg"])) {
     nextReg();
-}  else if (isset($_POST["nextRegConfirm"])) {
+} else if (isset($_POST["nextRegConfirm"])) {
     nextRegConfirm();
 } else {
     status();
@@ -148,16 +148,16 @@ function grades()
         $SQL = "SELECT * from course where courseID in(select c.courseID from enrolledstudent en inner join course c on en.courseID = c.courseID where en.registrationID = '$regID' group by c.courseID);";
         $result = $connection->query($SQL);
         for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-            $courseID = mysqli_result($result,$i,'courseID');
+            $courseID = mysqli_result($result, $i, 'courseID');
 
-            echo"
+            echo "
 			
 			<table cellspacing=\"0\" class=\"PSLEVEL1GRIDWBO\" id=\"IH_PT_INS\$scroll$0\" dir=\"ltr\" cols=\"1\" width=\"851\"
            cellpadding=\"0\">
         <tbody>
         <tr>
             <td class=\"PSLEVEL1GRIDLABEL\" align=\"left\">
-                <div id=\"win1divIH_PT_INSGP$0\">" . mysqli_result($result,$i,'name') . "</div>
+                <div id=\"win1divIH_PT_INSGP$0\">" . mysqli_result($result, $i, 'name') . "</div>
             </td>
         </tr>
         <tr>
@@ -173,30 +173,30 @@ function grades()
 
             $SQLstudent = "SELECT *,concat(p.personID,' - ',p.firstName,' ',p.lastName) as student, p.personID, en.status from course c inner join enrolledstudent en on c.courseID = en.courseID inner join person p on p.personID  = en.studentID where c.courseID = '$courseID';";
             $resultStudent = $connection->query($SQLstudent);
-                for($j = 0; $j < mysqli_num_rows($resultStudent) ; $j++){
-					$courseID = mysqli_result($result,$i,'courseID');
-					$studentID = mysqli_result($resultStudent,$j,'personID');
-                    echo "<tr id=\"trIH_PT_INS$0_row1\" valign=\"center\">
+            for ($j = 0; $j < mysqli_num_rows($resultStudent); $j++) {
+                $courseID = mysqli_result($result, $i, 'courseID');
+                $studentID = mysqli_result($resultStudent, $j, 'personID');
+                echo "<tr id=\"trIH_PT_INS$0_row1\" valign=\"center\">
                     <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
-                            <input type='checkbox' name='statusForm[]' class='statusForm' value=".$courseID."_".$studentID.">
+                            <input type='checkbox' name='statusForm[]' class='statusForm' value=" . $courseID . "_" . $studentID . ">
 						</td>
                         <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
-                            ".mysqli_result($resultStudent,$j,'student')."
+                            " . mysqli_result($resultStudent, $j, 'student') . "
                         </td>
                         <td align=\"left\" class=\"PSLEVEL1GRIDROW\">
-                            ".statusCheck($courseID,$studentID)."
+                            " . statusCheck($courseID, $studentID) . "
                         </td> </tr>";
-                }
-                   echo "
+            }
+            echo "
 							</tbody>
 						</table>
 					</td>
 				</tr>
 			</tbody>
 		</table>";
-		}
+        }
     }
-	echo "
+    echo "
 		<input type='button' name='Check_All' value='Check All' onClick=\"CheckAll(1)\"><input type='button' name='Un_CheckAll' value='Uncheck All' onClick=\"UnCheckAll(1)\">
 
             <i>Change selected to:</i>
@@ -205,27 +205,29 @@ function grades()
 		</form>";
 }
 
-function statusCheck ($courseID,$studentID) {
-	global $connection;
-	$regSQL = "SELECT * from registration where CURRENT = '1';";
-	$regResult = $connection->query($regSQL);
-	$regID = mysqli_result($regResult, 0, 'registrationID');
-	$checkStatusSQL = "SELECT status from enrolledStudent where studentID='$studentID' and courseID='$courseID' and registrationID='$regID';";
-	$result = $connection->query($checkStatusSQL);
-	switch (mysqli_result($result,0,'status')) {
-		case '1':
-			return "<Span style='color: lightgreen'>Passed</Span>";
-			break;
-		case '0':
-			return "<Span style='color: darkred'>Failed</Span>";
-			break;
-		default:
-			return "<Span style='color: #ffd552'>Pending</Span>";
-			break;
-	}
+function statusCheck($courseID, $studentID)
+{
+    global $connection;
+    $regSQL = "SELECT * from registration where CURRENT = '1';";
+    $regResult = $connection->query($regSQL);
+    $regID = mysqli_result($regResult, 0, 'registrationID');
+    $checkStatusSQL = "SELECT status from enrolledStudent where studentID='$studentID' and courseID='$courseID' and registrationID='$regID';";
+    $result = $connection->query($checkStatusSQL);
+    switch (mysqli_result($result, 0, 'status')) {
+        case '1':
+            return "<Span style='color: lightgreen'>Passed</Span>";
+            break;
+        case '0':
+            return "<Span style='color: darkred'>Failed</Span>";
+            break;
+        default:
+            return "<Span style='color: #ffd552'>Pending</Span>";
+            break;
+    }
 }
 
-function nextReg(){
+function nextReg()
+{
     Echo "<span class='errorMsg' style='font-size: 100%'> Are you sure you want to close this registration period and start the next one?</span><hr style='visibility: hidden'>
             <form method='post'>
                 <input type='submit' value = 'Yes' class = 'back' name =\"nextRegConfirm\">
@@ -233,48 +235,24 @@ function nextReg(){
             </FORM >";
 }
 
-function nextRegConfirm(){
+function nextRegConfirm()
+{
     global $connection;
-    if($connection->query("UPDATE registration set current = '0';")){
+    if ($connection->query("UPDATE registration set current = '0';")) {
         status();
         echo "<span class = 'confirmMsg'> Registration closed successfully.";
-    }
-    else {
+    } else {
         echo $connection->error;
     }
 
 
-
-
-
 }
 
-function submitStatus() {
-	global $connection;
-	
-	if(isset($_POST['setPassed'])) {
-		if (!isset($_POST['statusForm'])) {
-            grades();
-			echo "<span class='errorMsg'> No students selected! </span>";
-		} else {
-			$regSQL = "SELECT * from registration where CURRENT = '1';";
-			$regResult = $connection->query($regSQL);
-			$regID = mysqli_result($regResult, 0, 'registrationID');/*
-			$clearStatusSQL = "update enrolledstudent set status=0 WHERE registrationID='$regID' ";
-            $connection->query($clearStatusSQL);*/
-			$passedStudent = $_POST['statusForm'];
-			foreach ($passedStudent as $aStudent) {
-				//echo $aStudent ."<br/>";
-				$inputData = explode('_',"$aStudent");
-				$courseID = $inputData[0];
-				$studentID = $inputData[1];
-				$updateStatusSQL = "update enrolledstudent set status=1 where courseID='$courseID' and studentID='$studentID' and registrationID='$regID' ";
-                $connection->query($updateStatusSQL);
-			}
-            grades();
-			echo "<span class='confirmMsg'>Successfully updated status(es)!</span>";
-		}
-	}elseif(isset($_POST['setFailed'])){
+function submitStatus()
+{
+    global $connection;
+
+    if (isset($_POST['setPassed'])) {
         if (!isset($_POST['statusForm'])) {
             grades();
             echo "<span class='errorMsg'> No students selected! </span>";
@@ -287,7 +265,29 @@ function submitStatus() {
             $passedStudent = $_POST['statusForm'];
             foreach ($passedStudent as $aStudent) {
                 //echo $aStudent ."<br/>";
-                $inputData = explode('_',"$aStudent");
+                $inputData = explode('_', "$aStudent");
+                $courseID = $inputData[0];
+                $studentID = $inputData[1];
+                $updateStatusSQL = "update enrolledstudent set status=1 where courseID='$courseID' and studentID='$studentID' and registrationID='$regID' ";
+                $connection->query($updateStatusSQL);
+            }
+            grades();
+            echo "<span class='confirmMsg'>Successfully updated status(es)!</span>";
+        }
+    } elseif (isset($_POST['setFailed'])) {
+        if (!isset($_POST['statusForm'])) {
+            grades();
+            echo "<span class='errorMsg'> No students selected! </span>";
+        } else {
+            $regSQL = "SELECT * from registration where CURRENT = '1';";
+            $regResult = $connection->query($regSQL);
+            $regID = mysqli_result($regResult, 0, 'registrationID');/*
+			$clearStatusSQL = "update enrolledstudent set status=0 WHERE registrationID='$regID' ";
+            $connection->query($clearStatusSQL);*/
+            $passedStudent = $_POST['statusForm'];
+            foreach ($passedStudent as $aStudent) {
+                //echo $aStudent ."<br/>";
+                $inputData = explode('_', "$aStudent");
                 $courseID = $inputData[0];
                 $studentID = $inputData[1];
                 $updateStatusSQL = "update enrolledstudent set status=0 where courseID='$courseID' and studentID='$studentID' and registrationID='$regID' ";
@@ -297,9 +297,8 @@ function submitStatus() {
             echo "<span class='confirmMsg'>Successfully updated status(es)!</span>";
         }
     }
-	
-}
 
+}
 
 
 function setRegistrationForm()
@@ -427,7 +426,7 @@ function endRegistration()
     $SQL = "update registration set closedate = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
-        start2();
+        start2v2();
         status();
     } else {
         endRegistrationForm();
@@ -441,7 +440,7 @@ function endRegistrationForm2()
     Echo "  <form method='post'>
                 <input type='submit' value = 'Yes' class = 'back' name =\"endReg2Confirm\">
                 <input type='submit' value = 'No' name =\"backToReg\">
-            </FORM >";
+            </FORM>";
 }
 
 function endRegistration2()
@@ -453,11 +452,11 @@ function endRegistration2()
     $SQL = "update registration set closedate2 = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
-        endProcess();
+        endProcessv2();
         status();
     } else {
         endRegistrationForm2();
-        echo "<span class='errorMSG'>$connection->error</span>";
+        echo "<span class='errorMsg'>$connection->error</span>";
     }
 }
 
@@ -479,7 +478,7 @@ function openRegNowConfirm()
     $SQL = "update registration set opendate = '$yesterday' where CURRENT =1";
 
     if ($connection->query($SQL)) {
-        start1();
+        start1v2();
         status();
     } else {
         endRegistrationForm();
@@ -532,6 +531,10 @@ function setRegistration()
             if ($connection->query($SQL2) === TRUE) {
                 $SQL = "insert into registration (opendate, closedate, closedate2, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', $minStudents, $minCredits, '1')";
                 if ($connection->query($SQL) === TRUE) {
+                    $now = Date('m/d/Y');
+                    if ($openDATE == $now) {
+                        start1v2();
+                    }
                     $_SESSION['tab'] = "123";
                     header("Location:admin.php");
                     exit();
@@ -591,6 +594,10 @@ function editRegistration()
 
         $SQL = "update registration set opendate = '$openDATEy-$openDATEm-$openDATEd', closedate = '$closeDATEy-$closeDATEm-$closeDATEd', closedate2 = '$close2DATEy-$close2DATEm-$close2DATEd', minimumstudents = $minStudents, minimumcredits = $minCredits where current = 1";
         if ($connection->query($SQL) === TRUE) {
+            $now = Date('m/d/Y');
+            if ($openDATE == $now) {
+                start1v2();
+            }
             $_SESSION["tab"] = "123";
             header("Location:admin.php");
             exit();

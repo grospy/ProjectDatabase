@@ -251,30 +251,30 @@ function addStudents()
                     echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
                 } else {
                     $numberOfStudent = 0;
-					$sqlerror = FALSE;
-					$connection->query("START TRANSACTION;");
+                    $sqlerror = FALSE;
+                    $connection->query("START TRANSACTION;");
                     for ($i = 0; $i < count($properData); $i++) {
                         $studentID = $properData[$i][0];
                         $first_name = $properData[$i][1];
                         $last_name = $properData[$i][2];
                         $email = $properData[$i][3];
-						
+
                         $sql1 = "INSERT INTO person (personID, firstName, lastName, type) VALUES ('$studentID','$first_name','$last_name','student')";
                         $sql2 = "INSERT INTO student (studentID, email) VALUES ('$studentID','$email')";
-						if ($connection->query($sql1) && $connection->query($sql2)) {
-							$numberOfStudent++;	
-						} else {
-							echo "<span class='errorMsg'> The csv file contains error. Please check the data! </span>";
-							$connection->query("ROLLBACK;");
-							$sqlerror = TRUE;
-							break ;
-						}
+                        if ($connection->query($sql1) && $connection->query($sql2)) {
+                            $numberOfStudent++;
+                        } else {
+                            echo "<span class='errorMsg'> The csv file contains error. Please check the data! </span>";
+                            $connection->query("ROLLBACK;");
+                            $sqlerror = TRUE;
+                            break;
+                        }
                     }
-						if (!$sqlerror) {
-							$connection->query("COMMIT;"); 
-							echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
-						}
-					}
+                    if (!$sqlerror) {
+                        $connection->query("COMMIT;");
+                        echo "<span class='confirmMsg'> Succeed adding $numberOfStudent students! </span><br/>";
+                    }
+                }
 
             }
 
@@ -306,21 +306,21 @@ function addCourseCSV()
                     $capacity = $data[2];
                     $studyLoad = $data[3];
                     $teacherID = $data[4];
-						//check if teacher is in the DB
+                    //check if teacher is in the DB
                     if (strlen($courseID) == 7 && substr($courseID, 0, 4) == "IBIS" && preg_match("/^[0-9]+$/", substr($courseID, 4, 3)) && preg_match("/^[0-9]+$/", $teacherID) && preg_match("/^[0-9]+$/", $capacity) && preg_match("/^[0-9]+$/", $studyLoad)) {
                         array_push($properData, [$courseID, $courseName, $capacity, $studyLoad, $teacherID, "0"]);
                     } else {
                         $wrongData = FALSE;
-						break;
+                        break;
                     }
                 }
-					
+
                 if (!$wrongData) {
                     echo "<span class='errorMsg'>The csv file contains error. Please check the data!</span>";
                 } else {
                     $numberOfCourse = 0;
-						$sqlerror = FALSE;
-						$connection->query("START TRANSACTION;");
+                    $sqlerror = FALSE;
+                    $connection->query("START TRANSACTION;");
                     for ($i = 0; $i < count($properData); $i++) {
                         $courseID = $properData[$i][0];
                         $courseName = $properData[$i][1];
@@ -331,17 +331,16 @@ function addCourseCSV()
                         $sql2 = "INSERT INTO teacher VALUES ('$teacherID','$courseID')";
                         if ($connection->query($sql1) && $connection->query($sql2)) {
                             $numberOfCourse++;
+                        } else {
+                            echo "<span class='errorMsg'> The csv file contains error. Please check the data! </span>";
+                            $connection->query("ROLLBACK;");
+                            $sqlerror = TRUE;
+                            break;
                         }
-							else {
-								echo "<span class='errorMsg'> The csv file contains error. Please check the data! </span>";
-								$connection->query("ROLLBACK;");
-								$sqlerror = TRUE;
-								break ;
-							}
-						}
-						if (!$sqlerror) {
-							$connection->query("COMMIT;"); 
-							echo "<span class='confirmMsg'> Succeed adding $numberOfCourse! </span><br/>";
+                    }
+                    if (!$sqlerror) {
+                        $connection->query("COMMIT;");
+                        echo "<span class='confirmMsg'> Succeed adding $numberOfCourse! </span><br/>";
                     }
                 }
 
@@ -367,8 +366,8 @@ function addLessonCSV()
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             $handle = fopen($file, "r");
             if ($handle !== FALSE) {
-				$connection->query("START TRANSACTION");
-				$sqlerror = FALSE;
+                $connection->query("START TRANSACTION");
+                $sqlerror = FALSE;
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $num = count($data);
                     $courseID = $data[0];
@@ -382,14 +381,14 @@ function addLessonCSV()
                         echo "Succeed adding lesson! <br/>";
                     } else {
                         echo "<br/><span class='errorMsg'>" . $connection->error . "</span>";
-						$sqlerror = TRUE;
-						$connection->query("ROLLBACK");
-						break; ;
+                        $sqlerror = TRUE;
+                        $connection->query("ROLLBACK");
+                        break;;
                     }
-					
-					if (!$sqlerror) {
-						$connection->query("COMMIT");
-					}
+
+                    if (!$sqlerror) {
+                        $connection->query("COMMIT");
+                    }
                 }
                 fclose($handle);
             }
@@ -1002,7 +1001,7 @@ function tabSelect()
     if (isset($_POST['grades'])) {
         return 0;
     }
-	if (isset($_POST['submitStatus'])) {
+    if (isset($_POST['submitStatus'])) {
         return 0;
     }
     if (isset($_POST['clickEditReg'])) {
@@ -1194,7 +1193,8 @@ function runCheck()
     }
 }
 
-function start1(){
+function start1()
+{
 
     global $connection;
 
@@ -1205,13 +1205,25 @@ function start1(){
     $compare = mysqli_result($result, 0, 'opendate');
 
     if ($last < $compare) {
-        $connection->query("UPDATE student set allowToReg = 1 where CURRENT = 1;");
+        $connection->query("UPDATE student set allowToReg = 1;");
     }
     $now = Date('Y-m-d');
     $connection->query("UPDATE log set lastdate = '$now';");
 }
 
-function start2(){
+function start1v2()
+{
+
+    global $connection;
+
+    $connection->query("UPDATE student set allowToReg = 1;");
+    echo $connection->error;
+    $now = Date('Y-m-d');
+    $connection->query("UPDATE log set lastdate = '$now';");
+}
+
+function start2()
+{
     global $connection;
 
     $result = $connection->query("SELECT * FROM log;");
@@ -1224,7 +1236,7 @@ function start2(){
     $compare = mysqli_result($result, 0, 'closedate');
     $compare = date('Y-m-d', strtotime($compare . ' + 1 day'));
     if ($last < $compare) {
-        $connection->query("UPDATE student set allowToReg = 0 where CURRENT = 1;");
+        $connection->query("UPDATE student set allowToReg = 0");
         $result = $connection->query("SELECT * FROM course where offer = 1;");
         for ($i = 0; $i < mysqli_num_rows($result); $i++) {
             $id = mysqli_result($result, $i, 'courseID');
@@ -1235,16 +1247,16 @@ function start2(){
                 $connection->query("DELETE FROM enroledstudent where registrationID=$regID and courseID = $id;");
             }
         }
-        $result = $connection->query(" select * from student where CURRENT = 1;");
+        $result = $connection->query("select * from person where CURRENT = '1' and type = 'student';");
         for ($j = 0; $j < mysqli_num_rows($result); $j++) {
-            $number = mysqli_result($result, $j, 'studentID');
-            $result2 = $connection->query(" select * from enrolledstudent e inner join course c on e.courseID = c.courseID where estudentID = $number && eregistrationID = $regID;");
+            $number = mysqli_result($result, $j, 'personID');
+            $result2 = $connection->query("select * from enrolledstudent e inner join course c on e.courseID = c.courseID where e.studentID = $number && e.registrationID = $regID;");
             $credits = 0;
             for ($k = 0; $k < mysqli_num_rows($result2); $k++) {
                 $credits .= mysqli_result($result2, $k, 'studyload');
             }
             if ($credits < $minC) {
-                $connection->query("UPDATE student set allowToReg = 1 where studentID = $number;");
+                $connection->query("UPDATE student set allowToReg = 1 where studentID = '$number';");
             }
         }
     }
@@ -1252,31 +1264,69 @@ function start2(){
     $connection->query("UPDATE log set lastdate = '$now';");
 }
 
-function endProcess(){
+function start2v2()
+{
+    global $connection;
+
+    $result = $connection->query("SELECT * FROM registration WHERE current = 1;");
+    $regID = mysqli_result($result, 0, 'registrationID');
+    $minC = mysqli_result($result, 0, 'minimumcredits');
+
+    $connection->query("UPDATE student set allowToReg = 0;");
+    $result = $connection->query("SELECT * FROM course where offer = 1;");
+    for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+        $id = mysqli_result($result, $i, 'courseID');
+        $min = mysqli_result($result, $i, 'minimumstudents');
+
+        $en = mysqli_result($connection->query("SELECT count(*) FROM enrolledstudent where courseID = '$id' and registrationID = $regID;"), 0);
+        if ($en < $min) {
+            $connection->query("UPDATE course set offer = 0 where courseID = '$id';");
+            $connection->query("DELETE FROM enroledstudent where registrationID=$regID and courseID = $id;");
+        }
+    }
+    $result = $connection->query("select * from person where CURRENT = '1' and type = 'student';");
+    for ($j = 0; $j < mysqli_num_rows($result); $j++) {
+        $number = mysqli_result($result, $j, 'personID');
+        $result2 = $connection->query("select * from enrolledstudent e inner join course c on e.courseID = c.courseID where e.studentID = $number && e.registrationID = $regID;");
+        $credits = 0;
+        for ($k = 0; $k < mysqli_num_rows($result2); $k++) {
+            $credits .= mysqli_result($result2, $k, 'studyload');
+        }
+        if ($credits < $minC) {
+            $connection->query("UPDATE student set allowToReg = 1 where studentID = '$number';");
+        }
+    }
+    $now = Date('Y-m-d');
+    $connection->query("UPDATE log set lastdate = '$now';");
+    echo "$regID - $minC - $";
+}
+
+function endProcess()
+{
     global $connection;
 
     $result = $connection->query("SELECT * FROM log;");
     $last = mysqli_result($result, 0, 'lastdate');
 
-    $result = $connection->query("SELECT * FROM registration WHERE current = 1;");
-    $regID = mysqli_result($result, 0, 'registrationID');
-
     $compare = mysqli_result($result, 0, 'closedate2');
     $compare = date('Y-m-d', strtotime($compare . ' + 1 day'));
 
     if ($last < $compare) {
-        $connection->query("UPDATE student set allowToReg = 0 where CURRENT = 1;");
-        $result = $connection->query("SELECT * FROM course where offer = 1");
-        for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-            $id = mysqli_result($result, $i, 'courseID');
-            $min = mysqli_result($result, $i, 'minimumstudents');
-            $en = mysqli_result($connection->query("SELECT count(*) FROM enrolledstudent where courseID = '$id' and registrationID = $regID;"), 0);
-            if ($en < $min) {
-                $connection->query("UPDATE course set offer = 0 where courseID = '$id';");
-                $connection->query("DELETE FROM enrol +edstudent where registrationID=$regID and courseID = $id");
-            }
-        }
+        global $connection;
+        $connection->query("UPDATE student set allowToReg = 0;");
+        $now = Date('Y-m-d');
+        $connection->query("UPDATE log set lastdate = '$now';");
     }
+
+    $now = Date('Y-m-d');
+    $connection->query("UPDATE log set lastdate = '$now';");
+}
+
+function endProcessv2()
+{
+    global $connection;
+
+    $connection->query("UPDATE student set allowToReg = 0;");
     $now = Date('Y-m-d');
     $connection->query("UPDATE log set lastdate = '$now';");
 }
