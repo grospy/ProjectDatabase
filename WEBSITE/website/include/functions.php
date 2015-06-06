@@ -692,14 +692,14 @@ function courses()
             $offered[] = $row['courseID'];
         }
         //ENROLLED
-        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number and status is null;";
+        $SQL = "SELECT * FROM course c INNER JOIN enrolledstudent e on c.courseID = e.courseID where e.studentID = $number and e.status is null and e.registrationID in(select registrationID from registration where current = 1);";
         $result = $connection->query($SQL);
         $enrolled = array();
         while ($row = mysqli_fetch_array($result)) {
             $enrolled[] = $row['courseID'];
         }
         //OVERLAP
-        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number' and status is null)));";
+        $SQL = "select * from course where courseID in (select le.courseID from lesson le where concat(le.date,le.time_start) in (select concat(date,time_start) from lesson where courseID in (select courseID from enrolledstudent where studentID='$number' and status is null and registrationID in(select registrationID from registration where current = 1))));";
         $result = $connection->query($SQL);
         $overlap = array();
         while ($row = mysqli_fetch_array($result)) {
@@ -1298,7 +1298,6 @@ function start2v2()
     }
     $now = Date('Y-m-d');
     $connection->query("UPDATE log set lastdate = '$now';");
-    echo "$regID - $minC - $";
 }
 
 function endProcess()
@@ -1308,6 +1307,8 @@ function endProcess()
     $result = $connection->query("SELECT * FROM log;");
     $last = mysqli_result($result, 0, 'lastdate');
 
+
+    $result = $connection->query("SELECT * FROM registration where CURRENT = 1;");
     $compare = mysqli_result($result, 0, 'closedate2');
     $compare = date('Y-m-d', strtotime($compare . ' + 1 day'));
 
