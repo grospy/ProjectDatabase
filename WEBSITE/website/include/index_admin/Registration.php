@@ -23,6 +23,9 @@ function status()
             open();
             break;
         case 2:
+            open2();
+            break;
+        case 3:
             opening();
             break;
     }
@@ -40,13 +43,35 @@ function open()
     echo "<h4>Status: <span style='color:#3cda19;'>Open</span></h4>";
 
 
-    $result = $connection->query("Select date_format(closedate, '%b %e, %Y') as closedate, datediff(closedate, CURDATE()) as diff, date_format(closedate2, '%b %e, %Y') as closedate2, datediff(closedate2, CURDATE()) as diff2 from registration where CURRENT = 1");
+    $result = $connection->query("Select *,date_format(closedate, '%b %e, %Y') as closedate, datediff(closedate, CURDATE()) as diff, date_format(closedate2, '%b %e, %Y') as closedate2, datediff(closedate2, CURDATE()) as diff2 from registration where CURRENT = 1");
     $closeDate = mysqli_result($result, 0, 'closedate');
     $diff = mysqli_result($result, 0, 'diff');
     $closeDate2 = mysqli_result($result, 0, 'closedate2');
     $diff2 = mysqli_result($result, 0, 'diff2');
+    $mc = mysqli_result($result, 0, 'minimumcredits');
     echo "<b>Closing on:</b> $closeDate - <i>($diff day(s) from today)</i><br /><br />";
-    echo "<b>Second registration closing on:</b> $closeDate2 - <i>($diff2 day(s) from today)</i>";
+    echo "<b>Second registration closing on:</b> $closeDate2 - <i>($diff2 day(s) from today)</i><br /><br />";
+    echo "<b>Minimum credits:</b> $mc";
+    echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'></form>";
+
+
+}
+
+function open2()
+{
+    global $connection;
+    echo "<h4>Status: <span style='color:#3cda19;'>Open</span> - <span style='font-size: 60%;'><i>(Second registration)</i></span></h4>";
+
+
+    $result = $connection->query("Select *,date_format(closedate, '%b %e, %Y') as closedate, datediff(closedate, CURDATE()) as diff, date_format(closedate2, '%b %e, %Y') as closedate2, datediff(closedate2, CURDATE()) as diff2 from registration where CURRENT = 1");
+    $closeDate = mysqli_result($result, 0, 'closedate');
+    $diff = mysqli_result($result, 0, 'diff');
+    $closeDate2 = mysqli_result($result, 0, 'closedate2');
+    $diff2 = mysqli_result($result, 0, 'diff2');
+    $mc = mysqli_result($result, 0, 'minimumcredits');
+    echo "<b>Closing on:</b> $closeDate - <i>($diff day(s) from today)</i><br /><br />";
+    echo "<b>Second registration closing on:</b> $closeDate2 - <i>($diff2 day(s) from today)</i><br /><br />";
+    echo "<b>Minimum credits:</b> $mc";
     echo "<hr style='visibility: hidden'><form method='post'><input type='submit' name='editReg' value='Edit'></form>";
 
 
@@ -57,14 +82,16 @@ function opening()
     global $connection;
     echo "<h4>Status: <span style='color:#dac308;'>Closed</span></h4>";
     echo "<b>Opening on:</b> ";
-    $result = $connection->query("Select date_format(closedate, '%b %e, %Y') as closedate, date_format(opendate, '%b %e, %Y') as opendate, date_format(closedate2, '%b %e, %Y') as closedate2, datediff(opendate, CURDATE()) as diff from registration where CURRENT = 1");
+    $result = $connection->query("Select *,date_format(closedate, '%b %e, %Y') as closedate, date_format(opendate, '%b %e, %Y') as opendate, date_format(closedate2, '%b %e, %Y') as closedate2, datediff(opendate, CURDATE()) as diff from registration where CURRENT = 1");
     $openDate = mysqli_result($result, 0, 'opendate');
     $closeDate = mysqli_result($result, 0, 'closedate');
     $closeDate2 = mysqli_result($result, 0, 'closedate2');
+    $mc = mysqli_result($result, 0, 'minimumcredits');
     $diff = mysqli_result($result, 0, 'diff');
     echo $openDate . " - <i>($diff day(s) from today)</i><br /><br />";
     echo "<b>Closing on</b> $closeDate";
     echo "<b>Second registration closing on</b> $closeDate2";
+    echo "<b>Second registration closing on</b> $mc";
 
 }
 
@@ -73,7 +100,8 @@ function setRegistrationForm()
     isset($_POST['date1xx']) ? $d1 = $_POST['date1xx'] : $d1 = "";
     isset($_POST['date1xx']) ? $d2 = $_POST['date2xx'] : $d2 = "";
     isset($_POST['date3xx']) ? $d3 = $_POST['date3xx'] : $d3 = "";
-    isset($_POST['minstudents']) ? $ms = $_POST['minstudents'] : $ms = "";
+    isset($_POST['minstudents']) ? $ms = $_POST['minstudents'] : $ms = "10";
+    isset($_POST['mincredits']) ? $mc = $_POST['mincredits'] : $mc = "60";
 
     echo "<SCRIPT LANGUAGE=\"JavaScript\" ID=\"jscal1xx\">
             var date = new Date();
@@ -98,10 +126,14 @@ function setRegistrationForm()
                 <span style='font-size: 80%'><i>(Second registration will start)</i></span><br />
                 <INPUT TYPE = \"text\" NAME = \"date2xx\" VALUE = \"$d2\" SIZE = 15 readonly>
                 <A HREF = \"#\" onClick = \"cal2xx.select(document.forms[0].date2xx,'anchor2xx','MM/dd/yyyy'); return false;\"  NAME = \"anchor2xx\" ID = \"anchor2xx\" >Calendar</A ><br/>
+
                 <br /><b>Minimum students:</b><br />
                 <input type = 'number' value = '$ms'  name='minstudents' style ='width:50px;'><span style='font-size: 80%'> (Classes with participants lower than this number will be closed after closing date)</span><br />
 
-                <b>Close second registration:</b><br />
+                <br /><b>Minimum credits:</b><br />
+                <input type = 'number' value = '$mc'  name='mincredits' style ='width:50px;'><span style='font-size: 80%'> (Classes with participants lower than this number will be closed after closing date)</span><br />
+
+                <br /><b>Close second registration:</b><br />
                 <INPUT TYPE = \"text\" NAME = \"date3xx\" VALUE = \"$d3\" SIZE = 15 readonly>
                 <A HREF = \"#\" onClick = \"cal3xx.select(document.forms[0].date3xx,'anchor3xx','MM/dd/yyyy'); return false;\"  NAME = \"anchor3xx\" ID = \"anchor3xx\" >Calendar</A ><br/>
 
@@ -124,12 +156,14 @@ function editRegistrationForm()
     $close = mysqli_result($result, 0, 'cd');
     $close2 = mysqli_result($result, 0, 'cd2');
     $minimumstudents = mysqli_result($result, 0, 'minimumstudents');
+    $minimumcredits = mysqli_result($result, 0, 'minimumcredits');
 
 
     isset($_POST['date1xx']) ? $d1 = $_POST['date1xx'] : $d1 = $open;
     isset($_POST['date1xx']) ? $d2 = $_POST['date2xx'] : $d2 = $close;
     isset($_POST['date3xx']) ? $d3 = $_POST['date3xx'] : $d3 = $close2;
     isset($_POST['minstudents']) ? $ms = $_POST['minstudents'] : $ms = $minimumstudents;
+    isset($_POST['mincredits']) ? $mc = $_POST['mincredits'] : $mc = $minimumcredits;
 
     echo "<SCRIPT LANGUAGE=\"JavaScript\" ID=\"jscal1xx\">
             var date = new Date();
@@ -156,6 +190,9 @@ function editRegistrationForm()
 
                 <br /><b>Minimum students:</b><br />
                 <input type = 'number' value = '$ms'  name='minstudents' style ='width:50px;'><span style='font-size: 80%'>(Classes with participants lower than this number will be closed after closing date)<br />
+
+                <br /><b>Minimum credits:</b><br />
+                <input type = 'number' value = '$mc'  name='mincredits' style ='width:50px;'><span style='font-size: 80%'><br />
 
                 <b>Close second:</b><br />
                 <INPUT TYPE = \"text\" NAME = \"date3xx\" VALUE = \"$d3\" SIZE = 15 readonly>
@@ -187,9 +224,9 @@ function setRegistration()
     } else if ($_POST['minstudents'] == "" || $_POST['minstudents'] < 0) {
         setRegistrationForm();
         echo "<br/><span class='errorMsg'>Minumum students has to be at least 0.</span>";
-    } else if ($_POST['minstudents'] == "" || $_POST['minstudents'] < 0) {
+    } else if ($_POST['mincredits'] == "" || $_POST['mincredits'] < 0) {
         setRegistrationForm();
-        echo "<br/><span class='errorMsg'>Minumum students has to be at least 0.</span>";
+        echo "<br/><span class='errorMsg'>Minumum credits has to be at least 0.</span>";
     } else {
         $openDATE = $_POST["date1xx"];
         $openDATEm = substr($openDATE, 0, 2);
@@ -207,11 +244,12 @@ function setRegistration()
         $close2DATEy = substr($close2DATE, 6, 4);
 
         $minStudents = $_POST['minstudents'];
+        $minCredits = $_POST['mincredits'];
 
         //"Archives" other registrations
         $SQL = "update registration set current = '0'";
         if ($connection->query($SQL) === TRUE) {
-            $SQL = "insert into registration (opendate, closedate, closedate2, type, minimumstudents, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', '1', $minStudents, '1')";
+            $SQL = "insert into registration (opendate, closedate, closedate2, type, minimumstudents, minimumcredits, current) values ('$openDATEy-$openDATEm-$openDATEd', '$closeDATEy-$closeDATEm-$closeDATEd', '$close2DATEy-$close2DATEm-$close2DATEd', '1', $minStudents, $minCredits, '1')";
             if ($connection->query($SQL) === TRUE) {
                 $_SESSION['tab'] = "123";
                 header("Location:admin.php");
@@ -263,8 +301,10 @@ function editRegistration()
         $close2DATEy = substr($close2DATE, 6, 4);
 
         $minStudents = $_POST['minstudents'];
+        $minCredits = $_POST['mincredits'];
 
-        $SQL = "update registration set opendate = '$openDATEy-$openDATEm-$openDATEd', closedate = '$closeDATEy-$closeDATEm-$closeDATEd', closedate2 = '$close2DATEy-$close2DATEm-$close2DATEd', minimumstudents = $minStudents where current = 1";
+
+        $SQL = "update registration set opendate = '$openDATEy-$openDATEm-$openDATEd', closedate = '$closeDATEy-$closeDATEm-$closeDATEd', closedate2 = '$close2DATEy-$close2DATEm-$close2DATEd', minimumstudents = $minStudents, minimumcredits = $minCredits where current = 1";
         if ($connection->query($SQL) === TRUE) {
             $_SESSION["tab"] = "123";
             header("Location:admin.php");

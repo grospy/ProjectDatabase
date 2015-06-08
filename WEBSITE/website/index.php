@@ -7,10 +7,8 @@ require("include/functions.php");
 if ($_SESSION['login'] != md5("1")) {
     header("Location: login.php");
     exit();
-}else if(!access($_SESSION['number'])){
-    header("Location: regclosed.php");
-    exit();
 }
+
 require("include/top.php");
 require("include/database.php");
 ?>
@@ -35,7 +33,7 @@ require("include/database.php");
             </div>
         </div>
     </div>
-    <div class="tab">
+    <div  class="tab" <?php if(!access($_SESSION['number'])){echo "style=\"display: none\"";}?> >
         <input class="tab-radio" type="radio" id="tab-2" name="tab-group-1" checked>
         <label class="tab-label" for="tab-2">Enroll</label>
 

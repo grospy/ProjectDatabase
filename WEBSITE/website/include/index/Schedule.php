@@ -30,7 +30,7 @@
         if ($connection) {
             $number = quote_smart($connection,$number);
 
-            $SQL = 	"select c.name, dayname(l.date) as day, DATE_FORMAT(l.date, '%b %e, \'%y') as date, DATE_FORMAT(l.time_start,'%I:%i') as time_start, concat(p.firstName,' ',p.lastName) as instructor, l.roomnumber from course c inner join lesson l on c.courseID=l.courseID inner join teacher te on te.courseID=c.courseID inner join person p on p.personID=te.teacherID inner join enrolledstudent s on s.courseID=l.courseID WHERE s.studentID=$number AND s.status IS NULL order by l.date ASC, l.time_start ASC;";
+            $SQL = 	"select c.name, dayname(l.date) as day, DATE_FORMAT(l.date, '%b %e, \'%y') as date, DATE_FORMAT(l.time_start,'%k:%i') as time_start, concat(p.firstName,' ',p.lastName) as instructor, l.roomnumber from course c inner join lesson l on c.courseID=l.courseID inner join teacher te on te.courseID=c.courseID inner join person p on p.personID=te.teacherID inner join enrolledstudent s on s.courseID=l.courseID WHERE s.studentID=$number AND s.status IS NULL order by l.date ASC, l.time_start ASC;";
 
             $result = $connection->query($SQL);
             $num_rows = mysqli_num_rows($result);
