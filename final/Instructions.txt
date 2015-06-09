@@ -1,0 +1,50 @@
+SETUP PHP:
+	1 - OPEN /website/include/database.php
+	2 - EDIT username and password for your MySQL server
+	3 - MOVE /website TO HTDOCS
+SETUP DATABASE:
+	1 - OPEN inholland.sql
+	2 - COPY all the text in it
+	3 - PASTE it in MySQL cmd
+	4 - PRESS enter
+TO RUN:
+	1 - OPEN /website in web browser
+
+
+1 - Open MySQL command line
+
+2 - run command "create database inholland;"
+
+3 - run command "use inholland;"
+
+Two ways to do step 4
+
+4a - type "source " then drag and drop the file UserName.sql into the command line and press enter
+4b - open inholland.sql and copy all the contents then right-click in the MySQL command line and click paste
+
+
+===
+
+Admin 
+username:administrator|
+password:administrator
+
+
+Student(s): 
+Louis 
+u:480402
+|p:447799
+
+ 
+            Shamil 
+u:234587|
+p:765432
+            
+
+Abraham 
+u:876523|
+p:564532
+
+            Sasmita 
+u:876234
+|p:236423

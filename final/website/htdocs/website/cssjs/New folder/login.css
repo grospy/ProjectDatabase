@@ -1,0 +1,23 @@
+
+.error{
+    color: darkred;
+}
+.login {
+    width: 200px ;
+    margin-left: auto ;
+    margin-right: auto ;
+    padding: 1em;
+    text-align: center;
+    border: solid #a3a3a3 1px;
+    background: white;
+    box-shadow: 5px 5px 5px grey;
+    margin-top: 10%;
+    margin-bottom: 1em;
+}
+#number,#password{
+    font-size: 1em;
+}
+.help{
+    width: 100%;
+    text-align: center;
+}
