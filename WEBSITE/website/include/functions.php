@@ -28,6 +28,7 @@ function login(&$error)
         $connection->query($SQL);
         $SQL = "SELECT * FROM student s inner join person p on p.personID = s.studentID WHERE s.studentID = $number AND s.password = md5($saltypassword) and p.current = '1';";
         $result = $connection->query($SQL);
+        echo $connection->error;
         $num_rows = mysqli_num_rows($result);
 
         if ($result) {
@@ -339,16 +340,16 @@ function addNewCourse()
     global $connection;
     if (isset($_POST['addCourse'])) {
         if (empty($_POST['newCourseName']) || empty($_POST['newCapacity']) || empty($_POST['newStudyLoad']) || empty($_POST['newInstructor'])) {
-            echo "<span class='errorMsg'> All field has to be filled </span>";
+            echo "<span class='errorMsg'> All field have to be filled</span>";
         } else {
-            $newCourseID = $_POST['newCourseID'];
-            $newCourseName = $_POST['newCourseName'];
-            $newCapacity = $_POST['newCapacity'];
-            $newStudyLoad = $_POST['newStudyLoad'];
-            $newInstructor = $_POST['newInstructor'];
+            $newCourseID = quote_smart($connection,htmlspecialchars($_POST['newCourseID']));
+            $newCourseName = quote_smart($connection,htmlspecialchars($_POST['newCourseName']));
+            $newCapacity = quote_smart($connection,htmlspecialchars($_POST['newCapacity']));
+            $newStudyLoad = quote_smart($connection,htmlspecialchars($_POST['newStudyLoad']));
+            $newInstructor = quote_smart($connection,htmlspecialchars($_POST['newInstructor']));
 
-            $addCourseSQL = "insert into course value ('$newCourseID', '$newCourseName',$newCapacity,$newStudyLoad, 0);";
-            $addTeacherSQL = "insert into teacher value ('$newInstructor', '$newCourseID');";
+            $addCourseSQL = "insert into course value ($newCourseID, $newCourseName,$newCapacity,$newStudyLoad, 0);";
+            $addTeacherSQL = "insert into teacher value ($newInstructor, $newCourseID);";
             if ($connection->query($addCourseSQL) === TRUE && $connection->query($addTeacherSQL) === TRUE) {
                 echo "New course added! $newCourseID-$newCourseName, capacity : $newCapacity, study load : $newStudyLoad. ";
             } else {
